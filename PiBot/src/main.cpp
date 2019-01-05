@@ -6,27 +6,25 @@
  */
 
 #include <iostream>
-#include <pigpio.h>
+#include "gpio.h"
+
 
 int main(int argc, char* argv[])
 {
-	if (gpioInitialise() < 0)
-	   {
-	      fprintf(stderr, "pigpio initialisation failed\n");
-	      return 1;
-	   }
+	GPIO::Initialize();
 	std::cout << "Hello from PiBot!" << std::endl;
-	auto res = gpioSetMode(17, PI_OUTPUT);
-	std::cout << "set pin 17: " << res << std::endl;
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
-	gpioWrite(17, 1);
-	gpioDelay(200000);
-	gpioWrite(17, 0);
-	gpioDelay(200000);
-	gpioWrite(17, 1);
-	gpioDelay(200000);
-	gpioWrite(17, 0);
-	gpioTerminate();
+	GPIO GreenLED(17, PI_OUTPUT);
+	GreenLED.Write(1);
+	gpioDelay(500000);
+	GreenLED.Write(0);
+	gpioDelay(500000);
+	GreenLED.Write(1);
+	std::cout << "green LED level read: " << GreenLED.Read() << std::endl;
+	gpioDelay(500000);
+	GreenLED.Toggle();
+	std::cout << "green LED level read: " << GreenLED.Read() << std::endl;
+	GPIO::Terminate();
 	return 0;
 }
 
