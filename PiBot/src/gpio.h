@@ -19,6 +19,7 @@ public:
 	int Read(void) {return gpioRead(m_gpio);}
 	void Write(unsigned level) {gpioWrite(m_gpio, level);}
 	void Toggle(void) {gpioWrite(m_gpio, gpioRead(m_gpio) ^ 0x01);}
+	void Pulse(unsigned length, unsigned level) {gpioTrigger(m_gpio, length, level);}
 private:
 	unsigned m_gpio;
 };

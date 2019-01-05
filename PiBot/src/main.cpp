@@ -15,15 +15,15 @@ int main(int argc, char* argv[])
 	std::cout << "Hello from PiBot!" << std::endl;
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO GreenLED(17, PI_OUTPUT);
-	GreenLED.Write(1);
-	gpioDelay(500000);
-	GreenLED.Write(0);
-	gpioDelay(500000);
-	GreenLED.Write(1);
-	std::cout << "green LED level read: " << GreenLED.Read() << std::endl;
-	gpioDelay(500000);
-	GreenLED.Toggle();
-	std::cout << "green LED level read: " << GreenLED.Read() << std::endl;
+	GPIO UserKey(21, PI_INPUT, PI_PUD_UP);
+
+	while(UserKey.Read())
+	{
+		GreenLED.Toggle();
+		gpioDelay(200000);
+	}
+
+	std::cout << "Good bye!" << std::endl;
 	GPIO::Terminate();
 	return 0;
 }
