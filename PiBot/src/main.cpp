@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "gpio.h"
+#include "i2c.h"
 
 int main(int argc, char* argv[])
 {
@@ -18,17 +19,18 @@ int main(int argc, char* argv[])
 
 	gpioSetPullUpDown(2, PI_PUD_UP);
 	gpioSetPullUpDown(3, PI_PUD_UP);
-	int I2C_handle = i2cOpen(1, 0x6B, 0);	//  LSM9DS1 - Accelerometer and gyroscope
-	std::cout << "I2C handle: " << I2C_handle << std::endl;
+	I2C Gyroscope(I2C1, 0x6B);		// LSM9DS1 - Accelerometer and gyroscope
+	//I2C Magnetometer(I2C1, 0x1E);	// LSM9DS1 - Magnetic sensor
 
-	char data[10];
-	//while(UserKey.Read())
+	auto Data = Gyroscope.Read(0x0F, 1);
+
+	std::cout << "the length of Data vector: " << Data.size() << std::endl;
+	for(auto Byte : Data)
 	{
-		int res = i2cReadI2CBlockData(I2C_handle, 0x0F, data, 1);
-		std::cout << "I2C wrire result: " << res << std::endl;
-		GreenLED.Toggle();
-		gpioDelay(100000);
+		std::cout << Byte << ",";
 	}
+	std::cout << std::endl;
+	gpioDelay(1000);
 
 	std::cout << "Good bye!" << std::endl;
 
