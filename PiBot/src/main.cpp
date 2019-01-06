@@ -20,14 +20,23 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(2, PI_PUD_UP);
 	gpioSetPullUpDown(3, PI_PUD_UP);
 	I2C Gyroscope(I2C1, 0x6B);		// LSM9DS1 - Accelerometer and gyroscope
-	//I2C Magnetometer(I2C1, 0x1E);	// LSM9DS1 - Magnetic sensor
+	I2C Magnetometer(I2C1, 0x1E);	// LSM9DS1 - Magnetic sensor
 
 	auto Data = Gyroscope.Read(0x0F, 1);
-
 	std::cout << "the length of Data vector: " << Data.size() << std::endl;
 	for(auto Byte : Data)
 	{
-		std::cout << Byte << ",";
+		std::cout << std::hex << (int)Byte << ",";
+	}
+	std::cout << std::endl;
+
+	// the time between two devices readout is 0.14 ms
+
+	Data = Magnetometer.Read(0x0F, 1);
+	std::cout << "the length of Data vector: " << Data.size() << std::endl;
+	for(auto Byte : Data)
+	{
+		std::cout << std::hex << (int)Byte << ",";
 	}
 	std::cout << std::endl;
 	gpioDelay(1000);
