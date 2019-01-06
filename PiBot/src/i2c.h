@@ -20,6 +20,7 @@ public:
 	I2C(unsigned BusId, unsigned DeviceAddress);
 	~I2C();
 	std::vector<char> Read(unsigned address, unsigned length);
+	void Write(unsigned address, std::vector<char> data);
 
 private:
 	unsigned m_BusId;

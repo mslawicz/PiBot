@@ -37,9 +37,21 @@ I2C::~I2C()
 
 std::vector<char> I2C::Read(unsigned address, unsigned length)
 {
-
+	if(length > m_DataBufSize)
+	{
+		length = m_DataBufSize;
+		//TODO this improper scenario should be handled here
+	}
 	int NoOfBytes = i2cReadI2CBlockData(m_handle, address, m_pDataBuf, length);
 	std::vector<char> Data(m_pDataBuf, m_pDataBuf+NoOfBytes);
 	return Data;
 }
 
+void I2C::Write(unsigned address, std::vector<char> data)
+{
+	int result = i2cWriteI2CBlockData(m_handle, address, &data[0], data.size());
+	if(result)
+	{
+		//TODO write error handling
+	}
+}
