@@ -8,16 +8,6 @@
 #include <iostream>
 #include "gpio.h"
 
-void* myFunction(void* arg)
-{
-	static int counter = 0;
-	while(1)
-	{
-		std::cout << (char*)arg << " #" << counter++ << std::endl;
-		gpioDelay(1000000);
-	}
-}
-
 int main(int argc, char* argv[])
 {
 	GPIO::Initialize();
@@ -25,17 +15,25 @@ int main(int argc, char* argv[])
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO GreenLED(17, PI_OUTPUT);
 	GPIO UserKey(21, PI_INPUT, PI_PUD_UP);
-	pthread_t* pth;
-	pth = gpioStartThread(myFunction, (void*)"another thread: loop");
 
-	while(UserKey.Read())
+	gpioSetPullUpDown(2, PI_PUD_UP);
+	gpioSetPullUpDown(3, PI_PUD_UP);
+	int I2C_handle = i2cOpen(1, 0x56, 0);
+	std::cout << "I2C handle: " << I2C_handle << std::endl;
+
+	char data[] = {3, 5, 7};
+	//while(UserKey.Read())
 	{
+		int res = i2cWriteDevice(I2C_handle, data, sizeof(data));
+		std::cout << "I2C wrire result: " << res << std::endl;
 		GreenLED.Toggle();
-		gpioDelay(200000);
+		gpioDelay(100000);
 	}
 
-	gpioStopThread(pth);
 	std::cout << "Good bye!" << std::endl;
+
+
+
 	GPIO::Terminate();
 	return 0;
 }
