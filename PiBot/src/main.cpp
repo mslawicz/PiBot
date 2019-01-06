@@ -18,13 +18,13 @@ int main(int argc, char* argv[])
 
 	gpioSetPullUpDown(2, PI_PUD_UP);
 	gpioSetPullUpDown(3, PI_PUD_UP);
-	int I2C_handle = i2cOpen(1, 0x56, 0);
+	int I2C_handle = i2cOpen(1, 0x6B, 0);	//  LSM9DS1 - Accelerometer and gyroscope
 	std::cout << "I2C handle: " << I2C_handle << std::endl;
 
-	char data[] = {3, 5, 7};
+	char data[10];
 	//while(UserKey.Read())
 	{
-		int res = i2cWriteDevice(I2C_handle, data, sizeof(data));
+		int res = i2cReadI2CBlockData(I2C_handle, 0x0F, data, 1);
 		std::cout << "I2C wrire result: " << res << std::endl;
 		GreenLED.Toggle();
 		gpioDelay(100000);
