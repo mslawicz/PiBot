@@ -7,7 +7,6 @@
 
 #include "program.h"
 #include "gpio.h"
-#include <iostream>
 
 Program& Program::getInstance(void)
 {
@@ -19,7 +18,6 @@ Program& Program::getInstance(void)
 Program::~Program()
 {
 	GPIO::terminate();
-	std::cout << "Are you sure it works?" << std::endl;
 }
 
 void Program::initialize(void)
