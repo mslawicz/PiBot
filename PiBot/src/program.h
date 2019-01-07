@@ -13,13 +13,15 @@
 class Program
 {
 public:
-	static Program* instance(void);
-	static Program* pointer_to_object;
+	static Program& getInstance(void);
 	void initialize(void);
 	void terminate(void);
 	~Program();
+	// these two must be declared for prevention from copying a singleton object
+	Program(Program const&) = delete;
+	Program& operator=(Program const&) = delete;
 private:
-	// private constructor for getting a singleton feature
+	// private constructor prevents from more objects creation
 	Program() {}
 };
 

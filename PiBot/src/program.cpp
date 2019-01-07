@@ -7,19 +7,19 @@
 
 #include "program.h"
 #include "gpio.h"
+#include <iostream>
 
-Program* Program::instance(void)
+Program& Program::getInstance(void)
 {
-	if(pointer_to_object == nullptr)
-	{
-		pointer_to_object = new Program();
-	}
-	return pointer_to_object;
+	// instantiated on the first use and guaranteed to be destroyed
+	static Program instance;
+	return instance;
 }
 
 Program::~Program()
 {
 	GPIO::terminate();
+	std::cout << "Are you sure it works?" << std::endl;
 }
 
 void Program::initialize(void)

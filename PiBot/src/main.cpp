@@ -10,11 +10,9 @@
 #include "i2c.h"
 #include "program.h"
 
-Program* Program::pointer_to_object = nullptr;
-
 int main(int argc, char* argv[])
 {
-	Program::instance()->initialize();
+	Program::getInstance().initialize();
 
 
 	std::cout << "Hello from PiBot!" << std::endl;
@@ -53,7 +51,7 @@ int main(int argc, char* argv[])
 
 
 
-	Program::instance()->terminate();
+	Program::getInstance().terminate();
 	return 0;
 }
 
