@@ -8,8 +8,6 @@
 #include "program.h"
 #include "gpio.h"
 
-Program* Program::pointer_to_object = nullptr;
-
 Program* Program::instance(void)
 {
 	if(pointer_to_object == nullptr)
@@ -19,6 +17,11 @@ Program* Program::instance(void)
 	return pointer_to_object;
 }
 
+Program::~Program()
+{
+	GPIO::terminate();
+}
+
 void Program::initialize(void)
 {
 	GPIO::initialize();
@@ -26,5 +29,5 @@ void Program::initialize(void)
 
 void Program::terminate(void)
 {
-	GPIO::terminate();
+
 }

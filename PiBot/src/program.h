@@ -17,9 +17,10 @@ public:
 	static Program* pointer_to_object;
 	void initialize(void);
 	void terminate(void);
+	~Program();
 private:
 	// private constructor for getting a singleton feature
-	Program(void) {}
+	Program() {}
 };
 
 #endif /* SRC_PROGRAM_H_ */

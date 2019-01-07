@@ -10,6 +10,8 @@
 #include "i2c.h"
 #include "program.h"
 
+Program* Program::pointer_to_object = nullptr;
+
 int main(int argc, char* argv[])
 {
 	Program::instance()->initialize();
