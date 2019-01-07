@@ -20,7 +20,8 @@ Logger::~Logger()
 
 }
 
-void Logger::logEvent(void)
+void Logger::logEvent(MessageLevel level)
 {
-	std::cout << "I have logged an event" << std::endl;
+	std::cout << "I have logged an event with message level "<< level << std::endl;
+	//TODO use __PRETTY_FUNCTION__ to variable number of arguments
 }

@@ -19,6 +19,14 @@ enum ExitCode
 	MEMORY_ALLOCATION_ERROR
 };
 
+enum MessageLevel
+{
+	ERROR,
+	WARNING,
+	INFO,
+	DEBUG
+};
+
 // singleton class of logger
 // it provides necessary initializations
 class Logger
@@ -26,7 +34,7 @@ class Logger
 public:
 	static Logger& getInstance(void);
 	~Logger();
-	void logEvent(void);
+	void logEvent(MessageLevel level);
 	// these two must be declared for prevention from copying a singleton object
 	Logger(Logger const&) = delete;
 	Logger& operator=(Logger const&) = delete;

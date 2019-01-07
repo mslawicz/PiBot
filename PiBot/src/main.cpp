@@ -15,7 +15,8 @@ int main(int argc, char* argv[])
 {
 	Program::getInstance().initialize();
 
-	Logger::getInstance().logEvent();
+	Logger::getInstance().logEvent(ERROR);
+	Logger::getInstance().logEvent(INFO);
 	std::cout << "Hello from PiBot!" << std::endl;
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO GreenLED(17, PI_OUTPUT);
