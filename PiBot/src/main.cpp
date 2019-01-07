@@ -9,12 +9,13 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "program.h"
+#include "logger.h"
 
 int main(int argc, char* argv[])
 {
 	Program::getInstance().initialize();
 
-
+	Logger::getInstance().logEvent();
 	std::cout << "Hello from PiBot!" << std::endl;
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO GreenLED(17, PI_OUTPUT);
