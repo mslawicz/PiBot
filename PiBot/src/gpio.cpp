@@ -9,7 +9,7 @@
 #include "exit_codes.h"
 #include "gpio.h"
 
-void GPIO::Initialize(void)
+void GPIO::initialize(void)
 {
 	if(gpioInitialise() < 0)
 	{
@@ -17,13 +17,13 @@ void GPIO::Initialize(void)
 	}
 }
 
-void GPIO::Terminate(void)
+void GPIO::terminate(void)
 {
 	gpioTerminate();
 }
 
 GPIO::GPIO(unsigned gpio_number, unsigned mode, unsigned pull)
-	: m_gpio(gpio_number)
+	: gpio_number(gpio_number)
 {
 	auto result = gpioSetMode(gpio_number, mode);
 	if(result == PI_BAD_GPIO)

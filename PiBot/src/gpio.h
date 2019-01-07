@@ -13,15 +13,15 @@
 class GPIO
 {
 public:
-	static void Initialize(void);
-	static void Terminate(void);
+	static void initialize(void);
+	static void terminate(void);
 	GPIO(unsigned gpio_number, unsigned mode, unsigned pull = PI_PUD_OFF);
-	int Read(void) {return gpioRead(m_gpio);}
-	void Write(unsigned level) {gpioWrite(m_gpio, level);}
-	void Toggle(void) {gpioWrite(m_gpio, gpioRead(m_gpio) ^ 0x01);}
-	void Pulse(unsigned length, unsigned level) {gpioTrigger(m_gpio, length, level);}
+	int read(void) {return gpioRead(gpio_number);}
+	void write(unsigned level) {gpioWrite(gpio_number, level);}
+	void toggle(void) {gpioWrite(gpio_number, gpioRead(gpio_number) ^ 0x01);}
+	void pulse(unsigned length, unsigned level) {gpioTrigger(gpio_number, length, level);}
 private:
-	unsigned m_gpio;
+	unsigned gpio_number;
 };
 
 

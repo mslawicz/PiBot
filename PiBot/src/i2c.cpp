@@ -10,46 +10,46 @@
 #include "i2c.h"
 
 
-I2C::I2C(unsigned BusId, unsigned DeviceAddress)
-	: m_BusId(BusId)
-	, m_DeviceAddress(DeviceAddress)
+I2C::I2C(unsigned busId, unsigned deviceAddress)
+	: bus_id(busId)
+	, device_address(deviceAddress)
 {
-	m_pDataBuf = new char[m_DataBufSize];
-	if(m_pDataBuf == NULL)
+	p_data = new char[DataBufSize];
+	if(p_data == nullptr)
 	{
 		exit(ExitCode::MEMORY_ALLOCATION_ERROR);
 	}
-	m_handle = i2cOpen(BusId, DeviceAddress, 0);
+	handle = i2cOpen(busId, deviceAddress, 0);
 	// TODO: how to react to unsuccessfull opening?
 }
 
 I2C::~I2C()
 {
-	if(m_handle >= 0)
+	if(handle >= 0)
 	{
-		i2cClose(m_handle);
+		i2cClose(handle);
 	}
-	if(m_pDataBuf != NULL)
+	if(p_data != nullptr)
 	{
-		delete[] m_pDataBuf;
+		delete[] p_data;
 	}
 }
 
-std::vector<char> I2C::Read(unsigned address, unsigned length)
+std::vector<char> I2C::read(unsigned address, unsigned length)
 {
-	if(length > m_DataBufSize)
+	if(length > DataBufSize)
 	{
-		length = m_DataBufSize;
+		length = DataBufSize;
 		//TODO this improper scenario should be handled here
 	}
-	int NoOfBytes = i2cReadI2CBlockData(m_handle, address, m_pDataBuf, length);
-	std::vector<char> Data(m_pDataBuf, m_pDataBuf+NoOfBytes);
-	return Data;
+	int no_of_bytes = i2cReadI2CBlockData(handle, address, p_data, length);
+	std::vector<char> data(p_data, p_data+no_of_bytes);
+	return data;
 }
 
-void I2C::Write(unsigned address, std::vector<char> data)
+void I2C::write(unsigned address, std::vector<char> data)
 {
-	int result = i2cWriteI2CBlockData(m_handle, address, &data[0], data.size());
+	int result = i2cWriteI2CBlockData(handle, address, &data[0], data.size());
 	if(result)
 	{
 		//TODO write error handling

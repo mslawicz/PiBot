@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[])
 {
-	GPIO::Initialize();
+	GPIO::initialize();
 	std::cout << "Hello from PiBot!" << std::endl;
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO GreenLED(17, PI_OUTPUT);
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	I2C Gyroscope(I2C1, 0x6B);		// LSM9DS1 - Accelerometer and gyroscope
 	I2C Magnetometer(I2C1, 0x1E);	// LSM9DS1 - Magnetic sensor
 
-	auto Data = Gyroscope.Read(0x15, 9);
+	auto Data = Gyroscope.read(0x15, 9);
 	std::cout << "the length of Data vector: " << Data.size() << std::endl;
 	for(auto Byte : Data)
 	{
@@ -34,8 +34,8 @@ int main(int argc, char* argv[])
 	Data.clear();
 	Data.push_back(0xBA);
 	Data.push_back(0x40);
-	Magnetometer.Write(0x20, Data);
-	Data = Magnetometer.Read(0x20, 5);
+	Magnetometer.write(0x20, Data);
+	Data = Magnetometer.read(0x20, 5);
 	std::cout << "the length of Data vector: " << Data.size() << std::endl;
 	for(auto Byte : Data)
 	{
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 
 
 
-	GPIO::Terminate();
+	GPIO::terminate();
 	return 0;
 }
 
