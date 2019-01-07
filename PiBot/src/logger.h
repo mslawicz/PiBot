@@ -8,6 +8,17 @@
 #ifndef SRC_LOGGER_H_
 #define SRC_LOGGER_H_
 
+enum ExitCode
+{
+	OK,
+	GENERAL_ERROR,
+	SHELL_ERROR,
+	GPIO_INITIALIZATION_ERROR,
+	BAD_GPIO_NUMBER,
+	BAD_GPIO_MODE,
+	MEMORY_ALLOCATION_ERROR
+};
+
 // singleton class of logger
 // it provides necessary initializations
 class Logger

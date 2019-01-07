@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include "exit_codes.h"
+#include "logger.h"
 #include "i2c.h"
 
 

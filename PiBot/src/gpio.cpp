@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include "exit_codes.h"
+#include "logger.h"
 #include "gpio.h"
 
 void GPIO::initialize(void)
