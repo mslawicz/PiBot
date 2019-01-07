@@ -8,10 +8,13 @@
 #include <iostream>
 #include "gpio.h"
 #include "i2c.h"
+#include "program.h"
 
 int main(int argc, char* argv[])
 {
-	GPIO::initialize();
+	Program::instance()->initialize();
+
+
 	std::cout << "Hello from PiBot!" << std::endl;
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO GreenLED(17, PI_OUTPUT);
@@ -48,7 +51,7 @@ int main(int argc, char* argv[])
 
 
 
-	GPIO::terminate();
+	Program::instance()->terminate();
 	return 0;
 }
 
