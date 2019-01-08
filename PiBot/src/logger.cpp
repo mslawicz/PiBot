@@ -6,7 +6,6 @@
  */
 
 #include "logger.h"
-#include <iostream>
 
 Logger& Logger::getInstance(void)
 {
@@ -15,13 +14,13 @@ Logger& Logger::getInstance(void)
 	return instance;
 }
 
+Logger::Logger()
+{
+
+}
+
 Logger::~Logger()
 {
 
 }
 
-void Logger::logEvent(MessageLevel level)
-{
-	std::cout << "I have logged an event with message level "<< level << std::endl;
-	//TODO use __PRETTY_FUNCTION__ to variable number of arguments
-}

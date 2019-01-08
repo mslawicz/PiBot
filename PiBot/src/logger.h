@@ -8,6 +8,10 @@
 #ifndef SRC_LOGGER_H_
 #define SRC_LOGGER_H_
 
+#include<string>
+#include<iostream>
+#include<map>
+
 enum ExitCode
 {
 	OK,
@@ -34,13 +38,39 @@ class Logger
 public:
 	static Logger& getInstance(void);
 	~Logger();
-	void logEvent(MessageLevel level);
+
+	template<typename... Args> void logEvent(MessageLevel level, Args... args)
+	{
+		std::cout << MessageLevelText.find(level)->second.c_str() << ":";
+		takeNextArgument(args...);
+	}
+
 	// these two must be declared for prevention from copying a singleton object
 	Logger(Logger const&) = delete;
 	Logger& operator=(Logger const&) = delete;
+
 private:
+	const std::map<MessageLevel, std::string> MessageLevelText = {
+			{ERROR, "error"},
+			{WARNING, "warning"},
+			{INFO, "info"},
+			{DEBUG, "debug"}
+	};
+
 	// private constructor prevents from more objects creation
-	Logger() {}
+	Logger();
+
+	template<typename First, typename... Rest> void takeNextArgument(First arg0, Rest... args)
+	{
+	    std::cout << " " << arg0;
+	    takeNextArgument(args...);
+	}
+
+	void takeNextArgument()
+	    {
+	        std::cout << std::endl;
+	    }
+
 };
 
 #endif /* SRC_LOGGER_H_ */
