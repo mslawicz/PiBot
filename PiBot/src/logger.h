@@ -10,6 +10,7 @@
 
 #include<string>
 #include<iostream>
+#include<sstream>
 #include<map>
 
 enum ExitCode
@@ -41,7 +42,8 @@ public:
 
 	template<typename... Args> void logEvent(MessageLevel level, Args... args)
 	{
-		std::cout << MessageLevelText.find(level)->second.c_str() << ":";
+		message.str(std::string());
+		message << MessageLevelText.find(level)->second.c_str() << ":";
 		takeNextArgument(args...);
 	}
 
@@ -57,20 +59,23 @@ private:
 			{DEBUG, "debug"}
 	};
 
+	std::stringstream message;
+
 	// private constructor prevents from more objects creation
 	Logger();
 
 	template<typename First, typename... Rest> void takeNextArgument(First arg0, Rest... args)
 	{
-	    std::cout << " " << arg0;
+		message << " " << arg0;
 	    takeNextArgument(args...);
 	}
 
 	void takeNextArgument()
 	    {
-	        std::cout << std::endl;
+			sendMessage(message.str());
 	    }
 
+	void sendMessage(std::string message);
 };
 
 #endif /* SRC_LOGGER_H_ */

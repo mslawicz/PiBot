@@ -24,3 +24,10 @@ Logger::~Logger()
 
 }
 
+void Logger::sendMessage(std::string message)
+{
+	//TODO: time stamp and sinks
+
+	// temporary console sink
+	std::cout << message << std::endl;
+}
