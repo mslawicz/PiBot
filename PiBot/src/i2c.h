@@ -17,7 +17,7 @@
 class I2C
 {
 public:
-	I2C(unsigned BusId, unsigned DeviceAddress);
+	I2C(unsigned busId, unsigned deviceAddress);
 	~I2C();
 	std::vector<char> read(unsigned address, unsigned length);
 	void write(unsigned address, std::vector<char> data);

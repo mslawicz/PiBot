@@ -15,9 +15,7 @@ int main(int argc, char* argv[])
 {
 	Program::getInstance().initialize();
 
-	Logger::getInstance().logEvent(ERROR, 1, 2, 3);
-	Logger::getInstance().logEvent(INFO, 100, 0.12345, "qwerty");
-	std::cout << "Hello from PiBot!" << std::endl;
+
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO GreenLED(17, PI_OUTPUT);
 	GPIO UserKey(21, PI_INPUT, PI_PUD_UP);
@@ -49,7 +47,7 @@ int main(int argc, char* argv[])
 	std::cout << std::endl;
 	gpioDelay(1000);
 
-	std::cout << "Good bye!" << std::endl;
+
 
 
 

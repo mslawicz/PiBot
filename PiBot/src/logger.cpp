@@ -7,6 +7,9 @@
 
 #include "logger.h"
 
+/*
+ * get instance of the logger singleton object
+ */
 Logger& Logger::getInstance(void)
 {
 	// instantiated on the first use and guaranteed to be destroyed
@@ -24,6 +27,9 @@ Logger::~Logger()
 
 }
 
+/*
+ * logger output sink handler
+ */
 void Logger::sendMessage(std::string message)
 {
 	//TODO: time stamp and sinks

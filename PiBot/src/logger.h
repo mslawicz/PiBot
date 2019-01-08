@@ -13,6 +13,7 @@
 #include<sstream>
 #include<map>
 
+// definition of program exit codes
 enum ExitCode
 {
 	OK,
@@ -24,6 +25,7 @@ enum ExitCode
 	MEMORY_ALLOCATION_ERROR
 };
 
+// definition of logged messages severity level
 enum MessageLevel
 {
 	ERROR,
@@ -40,6 +42,10 @@ public:
 	static Logger& getInstance(void);
 	~Logger();
 
+	/*
+	 * log an event
+	 * any number of arguments can be provided
+	 */
 	template<typename... Args> void logEvent(MessageLevel level, Args... args)
 	{
 		message.str(std::string());
@@ -52,6 +58,7 @@ public:
 	Logger& operator=(Logger const&) = delete;
 
 private:
+	// map for printing message levels
 	const std::map<MessageLevel, std::string> MessageLevelText = {
 			{ERROR, "error"},
 			{WARNING, "warning"},
@@ -64,12 +71,18 @@ private:
 	// private constructor prevents from more objects creation
 	Logger();
 
+	/*
+	 * put next argument into stream
+	 */
 	template<typename First, typename... Rest> void takeNextArgument(First arg0, Rest... args)
 	{
 		message << " " << arg0;
 	    takeNextArgument(args...);
 	}
 
+	/*
+	 * conclusion of the message stream formatting; it calls logger sink handler
+	 */
 	void takeNextArgument()
 	    {
 			sendMessage(message.str());
