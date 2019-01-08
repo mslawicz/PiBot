@@ -6,7 +6,6 @@
  */
 
 #include "program.h"
-#include "logger.h"
 #include "gpio.h"
 
 /*
@@ -38,9 +37,17 @@ void Program::initialize(void)
 
 /*
  * program termination function
- * it should be called just before return or exit()
+ * it should be called always on exiting
+ * it calls exit() when an exit code is provided
  */
-void Program::terminate(void)
+void Program::terminate(ExitCode exitCode)
 {
 	Logger::getInstance().logEvent(INFO, "PiBot terminating");
+
+	//TODO: save log to file here
+
+	if (exitCode != ExitCode::OK)
+	{
+		exit(exitCode);
+	}
 }

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "logger.h"
 #include "i2c.h"
+#include "program.h"
 
 
 I2C::I2C(unsigned busId, unsigned deviceAddress)
@@ -17,7 +18,7 @@ I2C::I2C(unsigned busId, unsigned deviceAddress)
 	p_data = new char[DataBufSize];
 	if(p_data == nullptr)
 	{
-		exit(ExitCode::MEMORY_ALLOCATION_ERROR);
+		Program::getInstance().terminate(MEMORY_ALLOCATION_ERROR);
 	}
 	handle = i2cOpen(busId, deviceAddress, 0);
 	// TODO: how to react to unsuccessfull opening?

@@ -8,12 +8,13 @@
 #include <stdlib.h>
 #include "logger.h"
 #include "gpio.h"
+#include "program.h"
 
 void GPIO::initialize(void)
 {
 	if(gpioInitialise() < 0)
 	{
-		exit(ExitCode::GPIO_INITIALIZATION_ERROR);
+		Program::getInstance().terminate(GPIO_INITIALIZATION_ERROR);
 	}
 }
 
@@ -28,11 +29,11 @@ GPIO::GPIO(unsigned gpio_number, unsigned mode, unsigned pull)
 	auto result = gpioSetMode(gpio_number, mode);
 	if(result == PI_BAD_GPIO)
 	{
-		exit(ExitCode::BAD_GPIO_NUMBER);
+		Program::getInstance().terminate(BAD_GPIO_NUMBER);
 	}
 	if(result == PI_BAD_MODE)
 	{
-		exit(ExitCode::BAD_GPIO_MODE);
+		Program::getInstance().terminate(BAD_GPIO_MODE);
 	}
 	gpioSetPullUpDown(gpio_number, pull);
 }

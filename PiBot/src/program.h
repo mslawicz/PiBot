@@ -8,6 +8,8 @@
 #ifndef SRC_PROGRAM_H_
 #define SRC_PROGRAM_H_
 
+#include "logger.h"
+
 // singleton class of this program
 // it provides necessary initializations
 class Program
@@ -15,7 +17,7 @@ class Program
 public:
 	static Program& getInstance(void);
 	void initialize(void);
-	void terminate(void);
+	void terminate(ExitCode exitCode = ExitCode::OK);
 	~Program();
 	// these two must be declared for prevention from copying a singleton object
 	Program(Program const&) = delete;
