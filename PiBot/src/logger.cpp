@@ -19,7 +19,7 @@ Logger& Logger::getInstance(void)
 
 Logger::Logger()
 {
-
+	levelThreshold = MessageLevel::ERROR;
 }
 
 Logger::~Logger()

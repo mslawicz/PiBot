@@ -49,9 +49,12 @@ public:
 	 */
 	template<typename... Args> void logEvent(MessageLevel level, Args... args)
 	{
-		message.str(std::string());
-		message << MessageLevelText.find(level)->second.c_str() << ": ";
-		takeNextArgument(args...);
+		if(level <= levelThreshold)
+		{
+			message.str(std::string());
+			message << MessageLevelText.find(level)->second.c_str() << ": ";
+			takeNextArgument(args...);
+		}
 	}
 
 	// these two must be declared for prevention from copying a singleton object
@@ -69,6 +72,9 @@ private:
 	};
 
 	std::stringstream message;
+
+	// logger message level threshold
+	MessageLevel levelThreshold;
 
 	// private constructor prevents from more objects creation
 	Logger();
