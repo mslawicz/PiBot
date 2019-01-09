@@ -28,6 +28,7 @@ enum ExitCode
 // definition of logged messages severity level
 enum MessageLevel
 {
+	NONE,
 	ERROR,
 	WARNING,
 	INFO,
@@ -49,7 +50,7 @@ public:
 	template<typename... Args> void logEvent(MessageLevel level, Args... args)
 	{
 		message.str(std::string());
-		message << MessageLevelText.find(level)->second.c_str() << ":";
+		message << MessageLevelText.find(level)->second.c_str() << ": ";
 		takeNextArgument(args...);
 	}
 
@@ -60,6 +61,7 @@ public:
 private:
 	// map for printing message levels
 	const std::map<MessageLevel, std::string> MessageLevelText = {
+			{NONE, "none"},
 			{ERROR, "error"},
 			{WARNING, "warning"},
 			{INFO, "info"},
@@ -76,7 +78,7 @@ private:
 	 */
 	template<typename First, typename... Rest> void takeNextArgument(First arg0, Rest... args)
 	{
-		message << " " << arg0;
+		message << arg0;
 	    takeNextArgument(args...);
 	}
 

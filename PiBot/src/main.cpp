@@ -13,6 +13,8 @@
 
 int main(int argc, char* argv[])
 {
+	Logger::getInstance().logEvent(INFO, "PiBot started");
+	Program::getInstance().parseArguments(argc, argv);
 	Program::getInstance().initialize();
 
 

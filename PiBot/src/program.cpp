@@ -31,7 +31,6 @@ Program::~Program()
  */
 void Program::initialize(void)
 {
-	Logger::getInstance().logEvent(INFO, "PiBot started");
 	GPIO::initialize();
 }
 
@@ -42,7 +41,14 @@ void Program::initialize(void)
  */
 void Program::terminate(ExitCode exitCode)
 {
-	Logger::getInstance().logEvent(INFO, "PiBot terminating");
+	if (exitCode == ExitCode::OK)
+	{
+		Logger::getInstance().logEvent(INFO, "PiBot is shutting down");
+	}
+	else
+	{
+		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode);
+	}
 
 	//TODO: save log to file here
 
@@ -60,6 +66,7 @@ void Program::parseArguments(int argc, char* argv[])
 {
     std::string currentOptionName;
     std::vector<std::string> currentOptionParameters;
+    std::stringstream logStream;
     // iterate through all program arguments (skip argument #0)
     for (int argNo = 1; argNo < argc; argNo++)
     {
@@ -70,25 +77,31 @@ void Program::parseArguments(int argc, char* argv[])
             {
                 // its not the first option, so store the previous one
                 options[currentOptionName] = currentOptionParameters;
+                Logger::getInstance().logEvent(INFO, "Program parameter parsed: ", logStream.str().c_str());
                 currentOptionName.clear();
                 currentOptionParameters.clear();
+                logStream.str(std::string());
             }
+            // the name of current option
             currentOptionName = argv[argNo];
+            logStream << currentOptionName;
         }
         else
         {
-            // if not an option than it is a parameter
+            // it's not an option,  it is a parameter
             if (!currentOptionName.empty())
             {
                 // this condition skips everything until the first option
                 currentOptionParameters.push_back(argv[argNo]);
+                logStream << ' ' << argv[argNo];
             }
         }
     }
+    // store the very last option if exists
     if (!currentOptionName.empty())
     {
-        // store the very last option
         options[currentOptionName] = currentOptionParameters;
+        Logger::getInstance().logEvent(INFO, "Program parameter parsed: ", logStream.str().c_str());
     }
 }
 

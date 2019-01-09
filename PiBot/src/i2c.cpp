@@ -5,8 +5,8 @@
  *      Author: Marcin
  */
 
-#include "logger.h"
 #include "i2c.h"
+#include "logger.h"
 #include "program.h"
 #include <stdlib.h>
 
@@ -21,7 +21,14 @@ I2C::I2C(unsigned busId, unsigned deviceAddress)
 		Program::getInstance().terminate(MEMORY_ALLOCATION_ERROR);
 	}
 	handle = i2cOpen(busId, deviceAddress, 0);
-	// TODO: how to react to unsuccessfull opening?
+	if(handle >= 0)
+	{
+		Logger::getInstance().logEvent(INFO, "I2C device opened: bus=", busId, ", address=0x", std::hex, deviceAddress);
+	}
+	else
+	{
+		// TODO: how to react to unsuccessful opening?
+	}
 }
 
 I2C::~I2C()
