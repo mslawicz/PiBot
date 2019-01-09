@@ -5,11 +5,11 @@
  *      Author: Marcin
  */
 
-#include <iostream>
 #include "gpio.h"
 #include "i2c.h"
 #include "program.h"
 #include "logger.h"
+#include <iostream>
 
 int main(int argc, char* argv[])
 {

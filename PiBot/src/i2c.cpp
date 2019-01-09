@@ -5,10 +5,10 @@
  *      Author: Marcin
  */
 
-#include <stdlib.h>
 #include "logger.h"
 #include "i2c.h"
 #include "program.h"
+#include <stdlib.h>
 
 
 I2C::I2C(unsigned busId, unsigned deviceAddress)

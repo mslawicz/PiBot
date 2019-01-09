@@ -5,10 +5,10 @@
  *      Author: Marcin
  */
 
-#include <stdlib.h>
 #include "logger.h"
 #include "gpio.h"
 #include "program.h"
+#include <stdlib.h>
 
 void GPIO::initialize(void)
 {

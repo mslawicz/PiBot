@@ -11,8 +11,8 @@
 #define I2C0	0
 #define I2C1	1
 
-#include <vector>
 #include <pigpio.h>
+#include <vector>
 
 class I2C
 {
