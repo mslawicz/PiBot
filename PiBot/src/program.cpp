@@ -51,3 +51,44 @@ void Program::terminate(ExitCode exitCode)
 		exit(exitCode);
 	}
 }
+
+/*
+ * parses main program arguments
+ * creates a map of argument name and vector of argument's parameters
+ */
+void Program::parseArguments(int argc, char* argv[])
+{
+    std::string currentOptionName;
+    std::vector<std::string> currentOptionParameters;
+    // iterate through all program arguments (skip argument #0)
+    for (int argNo = 1; argNo < argc; argNo++)
+    {
+        if (argv[argNo][0] == '-')
+        {
+            // program option found
+            if (!currentOptionName.empty())
+            {
+                // its not the first option, so store the previous one
+                options[currentOptionName] = currentOptionParameters;
+                currentOptionName.clear();
+                currentOptionParameters.clear();
+            }
+            currentOptionName = argv[argNo];
+        }
+        else
+        {
+            // if not an option than it is a parameter
+            if (!currentOptionName.empty())
+            {
+                // this condition skips everything until the first option
+                currentOptionParameters.push_back(argv[argNo]);
+            }
+        }
+    }
+    if (!currentOptionName.empty())
+    {
+        // store the very last option
+        options[currentOptionName] = currentOptionParameters;
+    }
+}
+

@@ -9,6 +9,8 @@
 #define SRC_PROGRAM_H_
 
 #include "logger.h"
+#include <vector>
+#include <map>
 
 // singleton class of this program
 // it provides necessary initializations
@@ -22,9 +24,11 @@ public:
 	// these two must be declared for prevention from copying a singleton object
 	Program(Program const&) = delete;
 	Program& operator=(Program const&) = delete;
+	void parseArguments(int argc, char* argv[]);
 private:
 	// private constructor prevents from more objects creation
 	Program() {}
+	std::map<std::string, std::vector<std::string>> options;
 };
 
 #endif /* SRC_PROGRAM_H_ */
