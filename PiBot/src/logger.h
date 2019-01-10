@@ -8,10 +8,12 @@
 #ifndef SRC_LOGGER_H_
 #define SRC_LOGGER_H_
 
-#include<string>
-#include<iostream>
-#include<sstream>
-#include<map>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <map>
+#include <chrono>
+#include <iomanip>
 
 // definition of program exit codes
 enum ExitCode
@@ -52,8 +54,15 @@ public:
 		if(level <= levelThreshold)
 		{
 			message.str(std::string());
-			message << MessageLevelText.find(level)->second.c_str() << ": ";
+			auto now = std::chrono::system_clock::now();
+			auto time = std::chrono::system_clock::to_time_t(now);
+			auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) - std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
+			message << std::put_time(std::localtime(&time), "%H:%M:%S.");
+			message << std::setw(3) << std::setfill('0') << milliseconds.count() << "->";
+			message << MessageLevelText.find(level)->second.c_str() << "->";
 			takeNextArgument(args...);
+			// restore default stream manipulators
+			message << std::dec;
 		}
 	}
 
