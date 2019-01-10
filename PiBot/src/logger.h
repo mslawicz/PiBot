@@ -24,7 +24,8 @@ enum ExitCode
 	GPIO_INITIALIZATION_ERROR,
 	BAD_GPIO_NUMBER,
 	BAD_GPIO_MODE,
-	MEMORY_ALLOCATION_ERROR
+	MEMORY_ALLOCATION_ERROR,
+	HELP_REQUEST
 };
 
 // definition of logged messages severity level

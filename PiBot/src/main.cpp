@@ -52,7 +52,6 @@ int main(int argc, char* argv[])
 
 
 
-
 	Program::getInstance().terminate();
 	return 0;
 }

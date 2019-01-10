@@ -25,9 +25,12 @@ public:
 	Program(Program const&) = delete;
 	Program& operator=(Program const&) = delete;
 	void parseArguments(int argc, char* argv[]);
+	// checks if this option is provided in program arguments
+	bool isOptionProvided(std::string option) {return options.find(option) != options.end();}
 private:
 	// private constructor prevents from more objects creation
 	Program() {}
+	void displayHelp(void);
 	std::map<std::string, std::vector<std::string>> options;
 };
 
