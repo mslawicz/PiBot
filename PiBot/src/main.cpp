@@ -12,19 +12,29 @@
 #include <iostream>
 #include <unistd.h>
 
+struct EncoderData
+{
+	uint32_t noOfPulses;
+	uint32_t ticks;
+};
+
 GPIO* pResult;
 uint32_t g_bitMask;
+EncoderData myEncoderData;
 
 // a pointer to encoder sampling function
-void (*samplingFunc)(const gpioSample_t* sampleArray, int noOfSamples) = nullptr;
+void (*samplingFunc)(const gpioSample_t* sampleArray, int noOfSamples, void* userData) = nullptr;
 
 // this function is called every 1 ms
-void encoderSamples(const gpioSample_t* sampleArray, int noOfSamples)
+void encoderSamples(const gpioSample_t* sampleArray, int noOfSamples, void* userData)
 {
 	static unsigned int counter = 0;
-	static int lastTick = 0;
+	static uint32_t lastTick = 0;
 	static uint32_t lastLevel = 0;
-
+	unsigned int pulses = 0;
+	uint32_t lastDeltaTicks = 0;
+	// user data passed to this function casted to encoder structure
+	EncoderData* pEncoderData = (EncoderData*)userData;
 	pResult->toggle();
 	counter++;
 	// this condition is for printing only from time to time
@@ -39,16 +49,21 @@ void encoderSamples(const gpioSample_t* sampleArray, int noOfSamples)
 			{
 				// if encoder bit changes 0->1
 				// then print the number of ticks (us) elapsed since the previous low-to-high edge
-				std::cout << std::dec << std::setw(11) << sampleArray[k].tick - lastTick << ",";
+				lastDeltaTicks = sampleArray[k].tick - lastTick;
+				std::cout << std::dec << std::setw(11) << lastDeltaTicks << ",";
 				// and remember the current tick state
 				lastTick = sampleArray[k].tick;
-
+				// count pulses in this period
+				pulses++;
 			}
 			// remember the level of every sample to be able to recognize a rising edge
 			lastLevel = sampleArray[k].level;
 		}
 
 		std::cout << std::endl;
+		//store latest encoder data to user data structure
+		pEncoderData->noOfPulses = pulses;
+		pEncoderData->ticks = lastDeltaTicks;
 	}
 }
 
@@ -78,13 +93,15 @@ int main(int argc, char* argv[])
 
 	// pointer to sampling functions gets the function address
 	samplingFunc = encoderSamples;
-	gpioSetGetSamplesFunc(samplingFunc, g_bitMask);
+	// using extended version of the function to pass some user data
+	gpioSetGetSamplesFuncEx(samplingFunc, g_bitMask, &myEncoderData);
 
 //	while (userKey.read())
 //	{
 //
 //	}
 	sleep(5);
+	std::cout << "last encoder data:   period=" << myEncoderData.ticks << "us,  number of pulses=" << myEncoderData.noOfPulses << std::endl;
 
 
 	delete pResult;
