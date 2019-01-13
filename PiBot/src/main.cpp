@@ -20,12 +20,12 @@ struct EncoderData
 
 GPIO* pResult;
 uint32_t g_bitMask;
-EncoderData myEncoderData;
 
 class Encoder
 {
 public:
 	static void encoderSamples(const gpioSample_t* sampleArray, int noOfSamples, void* userData);
+	static std::vector<EncoderData> encoderData;
 };
 
 // a pointer to encoder sampling function
@@ -39,8 +39,8 @@ void Encoder::encoderSamples(const gpioSample_t* sampleArray, int noOfSamples, v
 	static uint32_t lastLevel = 0;
 	unsigned int pulses = 0;
 	uint32_t lastDeltaTicks = 0;
-	// user data passed to this function casted to encoder structure
-	EncoderData* pEncoderData = (EncoderData*)userData;
+	std::vector<EncoderData>* pEncoderData = (std::vector<EncoderData>*)userData;
+
 	pResult->toggle();
 	counter++;
 	// this condition is for printing only from time to time
@@ -68,10 +68,13 @@ void Encoder::encoderSamples(const gpioSample_t* sampleArray, int noOfSamples, v
 
 		std::cout << std::endl;
 		//store latest encoder data to user data structure
-		pEncoderData->noOfPulses = pulses;
-		pEncoderData->ticks = lastDeltaTicks;
+		(*pEncoderData)[0].noOfPulses = pulses;
+		(*pEncoderData)[0].ticks = lastDeltaTicks;
 	}
 }
+
+// static member variable must be globally defined
+std::vector<EncoderData> Encoder::encoderData;
 
 int main(int argc, char* argv[])
 {
@@ -99,15 +102,18 @@ int main(int argc, char* argv[])
 
 	// pointer to sampling functions gets the function address
 	samplingFunc = Encoder::encoderSamples;
+	// add an alement to data vector (normally it hould be done by constructor of encoder object
+	EncoderData aParticularEncoderData;
+	Encoder::encoderData.push_back(aParticularEncoderData);
 	// using extended version of the function to pass some user data
-	gpioSetGetSamplesFuncEx(samplingFunc, g_bitMask, &myEncoderData);
+	gpioSetGetSamplesFuncEx(samplingFunc, g_bitMask, (void*)(&Encoder::encoderData));
 
 //	while (userKey.read())
 //	{
 //
 //	}
 	sleep(5);
-	std::cout << "last encoder data:   period=" << myEncoderData.ticks << "us,  number of pulses=" << myEncoderData.noOfPulses << std::endl;
+	std::cout << "last encoder data:   period=" << Encoder::encoderData[0].ticks << "us,  number of pulses=" << Encoder::encoderData[0].noOfPulses << std::endl;
 
 
 	delete pResult;
