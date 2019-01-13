@@ -10,12 +10,16 @@
 #include "program.h"
 #include "logger.h"
 #include <iostream>
+#include <unistd.h>
 
 GPIO* pResult;
 uint32_t g_bitMask;
 
+// a pointer to encoder sampling function
+void (*samplingFunc)(const gpioSample_t* sampleArray, int noOfSamples) = nullptr;
+
 // this function is called every 1 ms
-void samplingFunc(const gpioSample_t* sampleArray, int noOfSamples)
+void encoderSamples(const gpioSample_t* sampleArray, int noOfSamples)
 {
 	static unsigned int counter = 0;
 	static int lastTick = 0;
@@ -71,13 +75,16 @@ int main(int argc, char* argv[])
 	gpioPWM(6, 64);
 	GPIO samplePort(12, PI_INPUT);
 	g_bitMask = 1 << 12;
+
+	// pointer to sampling functions gets the function address
+	samplingFunc = encoderSamples;
 	gpioSetGetSamplesFunc(samplingFunc, g_bitMask);
 
-	while (userKey.read())
-	{
-
-	}
-
+//	while (userKey.read())
+//	{
+//
+//	}
+	sleep(5);
 
 
 	delete pResult;
