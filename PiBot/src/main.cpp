@@ -22,11 +22,17 @@ GPIO* pResult;
 uint32_t g_bitMask;
 EncoderData myEncoderData;
 
+class Encoder
+{
+public:
+	static void encoderSamples(const gpioSample_t* sampleArray, int noOfSamples, void* userData);
+};
+
 // a pointer to encoder sampling function
 void (*samplingFunc)(const gpioSample_t* sampleArray, int noOfSamples, void* userData) = nullptr;
 
 // this function is called every 1 ms
-void encoderSamples(const gpioSample_t* sampleArray, int noOfSamples, void* userData)
+void Encoder::encoderSamples(const gpioSample_t* sampleArray, int noOfSamples, void* userData)
 {
 	static unsigned int counter = 0;
 	static uint32_t lastTick = 0;
@@ -92,7 +98,7 @@ int main(int argc, char* argv[])
 	g_bitMask = 1 << 12;
 
 	// pointer to sampling functions gets the function address
-	samplingFunc = encoderSamples;
+	samplingFunc = Encoder::encoderSamples;
 	// using extended version of the function to pass some user data
 	gpioSetGetSamplesFuncEx(samplingFunc, g_bitMask, &myEncoderData);
 
