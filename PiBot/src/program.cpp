@@ -39,6 +39,47 @@ void Program::initialize(void)
 		displayHelp();
 		terminate(HELP_REQUEST);
 	}
+
+	if (isOptionProvided("-s"))
+	{
+		// logger sinks declaration
+		auto params = options.find("-s")->second;
+		for (auto param : params)
+		{
+			if (!param.empty())
+			{
+				Logger::getInstance().addSink(param[0]);
+			}
+		}
+	}
+
+	if (isOptionProvided("-l"))
+	{
+		// logger severity threshold declaration
+		auto params = options.find("-l")->second;
+		if (!params.empty())
+		{
+			// there's at least one parameter defined
+			if (params[0] == "none")
+			{
+				Logger::getInstance().setLevelThreshold(MessageLevel::NONE);
+			}
+			else if (params[0] == "warning")
+			{
+				Logger::getInstance().setLevelThreshold(MessageLevel::WARNING);
+			}
+			else if (params[0] == "info")
+			{
+				Logger::getInstance().setLevelThreshold(MessageLevel::INFO);
+			}
+			else if (params[0] == "debug")
+			{
+				Logger::getInstance().setLevelThreshold(MessageLevel::DEBUG);
+			}
+		}
+
+	}
+
 	GPIO::initialize();
 }
 
@@ -130,7 +171,8 @@ void Program::displayHelp(void)
 	// vector of help info strings
 	const std::vector<std::pair<std::string, std::string>> HelpInfoTexts = {
 		{"-h | --help", "display help"},
-		{"-l", "set log severity threshold"}
+		{"-l", "set log severity threshold: none | error | warning | info | debug"},
+		{"-s", "define logger sinks: console, display"}
 	};
 
 	for (auto line : HelpInfoTexts)

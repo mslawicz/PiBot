@@ -14,6 +14,7 @@
 #include <map>
 #include <chrono>
 #include <iomanip>
+#include <set>
 
 // definition of program exit codes
 enum ExitCode
@@ -71,6 +72,16 @@ public:
 	Logger(Logger const&) = delete;
 	Logger& operator=(Logger const&) = delete;
 
+	/*
+	 * adds a sink to sinks set
+	 */
+	void addSink(char sink) { sinks.insert(sink); }
+
+	/*
+	 * sets logger level threshold
+	 */
+	void setLevelThreshold(MessageLevel level) { levelThreshold = level; }
+
 private:
 	// map for printing message levels
 	const std::map<MessageLevel, std::string> MessageLevelText = {
@@ -85,6 +96,9 @@ private:
 
 	// logger message level threshold
 	MessageLevel levelThreshold;
+
+	// sink container
+	std::set<char> sinks;
 
 	// private constructor prevents from more objects creation
 	Logger();

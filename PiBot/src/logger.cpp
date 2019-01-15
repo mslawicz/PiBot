@@ -19,7 +19,8 @@ Logger& Logger::getInstance(void)
 
 Logger::Logger()
 {
-	levelThreshold = MessageLevel::INFO;
+	// default logger level threshold
+	levelThreshold = MessageLevel::ERROR;
 }
 
 Logger::~Logger()
@@ -32,8 +33,8 @@ Logger::~Logger()
  */
 void Logger::sendMessage(std::string message)
 {
-	//TODO: time stamp and sinks
-
-	// temporary console sink
-	std::cout << message << std::endl;
+	if(sinks.find('c') != sinks.end())
+	{
+		std::cout << message << std::endl;
+	}
 }
