@@ -12,7 +12,7 @@ GPIO GreenLED(23, PI_OUTPUT);
 Drive::Drive()
 {
 	pInterruptSignal = new GPIO(13, PI_INPUT, PI_PUD_UP);
-	gpioSetISRFunc(13, FALLING_EDGE, 0, Drive::gyroInterruptCallback);
+	gpioSetISRFuncEx(13, FALLING_EDGE, 0, Drive::gyroInterruptCallback, this);
 	GreenLED.write(1);
 }
 
@@ -22,7 +22,7 @@ Drive::~Drive()
 	GreenLED.write(0);
 }
 
-void Drive::gyroInterruptCallback(int gpio, int level, uint32_t tick)
+void Drive::gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDrive)
 {
 	GreenLED.toggle();
 

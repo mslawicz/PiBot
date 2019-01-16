@@ -17,7 +17,7 @@ public:
 	~Drive();
 	void init(unsigned int ledValue);
 private:
-	static void gyroInterruptCallback(int gpio, int level, uint32_t tick);
+	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDrive);
 	GPIO* pInterruptSignal;	// for test only
 };
 
