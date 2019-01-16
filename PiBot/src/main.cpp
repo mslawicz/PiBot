@@ -9,6 +9,7 @@
 #include "i2c.h"
 #include "program.h"
 #include "logger.h"
+#include "drive.h"	//XXX for test
 #include <iostream>
 
 int main(int argc, char* argv[])
@@ -19,8 +20,8 @@ int main(int argc, char* argv[])
 
 
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
-	GPIO GreenLED(17, PI_OUTPUT);
 	GPIO UserKey(21, PI_INPUT, PI_PUD_UP);
+	//GPIO GreenLED(23, PI_OUTPUT);
 
 	gpioSetPullUpDown(2, PI_PUD_UP);
 	gpioSetPullUpDown(3, PI_PUD_UP);
@@ -47,7 +48,11 @@ int main(int argc, char* argv[])
 		std::cout << std::hex << (int)Byte << ",";
 	}
 	std::cout << std::endl;
+
+	//GreenLED.write(1);
+	Drive testDrive;
 	while(UserKey.read());
+	//gpioDelay(1000);
 
 
 
