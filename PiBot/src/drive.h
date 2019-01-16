@@ -15,10 +15,10 @@ class Drive
 public:
 	Drive();
 	~Drive();
-	void init(unsigned int ledValue);
 private:
-	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDrive);
-	GPIO* pInterruptSignal;	// for test only
+	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pObject);
+	GPIO* pGyroInterruptPort;
+	GPIO* pGreenLED;	// for test only
 };
 
 #endif /* SRC_DRIVE_H_ */
