@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 		std::cout << std::hex << (int)Byte << ",";
 	}
 	std::cout << std::endl;
-	gpioDelay(1000);
+	while(UserKey.read());
 
 
 

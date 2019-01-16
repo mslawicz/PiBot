@@ -8,6 +8,8 @@
 #ifndef SRC_DRIVE_H_
 #define SRC_DRIVE_H_
 
+#include "gpio.h"
+
 class Drive
 {
 public:
