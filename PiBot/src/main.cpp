@@ -23,25 +23,12 @@ int main(int argc, char* argv[])
 	GPIO UserKey(21, PI_INPUT, PI_PUD_UP);
 	//GPIO GreenLED(23, PI_OUTPUT);
 
-	gpioSetPullUpDown(2, PI_PUD_UP);
-	gpioSetPullUpDown(3, PI_PUD_UP);
-	I2C Gyroscope(I2C1, 0x6B);		// LSM9DS1 - Accelerometer and gyroscope
+	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
+	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
+
 	I2C Magnetometer(I2C1, 0x1E);	// LSM9DS1 - Magnetic sensor
 
-	auto Data = Gyroscope.read(0x15, 9);
-	std::cout << "the length of Data vector: " << Data.size() << std::endl;
-	for(auto Byte : Data)
-	{
-		std::cout << std::hex << (int)Byte << ",";
-	}
-	std::cout << std::endl;
-
-	// the time between two devices readout is 0.14 ms
-	Data.clear();
-	Data.push_back(0xBA);
-	Data.push_back(0x40);
-	Magnetometer.write(0x20, Data);
-	Data = Magnetometer.read(0x20, 5);
+	auto Data = Magnetometer.read(0x20, 5);
 	std::cout << "the length of Data vector: " << Data.size() << std::endl;
 	for(auto Byte : Data)
 	{

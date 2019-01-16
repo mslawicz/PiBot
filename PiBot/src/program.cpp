@@ -99,7 +99,8 @@ void Program::terminate(ExitCode exitCode)
 		{BAD_GPIO_NUMBER, "Bad GPIO number"},
 		{BAD_GPIO_MODE, "Bad GPIO mode"},
 		{MEMORY_ALLOCATION_ERROR, "Memory allocation error"},
-		{HELP_REQUEST, "Program help requested"}
+		{HELP_REQUEST, "Program help requested"},
+		{I2C_NOT_OPENED, "I2C opening error"}
 	};
 
 	if (exitCode == ExitCode::OK)

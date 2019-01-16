@@ -27,7 +27,8 @@ I2C::I2C(unsigned busId, unsigned deviceAddress)
 	}
 	else
 	{
-		// TODO: how to react to unsuccessful opening?
+		delete[] p_data;
+		Program::getInstance().terminate(I2C_NOT_OPENED);
 	}
 }
 
