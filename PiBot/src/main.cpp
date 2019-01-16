@@ -49,8 +49,8 @@ int main(int argc, char* argv[])
 	}
 	std::cout << std::endl;
 
-	//GreenLED.write(1);
-	Drive testDrive;
+
+	Drive testDrive;	//XXX test
 	while(UserKey.read());
 	//gpioDelay(1000);
 
