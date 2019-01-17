@@ -38,9 +38,10 @@ int main(int argc, char* argv[])
 
 
 	Drive testDrive;	//XXX test
+	testDrive.start();	// XXX test
 	while(UserKey.read());
 	//gpioDelay(1000);
-
+	testDrive.stop();	// XXX test
 
 
 

@@ -16,6 +16,10 @@ class Drive
 public:
 	Drive();
 	~Drive();
+	// starts the control of motors
+	void start(void);
+	// stops the control of motors
+	void stop(void);
 private:
 	// callback function for gyroscope generated interrupts
 	static void giroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);

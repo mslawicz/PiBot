@@ -28,6 +28,24 @@ Drive::~Drive()
 }
 
 /*
+ * starts the control of motors
+ */
+void Drive::start(void)
+{
+	// enable giroscope interrupts
+	gpioSetISRFuncEx(pIMUInterruptPort->getNumber(), FALLING_EDGE, 0, Drive::giroInterruptCallback, this);
+}
+
+/*
+ * stops the control of motors
+ */
+void Drive::stop(void)
+{
+	// disable giroscope interrupts
+	gpioSetISRFuncEx(pIMUInterruptPort->getNumber(), FALLING_EDGE, 0, nullptr, this);
+}
+
+/*
  * callback function for gyroscope generated interrupts
  * it must be a static method, but the pointer to drive object is passed as an argument
  */
