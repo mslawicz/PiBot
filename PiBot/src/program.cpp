@@ -91,16 +91,18 @@ void Program::initialize(void)
 void Program::terminate(ExitCode exitCode)
 {
 	// map for printing
-	const std::map<ExitCode, std::string> ExitMessages = {
-		{OK, "Normal program exit"},
-		{GENERAL_ERROR, "General error"},
-		{SHELL_ERROR, "Shell error"},
-		{GPIO_INITIALIZATION_ERROR, "GPIO initialization error"},
-		{BAD_GPIO_NUMBER, "Bad GPIO number"},
-		{BAD_GPIO_MODE, "Bad GPIO mode"},
-		{MEMORY_ALLOCATION_ERROR, "Memory allocation error"},
-		{HELP_REQUEST, "Program help requested"},
-		{I2C_NOT_OPENED, "I2C opening error"}
+	const std::map<ExitCode, std::string> ExitMessages =
+	{
+		{ OK, "Normal program exit" },
+		{ GENERAL_ERROR, "General error" },
+		{ SHELL_ERROR, "Shell error" },
+		{ GPIO_INITIALIZATION_ERROR, "GPIO initialization error" },
+		{ BAD_GPIO_NUMBER, "Bad GPIO number" },
+		{ BAD_GPIO_MODE, "Bad GPIO mode" },
+		{ MEMORY_ALLOCATION_ERROR, "Memory allocation error" },
+		{ HELP_REQUEST, "Program help requested" },
+		{ I2C_NOT_OPENED, "I2C opening error" },
+		{ WRONG_I2C_DEVICE, "Wrong I2C device" }
 	};
 
 	if (exitCode == ExitCode::OK)

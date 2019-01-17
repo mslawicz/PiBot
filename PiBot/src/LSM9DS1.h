@@ -8,6 +8,8 @@
 #ifndef SRC_LSM9DS1_H_
 #define SRC_LSM9DS1_H_
 
+#define LSM9DS1_AG	0x68
+
 enum INU_Registers
 {
 	ACT_THS = 0x04,
@@ -43,7 +45,7 @@ enum INU_Registers
 	CTRL_REG9 = 0x23,
 	CTRL_REG10 = 0x24,
 	INT_GEN_SRC_XL = 0x26,
-	STATUS_REG = 0x27,
+	STATUS_REG2 = 0x27,		// the same as 0x17
 	OUT_X_L_XL = 0x28,
 	OUT_X_H_XL = 0x29,
 	OUT_Y_L_XL = 0x2A,

@@ -27,7 +27,8 @@ enum ExitCode
 	BAD_GPIO_MODE,
 	MEMORY_ALLOCATION_ERROR,
 	HELP_REQUEST,
-	I2C_NOT_OPENED
+	I2C_NOT_OPENED,
+	WRONG_I2C_DEVICE
 };
 
 // definition of logged messages severity level

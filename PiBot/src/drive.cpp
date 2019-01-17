@@ -6,13 +6,22 @@
  */
 
 #include "drive.h"
+#include "LSM9DS1.h"
+#include "logger.h"
+#include "program.h"
 
 Drive::Drive()
 {
 	pGyroInterruptPort = new GPIO(13, PI_INPUT, PI_PUD_UP);
 	// interface to LSM9DS1 - Accelerometer and gyroscope
 	pIMUInterface = new I2C(I2C1, 0x6B);
-	gpioSetISRFuncEx(pGyroInterruptPort->getNumber(), FALLING_EDGE, 0, Drive::gyroInterruptCallback, this);
+	// verify the IMU device
+	auto data = pIMUInterface->read(INU_Registers::WHO_AM_I, 1);
+	if (data[0] != LSM9DS1_AG)
+	{
+		// this is not expected LSM9DS1 A/G device
+		Program::getInstance().terminate(WRONG_I2C_DEVICE);
+	}
 
 	pGreenLED = new GPIO(23, PI_OUTPUT);	//XXX test
 	pGreenLED->write(1);	//XXX test
@@ -62,4 +71,5 @@ void Drive::pitchControl(int level, uint32_t tick)
 {
 	pGreenLED->toggle();	//XXX test
 }
+
 
