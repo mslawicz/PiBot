@@ -22,11 +22,11 @@ public:
 	void stop(void);
 private:
 	// callback function for gyroscope generated interrupts
-	static void giroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
+	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
 	// pitch control method
 	void pitchControl(int level, uint32_t tick);
 	// port for gyroscope interrupts
-	GPIO* pIMUInterruptPort;
+	GPIO* pGyroInterruptPort;
 	// I2C interface to gyroscope and accelerometer
 	I2C* pIMUInterface;
 
