@@ -17,8 +17,10 @@ public:
 	Drive();
 	~Drive();
 private:
-	// pitch control callback function for gyroscope generated interrupts
-	static void IMUInterruptCallback(int gpio, int level, uint32_t tick, void* pObject);
+	// callback function for gyroscope generated interrupts
+	static void giroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
+	// pitch control method
+	void pitchControl(int level, uint32_t tick);
 	// port for gyroscope interrupts
 	GPIO* pIMUInterruptPort;
 	// I2C interface to gyroscope and accelerometer

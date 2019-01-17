@@ -12,7 +12,7 @@ Drive::Drive()
 	pIMUInterruptPort = new GPIO(13, PI_INPUT, PI_PUD_UP);
 	// interface to LSM9DS1 - Accelerometer and gyroscope
 	pIMUInterface = new I2C(I2C1, 0x6B);
-	gpioSetISRFuncEx(pIMUInterruptPort->getNumber(), FALLING_EDGE, 0, Drive::IMUInterruptCallback, this);
+	gpioSetISRFuncEx(pIMUInterruptPort->getNumber(), FALLING_EDGE, 0, Drive::giroInterruptCallback, this);
 
 	pGreenLED = new GPIO(23, PI_OUTPUT);	//XXX test
 	pGreenLED->write(1);	//XXX test
@@ -28,14 +28,20 @@ Drive::~Drive()
 }
 
 /*
- * pitch control callback function for gyroscope generated interrupts
+ * callback function for gyroscope generated interrupts
  * it must be a static method, but the pointer to drive object is passed as an argument
  */
-void Drive::IMUInterruptCallback(int gpio, int level, uint32_t tick, void* pObject)
+void Drive::giroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject)
 {
-	Drive* pDrive = static_cast<Drive*>(pObject);
-	pDrive->pGreenLED->toggle();	//XXX test
+	static_cast<Drive*>(pDriveObject)->pitchControl(level, tick);
 
 }
 
+/*
+ * pitch control method
+ */
+void Drive::pitchControl(int level, uint32_t tick)
+{
+	pGreenLED->toggle();	//XXX test
+}
 
