@@ -10,7 +10,7 @@
 
 #define LSM9DS1_AG	0x68
 
-enum INU_Registers
+enum IMU_Registers
 {
 	ACT_THS = 0x04,
 	ACT_DUR = 0x05,

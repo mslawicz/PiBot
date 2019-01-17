@@ -9,7 +9,8 @@
 #define SRC_DRIVE_H_
 
 #include "gpio.h"
-#include "i2c.h"
+#include "imu.h"
+
 
 class Drive
 {
@@ -25,10 +26,9 @@ private:
 	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
 	// pitch control method
 	void pitchControl(int level, uint32_t tick);
-	// port for gyroscope interrupts
-	GPIO* pGyroInterruptPort;
-	// I2C interface to gyroscope and accelerometer
-	I2C* pIMUInterface;
+
+	// pointer to inertial measurement unit
+	IMU* pIMU;
 
 	GPIO* pGreenLED;	// XXX for test only
 };
