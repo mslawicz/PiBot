@@ -31,3 +31,10 @@ IMU::~IMU()
 	delete pGyroInterruptPort;
 }
 
+/*
+ * configuration of IMU device
+ */
+void IMU::config(void)
+{
+
+}

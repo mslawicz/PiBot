@@ -19,6 +19,8 @@ public:
 	~IMU();
 	unsigned int getGyroInterruptPort(void) const { return pGyroInterruptPort->getNumber(); }
 private:
+	// configuration of IMU device
+	void config(void);
 	// pointer to port for gyroscope interrupts
 	GPIO* pGyroInterruptPort;
 	// pointer to interface to IMU device
