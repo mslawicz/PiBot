@@ -29,7 +29,7 @@ Drive::~Drive()
 void Drive::start(void)
 {
 	// enable gyroscope interrupts
-	gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), FALLING_EDGE, 0,
+	gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0,
 			Drive::gyroInterruptCallback, this);
 }
 
@@ -39,7 +39,7 @@ void Drive::start(void)
 void Drive::stop(void)
 {
 	// disable gyroscope interrupts
-	gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), FALLING_EDGE, 0, nullptr,
+	gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0, nullptr,
 			this);
 }
 
