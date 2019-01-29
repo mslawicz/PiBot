@@ -16,6 +16,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <map>
 
 //class I2C
 //{
@@ -43,6 +44,7 @@ public:
     void notify(void);
     void startHandler(void);
     void stopHandler(void);
+    static std::map<unsigned, I2cBus*> buses;
 private:
 	unsigned busId;
 	char* pData;
@@ -57,11 +59,13 @@ private:
 class I2cDevice
 {
 public:
-	I2cDevice(unsigned deviceAddres, uint8_t devicePriority);
+	I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePriority);
 	~I2cDevice();
 private:
+	unsigned busId;
 	unsigned address;
 	uint8_t priority;
+	int handle;
 };
 
 #endif /* SRC_I2C_H_ */

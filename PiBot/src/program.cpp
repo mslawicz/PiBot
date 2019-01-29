@@ -20,7 +20,6 @@ Program& Program::getInstance(void)
 
 Program::Program()
 {
-	pI2cBus1 = nullptr;
 }
 
 Program::~Program()
@@ -86,8 +85,14 @@ void Program::initialize(void)
 	}
 
 	GPIO::initialize();
-	pI2cBus1 = new I2cBus(I2C1);
-	pI2cBus1->startHandler();
+	// create and register in its constructor I2C1 bus object
+	new I2cBus(I2C1);
+
+	//start handlers of all i2c buses
+	for(auto bus : I2cBus::buses)
+	{
+		bus.second->startHandler();
+	}
 }
 
 /*
@@ -121,8 +126,12 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
-	pI2cBus1->stopHandler();
-	delete pI2cBus1;
+	//terminate i2c handlers and delete i2c bus objects
+	for(auto bus : I2cBus::buses)
+	{
+		bus.second->stopHandler();
+		delete bus.second;
+	}
 
 	//TODO: save log to file here
 

@@ -10,6 +10,7 @@
 #include "program.h"
 #include <stdlib.h>
 
+std::map<unsigned, I2cBus*> I2cBus::buses;
 
 //I2C::I2C(unsigned busId, unsigned deviceAddress)
 //	: bus_id(busId)
@@ -79,6 +80,8 @@ I2cBus::I2cBus(unsigned id)
     exitHandler = true;
     pI2cHandlerThread = nullptr;
     queueNotEmpty = false;
+    I2cBus::buses.emplace(busId, this);
+    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " initialized");
 }
 
 I2cBus::~I2cBus()
@@ -97,7 +100,7 @@ I2cBus::~I2cBus()
  */
 void I2cBus::handler(void)
 {
-    std::cout << "starting handler\n";
+	Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler started");
     do
     {
         std::cout << "handler loop start\n";
@@ -126,7 +129,7 @@ void I2cBus::notify(void)
  */
 void I2cBus::startHandler(void)
 {
-    std::cout << "handler thread start\n";
+	Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler start request");
     exitHandler = false;
     pI2cHandlerThread = new std::thread(&I2cBus::handler, this);
 }
@@ -140,17 +143,29 @@ void I2cBus::stopHandler(void)
     queueEvent.notify_one();
     pI2cHandlerThread->join();
     delete pI2cHandlerThread;
-    std::cout << "handler thread stop\n";
+    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler stop request");
 }
 
-I2cDevice::I2cDevice(unsigned deviceAddres, uint8_t devicePriority)
-	: address(deviceAddres)
+I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePriority)
+	: busId(i2cBusId)
+	, address(deviceAddres)
 	, priority(devicePriority)
 {
-
+	handle = i2cOpen(busId, address, 0);
+	if(handle >= 0)
+	{
+		Logger::getInstance().logEvent(INFO, "I2C device opened: bus=", busId, ", address=0x", std::hex, address);
+	}
+	else
+	{
+		Program::getInstance().terminate(I2C_NOT_OPENED);
+	}
 }
 
 I2cDevice::~I2cDevice()
 {
-
+	if(handle >= 0)
+	{
+		i2cClose(handle);
+	}
 }

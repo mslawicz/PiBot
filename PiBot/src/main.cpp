@@ -26,8 +26,7 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
-	//I2C Magnetometer(I2C1, 0x1E);	// LSM9DS1 - Magnetic sensor
-
+	I2cDevice magneto(I2C1, 0x1E, 5);
 	//auto Data = Magnetometer.read(0x20, 5);
 	//std::cout << "the length of Data vector: " << Data.size() << std::endl;
 //	for(auto Byte : Data)
@@ -37,11 +36,11 @@ int main(int argc, char* argv[])
 //	std::cout << std::endl;
 
 	std::cout << "main before notification\n";
-	Program::getInstance().pGetI2cBus()->notify();
+	I2cBus::buses.find(I2C1)->second->notify();
 	std::cout << "main after notification, sleep\n";
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 	std::cout << "main before notification\n";
-	Program::getInstance().pGetI2cBus()->notify();
+	I2cBus::buses.find(I2C1)->second->notify();
 	std::cout << "main after notification, sleep\n";
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 	//Drive testDrive;	//XXX test
