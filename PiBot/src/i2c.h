@@ -47,7 +47,7 @@ private:
 	unsigned busId;
 	char* pData;
 	const unsigned DataBufSize = 100;
-    std::mutex handlerMutex;
+    std::mutex notificationMutex;
     std::condition_variable queueEvent;
     bool exitHandler;
     std::thread* pI2cHandlerThread;
@@ -56,7 +56,12 @@ private:
 
 class I2cDevice
 {
-
+public:
+	I2cDevice(unsigned deviceAddres, uint8_t devicePriority);
+	~I2cDevice();
+private:
+	unsigned address;
+	uint8_t priority;
 };
 
 #endif /* SRC_I2C_H_ */

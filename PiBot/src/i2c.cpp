@@ -102,7 +102,7 @@ void I2cBus::handler(void)
     {
         std::cout << "handler loop start\n";
         std::this_thread::yield();
-        std::unique_lock<std::mutex> lock(handlerMutex);
+        std::unique_lock<std::mutex> lock(notificationMutex);
         queueEvent.wait(lock, [this]() {return (queueNotEmpty || exitHandler); });
         queueNotEmpty = false;
         std::cout << "handler loop continue\n";
@@ -115,7 +115,7 @@ void I2cBus::handler(void)
  */
 void I2cBus::notify(void)
 {
-    std::lock_guard<std::mutex> lock(handlerMutex);
+    std::lock_guard<std::mutex> lock(notificationMutex);
     std::cout << "sending notification to handler\n";
     queueNotEmpty = true;
     queueEvent.notify_one();
@@ -141,4 +141,16 @@ void I2cBus::stopHandler(void)
     pI2cHandlerThread->join();
     delete pI2cHandlerThread;
     std::cout << "handler thread stop\n";
+}
+
+I2cDevice::I2cDevice(unsigned deviceAddres, uint8_t devicePriority)
+	: address(deviceAddres)
+	, priority(devicePriority)
+{
+
+}
+
+I2cDevice::~I2cDevice()
+{
+
 }
