@@ -14,20 +14,37 @@
 #include <pigpio.h>
 #include <vector>
 
-class I2C
+//class I2C
+//{
+//public:
+//	I2C(unsigned busId, unsigned deviceAddress);
+//	~I2C();
+//	std::vector<char> read(unsigned address, unsigned length);
+//	void write(unsigned address, std::vector<char> data);
+//
+//private:
+//	unsigned bus_id;
+//	unsigned device_address;
+//	int handle;
+//	char* p_data;
+//	const unsigned DataBufSize = 100;
+//};
+
+
+class I2cBus
 {
 public:
-	I2C(unsigned busId, unsigned deviceAddress);
-	~I2C();
-	std::vector<char> read(unsigned address, unsigned length);
-	void write(unsigned address, std::vector<char> data);
-
+	I2cBus(unsigned id);
+	~I2cBus();
 private:
-	unsigned bus_id;
-	unsigned device_address;
-	int handle;
-	char* p_data;
+	unsigned busId;
+	char* pData;
 	const unsigned DataBufSize = 100;
+};
+
+class I2cDevice
+{
+
 };
 
 #endif /* SRC_I2C_H_ */

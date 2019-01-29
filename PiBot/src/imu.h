@@ -24,7 +24,7 @@ private:
 	// pointer to port for gyroscope interrupts
 	GPIO* pGyroInterruptPort;
 	// pointer to interface to IMU device
-	I2C* pInterface;
+	//I2C* pInterface;
 };
 
 #endif /* SRC_IMU_H_ */

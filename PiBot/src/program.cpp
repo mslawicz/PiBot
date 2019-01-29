@@ -18,6 +18,11 @@ Program& Program::getInstance(void)
 	return instance;
 }
 
+Program::Program()
+{
+	pI2cBus1 = nullptr;
+}
+
 Program::~Program()
 {
 	// gpio termination should be called in the very end
@@ -81,6 +86,7 @@ void Program::initialize(void)
 	}
 
 	GPIO::initialize();
+	pI2cBus1 = new I2cBus(I2C1);
 }
 
 /*
@@ -113,6 +119,8 @@ void Program::terminate(ExitCode exitCode)
 	{
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
+
+	delete pI2cBus1;
 
 	//TODO: save log to file here
 
