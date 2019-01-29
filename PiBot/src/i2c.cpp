@@ -76,7 +76,9 @@ I2cBus::I2cBus(unsigned id)
 	{
 		Program::getInstance().terminate(MEMORY_ALLOCATION_ERROR);
 	}
-
+    exitHandler = true;
+    pI2cHandlerThread = nullptr;
+    queueNotEmpty = false;
 }
 
 I2cBus::~I2cBus()
@@ -86,4 +88,57 @@ I2cBus::~I2cBus()
 		delete[] pData;
 		pData = nullptr;
 	}
+}
+
+/*
+ * i2c bus handler
+ * transmit i2c frames for all devices in a bus
+ * to be run in a separate thread
+ */
+void I2cBus::handler(void)
+{
+    std::cout << "starting handler\n";
+    do
+    {
+        std::cout << "handler loop start\n";
+        std::this_thread::yield();
+        std::unique_lock<std::mutex> lock(handlerMutex);
+        queueEvent.wait(lock, [this]() {return (queueNotEmpty || exitHandler); });
+        queueNotEmpty = false;
+        std::cout << "handler loop continue\n";
+    } while (!exitHandler);
+    std::cout << "exiting handler\n";
+}
+
+/*
+ * notify handler about queue activity
+ */
+void I2cBus::notify(void)
+{
+    std::lock_guard<std::mutex> lock(handlerMutex);
+    std::cout << "sending notification to handler\n";
+    queueNotEmpty = true;
+    queueEvent.notify_one();
+}
+
+/*
+ * creates a new thread for i2c bus handler
+ */
+void I2cBus::startHandler(void)
+{
+    std::cout << "handler thread start\n";
+    exitHandler = false;
+    pI2cHandlerThread = new std::thread(&I2cBus::handler, this);
+}
+
+/*
+ * initiate stop of i2c bus handler
+ */
+void I2cBus::stopHandler(void)
+{
+    exitHandler = true;
+    queueEvent.notify_one();
+    pI2cHandlerThread->join();
+    delete pI2cHandlerThread;
+    std::cout << "handler thread stop\n";
 }

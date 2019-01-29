@@ -13,6 +13,9 @@
 
 #include <pigpio.h>
 #include <vector>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 //class I2C
 //{
@@ -36,10 +39,19 @@ class I2cBus
 public:
 	I2cBus(unsigned id);
 	~I2cBus();
+    void handler(void);
+    void notify(void);
+    void startHandler(void);
+    void stopHandler(void);
 private:
 	unsigned busId;
 	char* pData;
 	const unsigned DataBufSize = 100;
+    std::mutex handlerMutex;
+    std::condition_variable queueEvent;
+    bool exitHandler;
+    std::thread* pI2cHandlerThread;
+    bool queueNotEmpty;
 };
 
 class I2cDevice

@@ -87,6 +87,7 @@ void Program::initialize(void)
 
 	GPIO::initialize();
 	pI2cBus1 = new I2cBus(I2C1);
+	pI2cBus1->startHandler();
 }
 
 /*
@@ -120,6 +121,7 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
+	pI2cBus1->stopHandler();
 	delete pI2cBus1;
 
 	//TODO: save log to file here
