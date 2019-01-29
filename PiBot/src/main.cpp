@@ -36,12 +36,19 @@ int main(int argc, char* argv[])
 //	}
 //	std::cout << std::endl;
 
-
-	Drive testDrive;	//XXX test
-	testDrive.start();	// XXX test
-	while(UserKey.read());
+	std::cout << "main before notification\n";
+	Program::getInstance().pGetI2cBus()->notify();
+	std::cout << "main after notification, sleep\n";
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	std::cout << "main before notification\n";
+	Program::getInstance().pGetI2cBus()->notify();
+	std::cout << "main after notification, sleep\n";
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	//Drive testDrive;	//XXX test
+	//testDrive.start();	// XXX test
+	//while(UserKey.read());
 	//gpioDelay(1000);
-	testDrive.stop();	// XXX test
+	//testDrive.stop();	// XXX test
 
 
 

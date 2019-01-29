@@ -28,6 +28,8 @@ public:
 	void parseArguments(int argc, char* argv[]);
 	// checks if this option is provided in program arguments
 	bool isOptionProvided(std::string option) {return options.find(option) != options.end();}
+	// gets pointer to i2c bus object
+	I2cBus* pGetI2cBus(void) const {return pI2cBus1;}
 private:
 	// private constructor prevents from creation more objects
 	Program();
