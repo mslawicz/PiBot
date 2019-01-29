@@ -85,7 +85,7 @@ void Program::initialize(void)
 	}
 
 	GPIO::initialize();
-	// create and register in its constructor I2C1 bus object
+	// create and register in a map I2C1 bus object
 	new I2cBus(I2C1);
 
 	//start handlers of all i2c buses
@@ -114,7 +114,8 @@ void Program::terminate(ExitCode exitCode)
 		{ MEMORY_ALLOCATION_ERROR, "Memory allocation error" },
 		{ HELP_REQUEST, "Program help requested" },
 		{ I2C_NOT_OPENED, "I2C opening error" },
-		{ WRONG_I2C_DEVICE, "Wrong I2C device" }
+		{ WRONG_I2C_DEVICE, "Wrong I2C device" },
+		{ WRONG_I2C_BUS, "Wrong I2C bus" }
 	};
 
 	if (exitCode == ExitCode::OK)

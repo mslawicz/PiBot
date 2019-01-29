@@ -151,6 +151,11 @@ I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePri
 	, address(deviceAddres)
 	, priority(devicePriority)
 {
+	if(I2cBus::buses.find(busId) == I2cBus::buses.end())
+	{
+		Program::getInstance().terminate(WRONG_I2C_BUS);
+	}
+
 	handle = i2cOpen(busId, address, 0);
 	if(handle >= 0)
 	{
