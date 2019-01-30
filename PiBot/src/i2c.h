@@ -42,7 +42,7 @@ public:
 	I2cBus(unsigned id);
 	~I2cBus();
     void handler(void);
-    void notify(void);
+    void requestToSend(void);
     void startHandler(void);
     void stopHandler(void);
     static std::map<unsigned, I2cBus*> buses;
@@ -50,7 +50,7 @@ private:
 	unsigned busId;
 	char* pData;
 	const unsigned DataBufSize = 100;
-    std::mutex sendDataMutex;
+    std::mutex sendQueueMutex;
     std::condition_variable queueEvent;
     bool exitHandler;
     std::thread* pI2cHandlerThread;

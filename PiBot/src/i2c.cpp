@@ -80,6 +80,7 @@ I2cBus::I2cBus(unsigned id)
     exitHandler = true;
     pI2cHandlerThread = nullptr;
     queueEmpty.test_and_set();
+    // register this i2c bus object in the bus map
     I2cBus::buses.emplace(busId, this);
     Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " initialized");
 }
@@ -103,12 +104,28 @@ void I2cBus::handler(void)
 	Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler started");
     do
     {
-        std::cout << "handler loop start\n";
+        std::cout << ">>> handler loop start\n";
         std::this_thread::yield();
-        std::unique_lock<std::mutex> lock(sendDataMutex);
+        std::unique_lock<std::mutex> lock(sendQueueMutex);
         queueEvent.wait(lock, [this]() {return (!queueEmpty.test_and_set() || exitHandler); });
+        lock.unlock();
         std::cout << ">>> handler loop continue\n";
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        {
+        	// body of loop for each registered i2c device
+        	{
+        		// body of while loop for every message in a queue
+        		{
+        			// pop message from a queue here
+        			std::lock_guard<std::mutex> lock(sendQueueMutex);
+        		}
+        		// i2c transmission
+        		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        		{
+        			std::lock_guard<std::mutex> lock(sendQueueMutex);
+        			// if data is received then it should be placed in a queue
+        		}
+        	}
+        }
         std::cout << ">>> handler loop end\n";
     } while (!exitHandler);
     std::cout << ">>> exiting handler\n";
@@ -117,7 +134,7 @@ void I2cBus::handler(void)
 /*
  * notify handler about queue activity
  */
-void I2cBus::notify(void)
+void I2cBus::requestToSend(void)
 {
     //std::lock_guard<std::mutex> lock(sendDataMutex); unneeded here
     std::cout << "sending notification to handler\n";
