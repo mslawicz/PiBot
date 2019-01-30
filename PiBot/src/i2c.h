@@ -17,6 +17,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <map>
+#include <atomic>
 
 //class I2C
 //{
@@ -49,11 +50,11 @@ private:
 	unsigned busId;
 	char* pData;
 	const unsigned DataBufSize = 100;
-    std::mutex notificationMutex;
+    std::mutex sendDataMutex;
     std::condition_variable queueEvent;
     bool exitHandler;
     std::thread* pI2cHandlerThread;
-    bool queueNotEmpty;
+    std::atomic_flag queueEmpty;
 };
 
 class I2cDevice

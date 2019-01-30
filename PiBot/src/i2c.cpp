@@ -79,7 +79,7 @@ I2cBus::I2cBus(unsigned id)
 	}
     exitHandler = true;
     pI2cHandlerThread = nullptr;
-    queueNotEmpty = false;
+    queueEmpty.test_and_set();
     I2cBus::buses.emplace(busId, this);
     Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " initialized");
 }
@@ -105,9 +105,8 @@ void I2cBus::handler(void)
     {
         std::cout << "handler loop start\n";
         std::this_thread::yield();
-        std::unique_lock<std::mutex> lock(notificationMutex);
-        queueEvent.wait(lock, [this]() {return (queueNotEmpty || exitHandler); });
-        queueNotEmpty = false;
+        std::unique_lock<std::mutex> lock(sendDataMutex);
+        queueEvent.wait(lock, [this]() {return (!queueEmpty.test_and_set() || exitHandler); });
         std::cout << "handler loop continue\n";
     } while (!exitHandler);
     std::cout << "exiting handler\n";
@@ -118,9 +117,9 @@ void I2cBus::handler(void)
  */
 void I2cBus::notify(void)
 {
-    std::lock_guard<std::mutex> lock(notificationMutex);
+    //std::lock_guard<std::mutex> lock(sendDataMutex); unneeded here
     std::cout << "sending notification to handler\n";
-    queueNotEmpty = true;
+    queueEmpty.clear();
     queueEvent.notify_one();
 }
 
