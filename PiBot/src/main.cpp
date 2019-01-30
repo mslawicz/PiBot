@@ -38,11 +38,11 @@ int main(int argc, char* argv[])
 	std::cout << "main before notification\n";
 	I2cBus::buses.find(I2C1)->second->notify();
 	std::cout << "main after notification, sleep\n";
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::cout << "main before notification\n";
 	I2cBus::buses.find(I2C1)->second->notify();
 	std::cout << "main after notification, sleep\n";
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	//Drive testDrive;	//XXX test
 	//testDrive.start();	// XXX test
 	//while(UserKey.read());

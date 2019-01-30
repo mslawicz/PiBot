@@ -107,9 +107,11 @@ void I2cBus::handler(void)
         std::this_thread::yield();
         std::unique_lock<std::mutex> lock(sendDataMutex);
         queueEvent.wait(lock, [this]() {return (!queueEmpty.test_and_set() || exitHandler); });
-        std::cout << "handler loop continue\n";
+        std::cout << ">>> handler loop continue\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::cout << ">>> handler loop end\n";
     } while (!exitHandler);
-    std::cout << "exiting handler\n";
+    std::cout << ">>> exiting handler\n";
 }
 
 /*
