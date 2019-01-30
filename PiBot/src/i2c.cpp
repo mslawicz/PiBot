@@ -8,6 +8,7 @@
 #include "i2c.h"
 #include "logger.h"
 #include "program.h"
+#include <algorithm>
 #include <stdlib.h>
 
 std::map<unsigned, I2cBus*> I2cBus::buses;
@@ -109,9 +110,11 @@ void I2cBus::handler(void)
         std::unique_lock<std::mutex> lock(sendQueueMutex);
         queueEvent.wait(lock, [this]() {return (!queueEmpty.test_and_set() || exitHandler); });
         lock.unlock();
-        std::cout << ">>> handler loop continue\n";
+
+        for(const auto& device : devices)
         {
-        	// body of loop for each registered i2c device
+        	// loop for each registered i2c device
+            std::cout << ">>> checking device: priority=" << (int)std::get<0>(device) << "  address=" << std::get<1>(device) << "\n";
         	{
         		// body of while loop for every message in a queue
         		{
@@ -126,6 +129,7 @@ void I2cBus::handler(void)
         		}
         	}
         }
+
         std::cout << ">>> handler loop end\n";
     } while (!exitHandler);
     std::cout << ">>> exiting handler\n";
@@ -163,9 +167,10 @@ void I2cBus::stopHandler(void)
     delete pI2cHandlerThread;
 }
 
-void I2cBus::registerDevice(I2cDeviceParameters deviceParameters)
+void I2cBus::registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*> newDevice)
 {
-
+    devices.push_back(newDevice);
+    std::sort(devices.begin(), devices.end());
 }
 
 I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePriority)
@@ -191,7 +196,7 @@ I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePri
 	}
 
 	// register this i2c device in the bus object map of devices
-	pI2cBus->registerDevice(I2cDeviceParameters{address, priority, this});
+	pI2cBus->registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*>{priority, address, this});
 }
 
 I2cDevice::~I2cDevice()

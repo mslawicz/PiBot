@@ -18,15 +18,8 @@
 #include <condition_variable>
 #include <map>
 #include <atomic>
+#include <tuple>
 
-class I2cDevice;
-
-struct I2cDeviceParameters
-{
-    unsigned address;
-    uint8_t priority;
-    I2cDevice* pDevice;
-};
 
 //class I2C
 //{
@@ -44,6 +37,7 @@ struct I2cDeviceParameters
 //	const unsigned DataBufSize = 100;
 //};
 
+class I2cDevice;
 
 class I2cBus
 {
@@ -54,7 +48,7 @@ public:
     void requestToSend(void);
     void startHandler(void);
     void stopHandler(void);
-    void registerDevice(I2cDeviceParameters deviceParameters);
+    void registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*> newDevice);
     static std::map<unsigned, I2cBus*> buses;
 private:
 	unsigned busId;
@@ -65,6 +59,7 @@ private:
     bool exitHandler;
     std::thread* pI2cHandlerThread;
     std::atomic_flag queueEmpty;
+    std::vector<std::tuple<uint8_t, unsigned, I2cDevice*>> devices;
 };
 
 class I2cDevice
