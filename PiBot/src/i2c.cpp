@@ -136,7 +136,6 @@ void I2cBus::handler(void)
  */
 void I2cBus::requestToSend(void)
 {
-    //std::lock_guard<std::mutex> lock(sendDataMutex); unneeded here
     std::cout << "sending notification to handler\n";
     queueEmpty.clear();
     queueEvent.notify_one();
@@ -157,11 +156,16 @@ void I2cBus::startHandler(void)
  */
 void I2cBus::stopHandler(void)
 {
+    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler stop request");
     exitHandler = true;
     queueEvent.notify_one();
     pI2cHandlerThread->join();
     delete pI2cHandlerThread;
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler stop request");
+}
+
+void I2cBus::registerDevice(I2cDeviceParameters deviceParameters)
+{
+
 }
 
 I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePriority)
@@ -174,7 +178,9 @@ I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePri
 		Program::getInstance().terminate(WRONG_I2C_BUS);
 	}
 
+	pI2cBus = I2cBus::buses.find(busId)->second;
 	handle = i2cOpen(busId, address, 0);
+
 	if(handle >= 0)
 	{
 		Logger::getInstance().logEvent(INFO, "I2C device opened: bus=", busId, ", address=0x", std::hex, address);
@@ -183,6 +189,9 @@ I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePri
 	{
 		Program::getInstance().terminate(I2C_NOT_OPENED);
 	}
+
+	// register this i2c device in the bus object map of devices
+	pI2cBus->registerDevice(I2cDeviceParameters{address, priority, this});
 }
 
 I2cDevice::~I2cDevice()

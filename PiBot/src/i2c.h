@@ -19,6 +19,15 @@
 #include <map>
 #include <atomic>
 
+class I2cDevice;
+
+struct I2cDeviceParameters
+{
+    unsigned address;
+    uint8_t priority;
+    I2cDevice* pDevice;
+};
+
 //class I2C
 //{
 //public:
@@ -45,6 +54,7 @@ public:
     void requestToSend(void);
     void startHandler(void);
     void stopHandler(void);
+    void registerDevice(I2cDeviceParameters deviceParameters);
     static std::map<unsigned, I2cBus*> buses;
 private:
 	unsigned busId;
@@ -67,6 +77,7 @@ private:
 	unsigned address;
 	uint8_t priority;
 	int handle;
+	I2cBus* pI2cBus;
 };
 
 #endif /* SRC_I2C_H_ */
