@@ -120,21 +120,31 @@ void I2cBus::handler(void)
             {
                 std::lock_guard<std::mutex> lock(std::get<2>(*iDevice)->sendQueueMutex);
                 //if the queue is not empty - pop message
-            }
-            // if message was popped
-            {
-                // transmit it
-                std::this_thread::sleep_for(std::chrono::milliseconds(50)); //qqq simulate long transmission
-                //if it was read operation
+                if(!std::get<2>(*iDevice)->dataToSend.empty())
                 {
-                    std::lock_guard<std::mutex> lock(std::get<2>(*iDevice)->receiveQueueMutex);
-                    //pop received data to receive queue
+                    // send queue of this i2c device is not empty
+                    I2cDataContainer dataContainer;
+                    {
+                        // queue modification protected by mutex
+                        dataContainer = std::get<2>(*iDevice)->dataToSend.front();
+                        std::get<2>(*iDevice)->dataToSend.pop();
+                    }
+                    // transmit it
+                    std::cout << ">>> transmit data: address=" << std::get<0>(dataContainer) << "  regAddress=" << std::get<1>(dataContainer) << "  length=" << std::get<2>(dataContainer) << "\n";
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50)); //qqq simulate long transmission
+                    //if it was read operation
+                    {
+                        std::lock_guard<std::mutex> lock(std::get<2>(*iDevice)->receiveQueueMutex);
+                        //push received data to receive queue
+                    }
+                    // after transmission start from the beginning
+                    iDevice = devices.begin();
                 }
-                //iDevice = devices.begin();
-            }
-            //else
-            {
-                iDevice++;
+                else
+                {
+                    // if nothing to transmit - move to next device
+                    iDevice++;
+                }
             }
         }
 
@@ -175,12 +185,18 @@ void I2cBus::stopHandler(void)
     delete pI2cHandlerThread;
 }
 
+/*
+ * registers i2c device in the vector (sorted by priority)
+ */
 void I2cBus::registerDevice(I2cDeviceContainer newDevice)
 {
     devices.push_back(newDevice);
     std::sort(devices.begin(), devices.end());
 }
 
+/*
+ * constructor of a new i2c device
+ */
 I2cDevice::I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, I2cPriority devicePriority)
 	: busId(i2cBusId)
 	, address(deviceAddres)
@@ -207,6 +223,9 @@ I2cDevice::I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, I2cPriority devic
 	pI2cBus->registerDevice(I2cDeviceContainer{priority, address, this});
 }
 
+/*
+ * pure virtual destructor
+ */
 I2cDevice::~I2cDevice()
 {
 	if(handle >= 0)
@@ -215,6 +234,9 @@ I2cDevice::~I2cDevice()
 	}
 }
 
+/*
+ * puts i2c data to send into send queue and notifies i2c bus handler
+ */
 void I2cDevice::writeData(char registerAddress, std::vector<char> data)
 {
     {
@@ -224,6 +246,9 @@ void I2cDevice::writeData(char registerAddress, std::vector<char> data)
     pI2cBus->requestToSend();
 }
 
+/*
+ * puts i2c data to initiate reception into send queue and notifies i2c bus handler
+ */
 void I2cDevice::readDataRequest(char registerAddress, unsigned length)
 {
     {
