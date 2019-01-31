@@ -70,8 +70,8 @@ std::map<unsigned, I2cBus*> I2cBus::buses;
 /*
  * constructor of the i2c bus object
  */
-I2cBus::I2cBus(unsigned id)
-	: busId(id)
+I2cBus::I2cBus(I2cBusId i2cBusId)
+	: busId(i2cBusId)
 {
 	pData = new char[DataBufSize];
 	if(pData == nullptr)
@@ -173,7 +173,7 @@ void I2cBus::registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*> newDevice)
     std::sort(devices.begin(), devices.end());
 }
 
-I2cDevice::I2cDevice(unsigned i2cBusId, unsigned deviceAddres, uint8_t devicePriority)
+I2cDevice::I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, uint8_t devicePriority)
 	: busId(i2cBusId)
 	, address(deviceAddres)
 	, priority(devicePriority)
