@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
-	//qqq I2cDevice magneto(I2cBusId::I2C1, 0x1E, I2cPriority::MAGNETOMETER);
+	Gyroscope gyroscope(I2cBusId::I2C1, 0x1E, I2cPriority::GYROSCOPE);  // example of an i2c object
 	//auto Data = Magnetometer.read(0x20, 5);
 	//std::cout << "the length of Data vector: " << Data.size() << std::endl;
 //	for(auto Byte : Data)

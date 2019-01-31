@@ -107,27 +107,35 @@ void I2cBus::handler(void)
     {
         std::cout << ">>> handler loop start\n";
         std::this_thread::yield();
-        std::unique_lock<std::mutex> lock(sendQueueMutex);
+        std::unique_lock<std::mutex> lock(handlerMutex);
         queueEvent.wait(lock, [this]() {return (!queueEmpty.test_and_set() || exitHandler); });
         lock.unlock();
 
-        for(const auto& device : devices)
+        auto iDevice = devices.begin();
+        while(iDevice != devices.end())
         {
-        	// loop for each registered i2c device
-            std::cout << ">>> checking device: priority=" << (int)std::get<0>(device) << "  address=" << std::get<1>(device) << "\n";
-        	{
-        		// body of while loop for every message in a queue
-        		{
-        			// pop message from a queue here
-        			std::lock_guard<std::mutex> lock(sendQueueMutex);
-        		}
-        		// i2c transmission
-        		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        		{
-        			std::lock_guard<std::mutex> lock(sendQueueMutex);
-        			// if data is received then it should be placed in a queue
-        		}
-        	}
+            // iterate through all registered i2c devices until their send queues are empty
+            std::cout << ">>> checking device: priority=" << (int)std::get<0>(*iDevice) << "  address=" << std::get<1>(*iDevice) << "\n";
+
+            {
+                std::lock_guard<std::mutex> lock(std::get<2>(*iDevice)->sendQueueMutex);
+                //if the queue is not empty - pop message
+            }
+            // if message was popped
+            {
+                // transmit it
+                std::this_thread::sleep_for(std::chrono::milliseconds(50)); //qqq simulate long transmission
+                //if it was read operation
+                {
+                    std::lock_guard<std::mutex> lock(std::get<2>(*iDevice)->receiveQueueMutex);
+                    //pop received data to receive queue
+                }
+                //iDevice = devices.begin();
+            }
+            //else
+            {
+                iDevice++;
+            }
         }
 
         std::cout << ">>> handler loop end\n";
@@ -167,7 +175,7 @@ void I2cBus::stopHandler(void)
     delete pI2cHandlerThread;
 }
 
-void I2cBus::registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*> newDevice)
+void I2cBus::registerDevice(I2cDeviceContainer newDevice)
 {
     devices.push_back(newDevice);
     std::sort(devices.begin(), devices.end());
@@ -196,7 +204,7 @@ I2cDevice::I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, I2cPriority devic
 	}
 
 	// register this i2c device in the bus object map of devices
-	pI2cBus->registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*>{priority, address, this});
+	pI2cBus->registerDevice(I2cDeviceContainer{priority, address, this});
 }
 
 I2cDevice::~I2cDevice()
