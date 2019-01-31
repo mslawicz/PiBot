@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <stdlib.h>
 
-std::map<unsigned, I2cBus*> I2cBus::buses;
+MapOfI2cBuses I2cBus::buses;
 
 //I2C::I2C(unsigned busId, unsigned deviceAddress)
 //	: bus_id(busId)

@@ -32,6 +32,7 @@ enum I2cBusId
     I2C1
 };
 
+class I2cBus;
 class I2cDevice;
 
 // typedef for sent/received i2c data container:
@@ -41,6 +42,9 @@ typedef std::tuple<unsigned, unsigned, std::vector<char>>   I2cDataContainer;
 
 // typedef for i2c device definition: priority, address, pointer to I2cDevice object
 typedef std::tuple<I2cPriority, unsigned, I2cDevice*> I2cDeviceContainer;
+
+// typedef for the map of i2c buses: bus id, pointer to I2cBus object
+typedef std::map<I2cBusId, I2cBus*> MapOfI2cBuses;
 
 //class I2C
 //{
@@ -65,7 +69,7 @@ public:
 	~I2cBus();
     void startHandler(void);
     void stopHandler(void);
-    static std::map<unsigned, I2cBus*> buses;
+    static MapOfI2cBuses buses;
     friend class I2cDevice;
 private:
     void handler(void);
