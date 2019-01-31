@@ -16,6 +16,7 @@
 #include <map>
 #include <atomic>
 #include <tuple>
+#include <queue>
 
 enum I2cPriority
 {
@@ -30,6 +31,11 @@ enum I2cBusId
     I2C0,
     I2C1
 };
+
+// typedef for sent/received i2c data container:
+// data sent container: device address, no of bytes requested to read (0=write only), vector of data to send (may be empty when read request)
+// data received container: device address, no of bytes read (==length of vector), vector of data received
+typedef std::tuple<unsigned, unsigned, std::vector<char>>   I2cDataContainer;
 
 //class I2C
 //{
@@ -86,6 +92,10 @@ private:
 	I2cPriority priority;
 	int handle;
 	I2cBus* pI2cBus;
+    std::queue<I2cDataContainer> dataToSend;
+    std::queue<I2cDataContainer> receivedData;
+    std::mutex sendQueueMutex;
+    std::mutex receiveQueueMutex;
 };
 
 #endif /* SRC_I2C_H_ */

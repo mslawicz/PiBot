@@ -27,4 +27,14 @@ private:
 	//I2C* pInterface;
 };
 
+class Gyroscope : public I2cDevice
+{
+public:
+    Gyroscope(I2cBusId busId, uint8_t address, I2cPriority priority);
+    int getData(void) const     // example of getting data from a i2c device
+    {
+        return 111;
+    }
+};
+
 #endif /* SRC_IMU_H_ */

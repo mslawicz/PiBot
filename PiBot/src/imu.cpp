@@ -48,3 +48,9 @@ void IMU::config(void)
 	data = {0x80, 0, 0};
 	//pInterface->write(IMU_Registers::CTRL_REG6_XL, data);
 }
+
+Gyroscope::Gyroscope(I2cBusId busId, uint8_t address, I2cPriority priority)
+    : I2cDevice(busId, address, priority)
+{
+
+}
