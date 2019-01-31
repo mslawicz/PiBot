@@ -77,7 +77,8 @@ class I2cDevice
 {
 public:
 	I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, I2cPriority devicePriority);
-	~I2cDevice();
+	// this makes this class abstract
+	virtual ~I2cDevice() = 0;
 	friend class I2cBus;
 private:
 	I2cBusId busId;
