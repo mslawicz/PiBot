@@ -237,8 +237,9 @@ I2cDevice::~I2cDevice()
 /*
  * puts i2c data to send into send queue and notifies i2c bus handler
  */
-void I2cDevice::writeData(char registerAddress, std::vector<char> data)
+void I2cDevice::writeData(unsigned registerAddress, std::vector<char> data)
 {
+    std::cout << "I want to send: address=" << address << "  regAddress=" << registerAddress << "\n";
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
         dataToSend.push(I2cDataContainer{address, registerAddress, 0, data});
@@ -249,8 +250,9 @@ void I2cDevice::writeData(char registerAddress, std::vector<char> data)
 /*
  * puts i2c data to initiate reception into send queue and notifies i2c bus handler
  */
-void I2cDevice::readDataRequest(char registerAddress, unsigned length)
+void I2cDevice::readDataRequest(unsigned registerAddress, unsigned length)
 {
+    std::cout << "I want to receive: address=" << address << "  regAddress=" << registerAddress << "  length=" << length << "\n";
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
         dataToSend.push(I2cDataContainer{address, registerAddress, length, std::vector<char>()});

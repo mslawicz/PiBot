@@ -36,13 +36,9 @@ int main(int argc, char* argv[])
 //	}
 //	std::cout << std::endl;
 
-	std::cout << "main before notification\n";
 	gyroscope.writeData(10, std::vector<char>{20, 30, 40});
-	std::cout << "main after notification, sleep\n";
 	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	std::cout << "main before notification\n";
 	gyroscope.readDataRequest(50, 3);
-	std::cout << "main after notification, sleep\n";
 	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	//Drive testDrive;	//XXX test
 	//testDrive.start();	// XXX test

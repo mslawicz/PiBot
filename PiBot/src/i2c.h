@@ -93,8 +93,8 @@ public:
 	// this makes this class abstract
 	virtual ~I2cDevice() = 0;
 	friend class I2cBus;
-	void writeData(char registerAddress, std::vector<char> data);
-	void readDataRequest(char registerAddress, unsigned length);
+	void writeData(unsigned registerAddress, std::vector<char> data);
+	void readDataRequest(unsigned registerAddress, unsigned length);
 private:
 	I2cBusId busId;
 	unsigned address;
