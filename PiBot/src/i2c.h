@@ -54,16 +54,17 @@ class I2cBus
 public:
 	I2cBus(I2cBusId i2cBusId);
 	~I2cBus();
-    void handler(void);
-    void requestToSend(void);
     void startHandler(void);
     void stopHandler(void);
-    void registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*> newDevice);
     static std::map<unsigned, I2cBus*> buses;
+    friend class I2cDevice;
 private:
+    void handler(void);
+    void requestToSend(void);
+    void registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*> newDevice);
     I2cBusId busId;
 	char* pData;
-	const unsigned DataBufSize = 100;
+	const unsigned DataBufSize = 30;
     std::mutex sendQueueMutex;
     std::condition_variable queueEvent;
     bool exitHandler;
@@ -77,6 +78,7 @@ class I2cDevice
 public:
 	I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, I2cPriority devicePriority);
 	~I2cDevice();
+	friend class I2cBus;
 private:
 	I2cBusId busId;
 	unsigned address;
