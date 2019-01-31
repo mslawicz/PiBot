@@ -36,11 +36,11 @@ int main(int argc, char* argv[])
 //	std::cout << std::endl;
 
 	std::cout << "main before notification\n";
-	//I2cBus::buses.find(I2C1)->second->requestToSend();
+	gyroscope.writeData(10, std::vector<char>{20, 30, 40});
 	std::cout << "main after notification, sleep\n";
 	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	std::cout << "main before notification\n";
-	//qqq I2cBus::buses.find(I2C1)->second->requestToSend();
+	gyroscope.readDataRequest(50, 3);
 	std::cout << "main after notification, sleep\n";
 	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	//Drive testDrive;	//XXX test

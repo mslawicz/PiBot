@@ -214,3 +214,21 @@ I2cDevice::~I2cDevice()
 		i2cClose(handle);
 	}
 }
+
+void I2cDevice::writeData(char registerAddress, std::vector<char> data)
+{
+    {
+        std::lock_guard<std::mutex> lock(sendQueueMutex);
+        dataToSend.push(I2cDataContainer{address, registerAddress, 0, data});
+    }
+    pI2cBus->requestToSend();
+}
+
+void I2cDevice::readDataRequest(char registerAddress, unsigned length)
+{
+    {
+        std::lock_guard<std::mutex> lock(sendQueueMutex);
+        dataToSend.push(I2cDataContainer{address, registerAddress, length, std::vector<char>()});
+    }
+    pI2cBus->requestToSend();
+}
