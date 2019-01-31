@@ -173,7 +173,7 @@ void I2cBus::registerDevice(std::tuple<uint8_t, unsigned, I2cDevice*> newDevice)
     std::sort(devices.begin(), devices.end());
 }
 
-I2cDevice::I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, uint8_t devicePriority)
+I2cDevice::I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, I2cPriority devicePriority)
 	: busId(i2cBusId)
 	, address(deviceAddres)
 	, priority(devicePriority)

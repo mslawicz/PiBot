@@ -22,7 +22,7 @@ enum I2cPriority
     GYROSCOPE,
     MOTOR,
     ACCELEROMETER,
-    MAGNETIC
+    MAGNETOMETER
 };
 
 enum I2cBusId
@@ -75,12 +75,12 @@ private:
 class I2cDevice
 {
 public:
-	I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, uint8_t devicePriority);
+	I2cDevice(I2cBusId i2cBusId, unsigned deviceAddres, I2cPriority devicePriority);
 	~I2cDevice();
 private:
 	I2cBusId busId;
 	unsigned address;
-	uint8_t priority;
+	I2cPriority priority;
 	int handle;
 	I2cBus* pI2cBus;
 };
