@@ -115,7 +115,8 @@ void Program::terminate(ExitCode exitCode)
 		{ HELP_REQUEST, "Program help requested" },
 		{ I2C_NOT_OPENED, "I2C opening error" },
 		{ WRONG_I2C_DEVICE, "Wrong I2C device" },
-		{ WRONG_I2C_BUS, "Wrong I2C bus" }
+		{ WRONG_I2C_BUS, "Wrong I2C bus" },
+		{ I2C_BUFFER_SIZE, "I2C receive buffer too small" }
 	};
 
 	if (exitCode == ExitCode::OK)
