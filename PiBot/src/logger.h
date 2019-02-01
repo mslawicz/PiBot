@@ -28,7 +28,9 @@ enum ExitCode
 	MEMORY_ALLOCATION_ERROR,
 	HELP_REQUEST,
 	I2C_NOT_OPENED,
-	WRONG_I2C_DEVICE
+	WRONG_I2C_DEVICE,
+	WRONG_I2C_BUS,
+	I2C_BUFFER_SIZE
 };
 
 // definition of logged messages severity level

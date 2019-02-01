@@ -9,6 +9,7 @@
 #define SRC_PROGRAM_H_
 
 #include "logger.h"
+#include "i2c.h"
 #include <vector>
 #include <map>
 
@@ -27,9 +28,10 @@ public:
 	void parseArguments(int argc, char* argv[]);
 	// checks if this option is provided in program arguments
 	bool isOptionProvided(std::string option) {return options.find(option) != options.end();}
+	// gets pointer to i2c bus object
 private:
-	// private constructor prevents from more objects creation
-	Program() {}
+	// private constructor prevents from creation more objects
+	Program();
 	void displayHelp(void);
 	std::map<std::string, std::vector<std::string>> options;
 };

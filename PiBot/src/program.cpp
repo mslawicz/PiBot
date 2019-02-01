@@ -18,6 +18,10 @@ Program& Program::getInstance(void)
 	return instance;
 }
 
+Program::Program()
+{
+}
+
 Program::~Program()
 {
 	// gpio termination should be called in the very end
@@ -81,6 +85,14 @@ void Program::initialize(void)
 	}
 
 	GPIO::initialize();
+	// create and register in a map I2C1 bus object
+	new I2cBus(I2C1);
+
+	//start handlers of all i2c buses
+	for(auto bus : I2cBus::buses)
+	{
+		bus.second->startHandler();
+	}
 }
 
 /*
@@ -102,7 +114,9 @@ void Program::terminate(ExitCode exitCode)
 		{ MEMORY_ALLOCATION_ERROR, "Memory allocation error" },
 		{ HELP_REQUEST, "Program help requested" },
 		{ I2C_NOT_OPENED, "I2C opening error" },
-		{ WRONG_I2C_DEVICE, "Wrong I2C device" }
+		{ WRONG_I2C_DEVICE, "Wrong I2C device" },
+		{ WRONG_I2C_BUS, "Wrong I2C bus" },
+		{ I2C_BUFFER_SIZE, "I2C receive buffer too small" }
 	};
 
 	if (exitCode == ExitCode::OK)
@@ -112,6 +126,13 @@ void Program::terminate(ExitCode exitCode)
 	else
 	{
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
+	}
+
+	//terminate i2c handlers and delete i2c bus objects
+	for(auto bus : I2cBus::buses)
+	{
+		bus.second->stopHandler();
+		delete bus.second;
 	}
 
 	//TODO: save log to file here
