@@ -26,7 +26,12 @@ enum I2cPriority
     MAGNETOMETER_PR
 };
 
-
+enum I2cDeviceAddress
+{
+    GYROSCOPE_ADDR = 0x68,
+    ACCELEROMETER_ADDR = GYROSCOPE_ADDR,
+    MAGNETOMETER_ADDR = 0x1E
+};
 
 enum I2cBusId
 {
