@@ -13,27 +13,6 @@
 
 MapOfI2cBuses I2cBus::buses;
 
-//
-//std::vector<char> I2C::read(unsigned address, unsigned length)
-//{
-//	if(length > DataBufSize)
-//	{
-//		length = DataBufSize;
-//		//TODO this improper scenario should be handled here
-//	}
-//	int no_of_bytes = i2cReadI2CBlockData(handle, address, p_data, length);
-//	std::vector<char> data(p_data, p_data+no_of_bytes);
-//	return data;
-//}
-//
-//void I2C::write(unsigned address, std::vector<char> data)
-//{
-//	int result = i2cWriteI2CBlockData(handle, address, &data[0], data.size());
-//	if(result)
-//	{
-//		//TODO write error handling
-//	}
-//}
 
 /*
  * constructor of the i2c bus object

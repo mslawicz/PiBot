@@ -20,11 +20,13 @@
 
 enum I2cPriority
 {
-    GYROSCOPE,
-    MOTOR,
-    ACCELEROMETER,
-    MAGNETOMETER
+    GYROSCOPE_PR,
+    MOTOR_PR,
+    ACCELEROMETER_PR,
+    MAGNETOMETER_PR
 };
+
+
 
 enum I2cBusId
 {
@@ -46,21 +48,6 @@ typedef std::tuple<I2cPriority, I2cDevice*> I2cDeviceContainer;
 // typedef for the map of i2c buses: bus id, pointer to I2cBus object
 typedef std::map<I2cBusId, I2cBus*> MapOfI2cBuses;
 
-//class I2C
-//{
-//public:
-//	I2C(unsigned busId, unsigned deviceAddress);
-//	~I2C();
-//	std::vector<char> read(unsigned address, unsigned length);
-//	void write(unsigned address, std::vector<char> data);
-//
-//private:
-//	unsigned bus_id;
-//	unsigned device_address;
-//	int handle;
-//	char* p_data;
-//	const unsigned DataBufSize = 100;
-//};
 
 class I2cBus
 {
