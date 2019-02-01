@@ -26,8 +26,8 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
-	Gyroscope gyroscope(I2cBusId::I2C1, 0x1E, I2cPriority::GYROSCOPE);  // example of an i2c object
-	Gyroscope anotherGyroscope(I2cBusId::I2C1, 77, I2cPriority::MAGNETOMETER);  // example of another i2c object just for test
+	Gyroscope gyroscope(I2cBusId::I2C1, 0x6B, I2cPriority::GYROSCOPE);  // example of an i2c object
+	Gyroscope magnetometer(I2cBusId::I2C1, 0x1E, I2cPriority::MAGNETOMETER);  // example of an i2c object
 	//auto Data = Magnetometer.read(0x20, 5);
 	//std::cout << "the length of Data vector: " << Data.size() << std::endl;
 //	for(auto Byte : Data)
@@ -38,7 +38,8 @@ int main(int argc, char* argv[])
 
 	gyroscope.writeData(10, std::vector<char>{20, 30, 40});
 	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	gyroscope.readDataRequest(50, 3);
+	gyroscope.readDataRequest(0x0F, 3);
+	magnetometer.readDataRequest(0x0F, 1);
 	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	//Drive testDrive;	//XXX test
 	//testDrive.start();	// XXX test

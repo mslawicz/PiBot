@@ -99,6 +99,7 @@ void I2cBus::handler(void)
                     }
                     if(std::get<1>(dataContainer) == 0)
                     {
+                        std::cout << ">>> write data: regAddress=" << std::get<0>(dataContainer) << " data[0]=" << (int)std::get<2>(dataContainer)[0] << "  length=" << std::get<2>(dataContainer).size() << "\n";
                         // i2c write operation
                         int result = i2cWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), &std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
                         if(result)
@@ -108,6 +109,7 @@ void I2cBus::handler(void)
                     }
                     else
                     {
+                        std::cout << ">>> read data: regAddress=" << std::get<0>(dataContainer) << "  length=" << std::get<1>(dataContainer) << "\n";
                         // i2c read operation
                         if(std::get<1>(dataContainer) > DataBufSize)
                         {
@@ -116,13 +118,12 @@ void I2cBus::handler(void)
                         int no_of_bytes = i2cReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), pData, std::get<1>(dataContainer));
                         std::vector<char> data(pData, pData+no_of_bytes);
                         {
+                            std::cout << ">>> read data[0]=" << (int)*pData << "  length=" << no_of_bytes << "\n";
                             //push received data to receive queue
                             std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
                             std::get<1>(*iDevice)->receivedData.push(I2cDataContainer{});
                         }
                     }
-
-                    std::cout << ">>> transmit data: address=" << std::get<1>(*iDevice)->address << "  regAddress=" << std::get<0>(dataContainer) << "  length=" << std::get<1>(dataContainer) << "\n";
 
                     // after transmission start from the beginning
                     iDevice = devices.begin();
