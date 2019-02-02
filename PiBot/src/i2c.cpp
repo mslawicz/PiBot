@@ -222,3 +222,18 @@ void I2cDevice::clearReceiveQueue(void)
     std::lock_guard<std::mutex> lock(receiveQueueMutex);
     receivedData = std::queue<I2cDataContainer>();
 }
+
+/*
+ * reads data container from the receive queue
+ */
+I2cDataContainer I2cDevice::readData(void)
+{
+    I2cDataContainer data;
+    if(!receivedData.empty())
+    {
+        std::lock_guard<std::mutex> lock(receiveQueueMutex);
+        data = receivedData.front();
+        receivedData.pop();
+    }
+    return data;
+}
