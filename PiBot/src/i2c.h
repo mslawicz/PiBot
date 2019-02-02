@@ -90,6 +90,7 @@ public:
 	void writeData(unsigned registerAddress, std::vector<char> data);
 	void readDataRequest(unsigned registerAddress, unsigned length);
 	void clearReceiveQueue(void);
+	bool receiveQueueEmpty(void) const {return receivedData.empty();}
 private:
 	I2cBusId busId;
 	I2cDeviceAddress address;
