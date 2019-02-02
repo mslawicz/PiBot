@@ -9,7 +9,7 @@
 
 Drive::Drive()
 {
-	pIMU = new IMU;
+	//pIMU = new IMU;
 
 	pGreenLED = new GPIO(23, PI_OUTPUT);	//XXX test
 	pGreenLED->write(1);	//XXX test
@@ -17,7 +17,7 @@ Drive::Drive()
 
 Drive::~Drive()
 {
-	delete pIMU;
+	//delete pIMU;
 
 	pGreenLED->write(0);	//XXX test
 	delete pGreenLED;	//XXX test
@@ -29,8 +29,7 @@ Drive::~Drive()
 void Drive::start(void)
 {
 	// enable gyroscope interrupts
-	gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0,
-			Drive::gyroInterruptCallback, this);
+	//gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0, Drive::gyroInterruptCallback, this);
 }
 
 /*
@@ -39,8 +38,7 @@ void Drive::start(void)
 void Drive::stop(void)
 {
 	// disable gyroscope interrupts
-	gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0, nullptr,
-			this);
+	//gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0, nullptr, this);
 }
 
 /*

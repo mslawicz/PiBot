@@ -10,6 +10,8 @@
 
 #include <pigpio.h>
 
+#define GYRO_INT    4
+
 class GPIO
 {
 public:

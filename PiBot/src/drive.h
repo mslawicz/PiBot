@@ -28,7 +28,7 @@ private:
 	void pitchControl(int level, uint32_t tick);
 
 	// pointer to inertial measurement unit
-	IMU* pIMU;
+	//IMU* pIMU;
 
 	GPIO* pGreenLED;	// XXX for test only
 };

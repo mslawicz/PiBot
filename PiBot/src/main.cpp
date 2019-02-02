@@ -30,7 +30,6 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
 	Gyroscope gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);  // example of an i2c object
-	Gyroscope magnetometer(I2cBusId::I2C1, I2cDeviceAddress::MAGNETOMETER_ADDR, I2cPriority::MAGNETOMETER_PR);  // example of an i2c object
 
 
 //	std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -50,11 +49,7 @@ int main(int argc, char* argv[])
 	    {
 	        loopMark.write(1);
 	        event = now;
-	        gyroscope.clearReceiveQueue();
-	        magnetometer.clearReceiveQueue();
-	        gyroscope.writeData(ImuRegisters::CTRL_REG1_G, std::vector<char>{0x82});
-	        magnetometer.readDataRequest(MagnetometerRegisters::WHO_AM_I_M, 1);
-	        gyroscope.readDataRequest(ImuRegisters::WHO_AM_I, 1);
+	        gyroscope.readDataRequest(ImuRegisters::OUT_X_L_G, 6);
 	        loopMark.write(0);
 	    }
 	    if(!gyroscope.receiveQueueEmpty())

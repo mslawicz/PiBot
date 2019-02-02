@@ -12,29 +12,14 @@
 #include "i2c.h"
 
 
-class IMU
-{
-public:
-	IMU();
-	~IMU();
-	unsigned int getGyroInterruptPort(void) const { return pGyroInterruptPort->getNumber(); }
-private:
-	// configuration of IMU device
-	void config(void);
-	// pointer to port for gyroscope interrupts
-	GPIO* pGyroInterruptPort;
-	// pointer to interface to IMU device
-	//I2C* pInterface;
-};
-
 class Gyroscope : public I2cDevice
 {
 public:
     Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
-    int getData(void) const     // example of getting data from a i2c device
-    {
-        return 111;
-    }
+    ~Gyroscope();
+private:
+    // pointer to port for gyroscope interrupts
+    GPIO* pGyroInterruptPort;
 };
 
 #endif /* SRC_IMU_H_ */
