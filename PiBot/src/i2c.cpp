@@ -52,72 +52,62 @@ void I2cBus::handler(void)
 	Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler started");
     do
     {
-        std::cout << ">>> handler loop start\n";
         std::this_thread::yield();
         std::unique_lock<std::mutex> lock(handlerMutex);
         queueEvent.wait(lock, [this]() {return (!queueEmpty.test_and_set() || exitHandler); });
         lock.unlock();
 
         auto iDevice = devices.begin();
+        // iterate through all registered i2c devices until their send queues are empty
         while(iDevice != devices.end())
         {
-            // iterate through all registered i2c devices until their send queues are empty
-            std::cout << ">>> checking device: priority=" << (int)std::get<0>(*iDevice) << "  address=" << std::get<1>(*iDevice)->address << "\n";
-
+            //if the queue is not empty - pop message
+            if(!std::get<1>(*iDevice)->dataToSend.empty())
             {
-                //if the queue is not empty - pop message
-                if(!std::get<1>(*iDevice)->dataToSend.empty())
+                // the sending queue of this i2c device is not empty
+                I2cDataContainer dataContainer;
                 {
-                    // the sending queue of this i2c device is not empty
-                    I2cDataContainer dataContainer;
+                    // queue modification protected by mutex
+                    std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->sendQueueMutex);
+                    dataContainer = std::get<1>(*iDevice)->dataToSend.front();
+                    std::get<1>(*iDevice)->dataToSend.pop();
+                }
+                if(std::get<1>(dataContainer) == 0)
+                {
+                    // i2c write operation
+                    int result = i2cWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), &std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
+                    if(result)
                     {
-                        // queue modification protected by mutex
-                        std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->sendQueueMutex);
-                        dataContainer = std::get<1>(*iDevice)->dataToSend.front();
-                        std::get<1>(*iDevice)->dataToSend.pop();
+                        Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, " device=", std::get<1>(*iDevice)->address);
                     }
-                    if(std::get<1>(dataContainer) == 0)
-                    {
-                        std::cout << ">>> write data: regAddress=" << std::get<0>(dataContainer) << " data[0]=" << (int)std::get<2>(dataContainer)[0] << "  length=" << std::get<2>(dataContainer).size() << "\n";
-                        // i2c write operation
-                        int result = i2cWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), &std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
-                        if(result)
-                        {
-                            Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, " device=", std::get<1>(*iDevice)->address);
-                        }
-                    }
-                    else
-                    {
-                        std::cout << ">>> read data: regAddress=" << std::get<0>(dataContainer) << "  length=" << std::get<1>(dataContainer) << "\n";
-                        // i2c read operation
-                        if(std::get<1>(dataContainer) > DataBufSize)
-                        {
-                            Program::getInstance().terminate(I2C_BUFFER_SIZE);
-                        }
-                        int no_of_bytes = i2cReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), pData, std::get<1>(dataContainer));
-                        std::vector<char> data(pData, pData+no_of_bytes);
-                        {
-                            std::cout << ">>> read data[0]=" << (int)*pData << "  length=" << no_of_bytes << "\n";
-                            //push received data to receive queue
-                            std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
-                            std::get<1>(*iDevice)->receivedData.push(I2cDataContainer{});
-                        }
-                    }
-
-                    // after transmission start from the beginning
-                    iDevice = devices.begin();
                 }
                 else
                 {
-                    // if nothing to transmit - move to next device
-                    iDevice++;
+                    // i2c read operation
+                    if(std::get<1>(dataContainer) > DataBufSize)
+                    {
+                        Program::getInstance().terminate(I2C_BUFFER_SIZE);
+                    }
+                    int no_of_bytes = i2cReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), pData, std::get<1>(dataContainer));
+                    std::vector<char> data(pData, pData+no_of_bytes);
+                    {
+                        //push received data to receive queue
+                        std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
+                        std::get<1>(*iDevice)->receivedData.push(I2cDataContainer{});
+                    }
                 }
+
+                // after transmission start from the beginning
+                iDevice = devices.begin();
+            }
+            else
+            {
+                // if nothing to transmit - move to next device
+                iDevice++;
             }
         }
 
-        std::cout << ">>> handler loop end\n";
     } while (!exitHandler);
-    std::cout << ">>> exiting handler\n";
 }
 
 /*
@@ -125,7 +115,6 @@ void I2cBus::handler(void)
  */
 void I2cBus::requestToSend(void)
 {
-    std::cout << "sending notification to handler\n";
     queueEmpty.clear();
     queueEvent.notify_one();
 }
@@ -206,7 +195,6 @@ I2cDevice::~I2cDevice()
  */
 void I2cDevice::writeData(unsigned registerAddress, std::vector<char> data)
 {
-    std::cout << "I want to send: address=" << address << "  regAddress=" << registerAddress << "\n";
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
         dataToSend.push(I2cDataContainer{registerAddress, 0, data});
@@ -219,7 +207,6 @@ void I2cDevice::writeData(unsigned registerAddress, std::vector<char> data)
  */
 void I2cDevice::readDataRequest(unsigned registerAddress, unsigned length)
 {
-    std::cout << "I want to receive: address=" << address << "  regAddress=" << registerAddress << "  length=" << length << "\n";
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
         dataToSend.push(I2cDataContainer{registerAddress, length, std::vector<char>()});
