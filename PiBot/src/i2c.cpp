@@ -213,3 +213,12 @@ void I2cDevice::readDataRequest(unsigned registerAddress, unsigned length)
     }
     pI2cBus->requestToSend();
 }
+
+/*
+ * clears device reception queue without reading it
+ */
+void I2cDevice::clearReceiveQueue(void)
+{
+    std::lock_guard<std::mutex> lock(receiveQueueMutex);
+    receivedData = std::queue<I2cDataContainer>();
+}

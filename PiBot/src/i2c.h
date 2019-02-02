@@ -89,6 +89,7 @@ public:
 	friend class I2cBus;
 	void writeData(unsigned registerAddress, std::vector<char> data);
 	void readDataRequest(unsigned registerAddress, unsigned length);
+	void clearReceiveQueue(void);
 private:
 	I2cBusId busId;
 	I2cDeviceAddress address;

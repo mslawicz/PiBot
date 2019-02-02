@@ -57,6 +57,7 @@ int main(int argc, char* argv[])
 	    {
 	        event = now;
 	        loopMark.pulse(100, 1);
+	        gyroscope.clearReceiveQueue();
 	    }
 
 	}
