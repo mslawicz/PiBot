@@ -31,16 +31,7 @@ int main(int argc, char* argv[])
 	Gyroscope gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);  // example of an i2c object
 	Gyroscope magnetometer(I2cBusId::I2C1, I2cDeviceAddress::MAGNETOMETER_ADDR, I2cPriority::MAGNETOMETER_PR);  // example of an i2c object
 
-//	for(auto Byte : Data)
-//	{
-//		std::cout << std::hex << (int)Byte << ",";
-//	}
-//	std::cout << std::endl;
 
-//	gyroscope.writeData(10, std::vector<char>{20, 30, 40});
-//	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-//	gyroscope.readDataRequest(0x0F, 3);
-//	magnetometer.readDataRequest(0x0F, 1);
 //	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	//Drive testDrive;	//XXX test
 	//testDrive.start();	// XXX test
@@ -49,17 +40,21 @@ int main(int argc, char* argv[])
 	//testDrive.stop();	// XXX test
 
 	std::chrono::steady_clock::time_point event = std::chrono::steady_clock::now();
-	loopMark.write(0);
 
 	while(terminatePin.read())
 	{
 	    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() >= 10)
 	    {
+	        loopMark.write(1);
 	        event = now;
 	        loopMark.pulse(100, 1);
 	        gyroscope.clearReceiveQueue();
-	        gyroscope.writeData(IMU_Registers::CTRL_REG1_G, std::vector<char>{0x82});
+	        magnetometer.clearReceiveQueue();
+	        gyroscope.writeData(ImuRegisters::CTRL_REG1_G, std::vector<char>{0x82});
+	        magnetometer.readDataRequest(MagnetometerRegisters::WHO_AM_I_M, 1);
+	        gyroscope.readDataRequest(ImuRegisters::WHO_AM_I, 1);
+	        loopMark.write(0);
 	    }
 
 	}
