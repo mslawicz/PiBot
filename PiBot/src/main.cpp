@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
 	GPIO loopMark(12, PI_OUTPUT);
+	GPIO queueMark(16, PI_OUTPUT);
 	//GPIO GreenLED(23, PI_OUTPUT);
 
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
@@ -40,6 +41,7 @@ int main(int argc, char* argv[])
 	//testDrive.stop();	// XXX test
 
 	std::chrono::steady_clock::time_point event = std::chrono::steady_clock::now();
+	queueMark.write(0);
 
 	while(terminatePin.read())
 	{
@@ -48,7 +50,6 @@ int main(int argc, char* argv[])
 	    {
 	        loopMark.write(1);
 	        event = now;
-	        loopMark.pulse(100, 1);
 	        gyroscope.clearReceiveQueue();
 	        magnetometer.clearReceiveQueue();
 	        gyroscope.writeData(ImuRegisters::CTRL_REG1_G, std::vector<char>{0x82});
@@ -56,7 +57,12 @@ int main(int argc, char* argv[])
 	        gyroscope.readDataRequest(ImuRegisters::WHO_AM_I, 1);
 	        loopMark.write(0);
 	    }
-
+	    if(!gyroscope.receiveQueueEmpty())
+	    {
+	        // there's something in a queue
+	        queueMark.pulse(100, 1);
+	        gyroscope.clearReceiveQueue();
+	    }
 	}
 
 
