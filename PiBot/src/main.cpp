@@ -20,7 +20,8 @@ int main(int argc, char* argv[])
 
 
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
-	GPIO UserKey(21, PI_INPUT, PI_PUD_UP);
+	GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
+	GPIO loopMark(12, PI_OUTPUT);
 	//GPIO GreenLED(23, PI_OUTPUT);
 
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
@@ -28,26 +29,37 @@ int main(int argc, char* argv[])
 
 	Gyroscope gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);  // example of an i2c object
 	Gyroscope magnetometer(I2cBusId::I2C1, I2cDeviceAddress::MAGNETOMETER_ADDR, I2cPriority::MAGNETOMETER_PR);  // example of an i2c object
-	//auto Data = Magnetometer.read(0x20, 5);
-	//std::cout << "the length of Data vector: " << Data.size() << std::endl;
+
 //	for(auto Byte : Data)
 //	{
 //		std::cout << std::hex << (int)Byte << ",";
 //	}
 //	std::cout << std::endl;
 
-	gyroscope.writeData(10, std::vector<char>{20, 30, 40});
-	std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	gyroscope.readDataRequest(0x0F, 3);
-	magnetometer.readDataRequest(0x0F, 1);
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+//	gyroscope.writeData(10, std::vector<char>{20, 30, 40});
+//	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+//	gyroscope.readDataRequest(0x0F, 3);
+//	magnetometer.readDataRequest(0x0F, 1);
+//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	//Drive testDrive;	//XXX test
 	//testDrive.start();	// XXX test
 	//while(UserKey.read());
 	//gpioDelay(1000);
 	//testDrive.stop();	// XXX test
 
+	std::chrono::steady_clock::time_point event = std::chrono::steady_clock::now();
+	loopMark.write(0);
 
+	while(terminatePin.read())
+	{
+	    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() >= 10)
+	    {
+	        event = now;
+	        loopMark.pulse(100, 1);
+	    }
+
+	}
 
 
 	Program::getInstance().terminate();
