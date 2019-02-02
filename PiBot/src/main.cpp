@@ -10,6 +10,7 @@
 #include "program.h"
 #include "logger.h"
 #include "drive.h"	//XXX for test
+#include "LSM9DS1.h"  //XXX for test
 #include <iostream>
 
 int main(int argc, char* argv[])
@@ -58,6 +59,7 @@ int main(int argc, char* argv[])
 	        event = now;
 	        loopMark.pulse(100, 1);
 	        gyroscope.clearReceiveQueue();
+	        gyroscope.writeData(IMU_Registers::CTRL_REG1_G, std::vector<char>{0x82});
 	    }
 
 	}
