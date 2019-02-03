@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 	            std::cout << "---" << std::endl;
 	        }
 	    }
-	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 20);
+	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 5);
 
 
     testDrive.stop(); // XXX test

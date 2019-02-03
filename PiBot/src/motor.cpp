@@ -7,7 +7,8 @@
 
 #include "motor.h"
 
-Motor::Motor()
+Motor::Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority)
+    : I2cDevice(busId, address, priority)
 {
     // TODO Auto-generated constructor stub
 

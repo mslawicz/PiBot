@@ -11,8 +11,6 @@
 Drive::Drive()
 {
     pGyroscope = new Gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);
-    // set gyroscope interrupt pin as input
-    GPIO gyroscopeInterruptPin(GYRO_INT_PIN, PI_INPUT, PI_PUD_DOWN);
 }
 
 Drive::~Drive()

@@ -17,9 +17,6 @@ class Gyroscope : public I2cDevice
 public:
     Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
     ~Gyroscope();
-private:
-    // pointer to port for gyroscope interrupts
-    GPIO* pGyroInterruptPort;
 };
 
 #endif /* SRC_IMU_H_ */

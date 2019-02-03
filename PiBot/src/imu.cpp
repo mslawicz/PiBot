@@ -13,8 +13,8 @@
 Gyroscope::Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority)
     : I2cDevice(busId, address, priority)
 {
-    // port of gyroscope interrupt signal
-    pGyroInterruptPort = new GPIO(GYRO_INT_PIN, PI_INPUT, PI_PUD_DOWN);
+    // set gyroscope interrupt pin as input
+    GPIO gyroscopeInterruptPin(GYRO_INT_PIN, PI_INPUT, PI_PUD_DOWN);
 
     // Gyroscope data ready on INT 1_A/G pin
     std::vector<uint8_t> data = {0x02};
@@ -28,5 +28,5 @@ Gyroscope::Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority prior
 
 Gyroscope::~Gyroscope()
 {
-    delete pGyroInterruptPort;
+
 }

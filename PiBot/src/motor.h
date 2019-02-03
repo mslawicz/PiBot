@@ -8,10 +8,12 @@
 #ifndef SRC_MOTOR_H_
 #define SRC_MOTOR_H_
 
-class Motor
+#include "i2c.h"
+
+class Motor : public I2cDevice
 {
 public:
-    Motor();
+    Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
     ~Motor();
 };
 
