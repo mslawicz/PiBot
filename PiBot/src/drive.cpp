@@ -5,22 +5,19 @@
  *      Author: Marcin
  */
 
+#include "LSM9DS1.h"
 #include "drive.h"
 
 Drive::Drive()
 {
-	//pIMU = new IMU;
+    pGyroscope = new Gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);
 
-	pGreenLED = new GPIO(23, PI_OUTPUT);	//XXX test
-	pGreenLED->write(1);	//XXX test
 }
 
 Drive::~Drive()
 {
-	//delete pIMU;
+	delete pGyroscope;
 
-	pGreenLED->write(0);	//XXX test
-	delete pGreenLED;	//XXX test
 }
 
 /*
@@ -29,7 +26,7 @@ Drive::~Drive()
 void Drive::start(void)
 {
 	// enable gyroscope interrupts
-	//gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0, Drive::gyroInterruptCallback, this);
+	gpioSetISRFuncEx(GYRO_INT, RISING_EDGE, 0, Drive::gyroInterruptCallback, this);
 }
 
 /*
@@ -38,18 +35,31 @@ void Drive::start(void)
 void Drive::stop(void)
 {
 	// disable gyroscope interrupts
-	//gpioSetISRFuncEx(pIMU->getGyroInterruptPort(), RISING_EDGE, 0, nullptr, this);
+	gpioSetISRFuncEx(GYRO_INT, RISING_EDGE, 0, nullptr, this);
 }
 
 /*
  * callback function for gyroscope generated interrupts
  * it must be a static method, but the pointer to drive object is passed as an argument
+ * Parameter   Value    Meaning
+ *
+ * gpio        0-53     The GPIO which has changed state
+ *
+ * level       0-2      0 = change to low (a falling edge)
+ *                      1 = change to high (a rising edge)
+ *                      2 = no level change (interrupt timeout)
+ *
+ * tick        32 bit   The number of microseconds since boot
+ *                      WARNING: this wraps around from
+ *                      4294967295 to 0 roughly every 72 minutes
+ *
+ * pDriveObject pointer Pointer to an arbitrary object
+ *
  */
 void Drive::gyroInterruptCallback(int gpio, int level, uint32_t tick,
 		void* pDriveObject)
 {
 	static_cast<Drive*>(pDriveObject)->pitchControl(level, tick);
-
 }
 
 /*
@@ -57,7 +67,17 @@ void Drive::gyroInterruptCallback(int gpio, int level, uint32_t tick,
  */
 void Drive::pitchControl(int level, uint32_t tick)
 {
-	pGreenLED->toggle();	//XXX test
+    GPIO interMark(16, PI_OUTPUT);
+    interMark.write(1);
+    if(!pGyroscope->receiveQueueEmpty())
+    {
+        // there's something in a reception queue
+        pGyroscope->getData();
+    }
+
+    // send read data request; this data is to be used in the next function call
+    pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, 6);
+    interMark.write(0);
 }
 
 

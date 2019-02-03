@@ -91,7 +91,7 @@ public:
 	void readDataRequest(unsigned registerAddress, unsigned length);
 	void clearReceiveQueue(void);
 	bool receiveQueueEmpty(void) const {return receivedData.empty();}
-	I2cDataContainer readData(void);
+	I2cDataContainer getData(void);
 private:
 	I2cBusId busId;
 	I2cDeviceAddress address;

@@ -10,7 +10,6 @@
 #include "program.h"
 #include "logger.h"
 #include "drive.h"	//XXX for test
-#include "LSM9DS1.h"  //XXX for test
 #include <iostream>
 
 int main(int argc, char* argv[])
@@ -23,24 +22,19 @@ int main(int argc, char* argv[])
 	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
 	GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
 	GPIO loopMark(12, PI_OUTPUT);
-	GPIO queueMark(16, PI_OUTPUT);
 	//GPIO GreenLED(23, PI_OUTPUT);
 
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
-	Gyroscope gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);  // example of an i2c object
 
-
-//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	//Drive testDrive;	//XXX test
-	//testDrive.start();	// XXX test
+	//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	Drive testDrive;	//XXX test
+	testDrive.start();	// XXX test
 	//while(UserKey.read());
 	//gpioDelay(1000);
-	//testDrive.stop();	// XXX test
 
 	std::chrono::steady_clock::time_point event = std::chrono::steady_clock::now();
-	queueMark.write(0);
 
 	while(terminatePin.read())
 	{
@@ -49,17 +43,11 @@ int main(int argc, char* argv[])
 	    {
 	        loopMark.write(1);
 	        event = now;
-	        gyroscope.readDataRequest(ImuRegisters::OUT_X_L_G, 6);
 	        loopMark.write(0);
 	    }
-	    if(!gyroscope.receiveQueueEmpty())
-	    {
-	        // there's something in a queue
-	        queueMark.pulse(100, 1);
-	        gyroscope.clearReceiveQueue();
-	    }
-	}
 
+	}
+    testDrive.stop(); // XXX test
 
 	Program::getInstance().terminate();
 	return 0;

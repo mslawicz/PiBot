@@ -26,11 +26,8 @@ private:
 	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
 	// pitch control method
 	void pitchControl(int level, uint32_t tick);
-
-	// pointer to inertial measurement unit
-	//IMU* pIMU;
-
-	GPIO* pGreenLED;	// XXX for test only
+	// pointer to gyroscope device
+	Gyroscope* pGyroscope;
 };
 
 #endif /* SRC_DRIVE_H_ */

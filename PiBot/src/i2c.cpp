@@ -224,9 +224,9 @@ void I2cDevice::clearReceiveQueue(void)
 }
 
 /*
- * reads data container from the receive queue
+ * gets data container from the receive queue
  */
-I2cDataContainer I2cDevice::readData(void)
+I2cDataContainer I2cDevice::getData(void)
 {
     I2cDataContainer data;
     if(!receivedData.empty())
