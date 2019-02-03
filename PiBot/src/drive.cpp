@@ -27,9 +27,8 @@ Drive::~Drive()
 void Drive::start(void)
 {
 	// enable gyroscope interrupts
-	gpioSetISRFuncEx(GYRO_INT_PIN, RISING_EDGE, 0, Drive::gyroInterruptCallback, this);
-	// trig the first data readout
-	pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, 6);
+    // interrupt function is called either on interrupt signal or after stated timeout in ms
+	gpioSetISRFuncEx(GYRO_INT_PIN, RISING_EDGE, 10, Drive::gyroInterruptCallback, this);
 }
 
 /*
