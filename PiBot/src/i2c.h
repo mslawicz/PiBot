@@ -47,7 +47,7 @@ class I2cDevice;
 // typedef for sent/received i2c data container:
 // data sent container: register address, no of bytes requested to read (0=write only), vector of data to send (may be empty when read request)
 // data received container: register address, no of bytes read (==length of vector), vector of data received
-typedef std::tuple<unsigned, unsigned, std::vector<char>>   I2cDataContainer;
+typedef std::tuple<unsigned, unsigned, std::vector<uint8_t>>   I2cDataContainer;
 
 // typedef for i2c device definition: priority, pointer to I2cDevice object
 typedef std::tuple<I2cPriority, I2cDevice*> I2cDeviceContainer;
@@ -70,7 +70,7 @@ private:
     void requestToSend(void);
     void registerDevice(I2cDeviceContainer newDevice);
     I2cBusId busId;
-	char* pData;
+	uint8_t* pData;
 	const unsigned DataBufSize = 30;
     std::mutex handlerMutex;
     std::condition_variable queueEvent;
@@ -87,7 +87,7 @@ public:
 	// this makes this class abstract
 	virtual ~I2cDevice() = 0;
 	friend class I2cBus;
-	void writeData(unsigned registerAddress, std::vector<char> data);
+	void writeData(unsigned registerAddress, std::vector<uint8_t> data);
 	void readDataRequest(unsigned registerAddress, unsigned length);
 	void clearReceiveQueue(void);
 	bool receiveQueueEmpty(void) const {return receivedData.empty();}

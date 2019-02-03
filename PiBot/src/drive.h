@@ -21,7 +21,7 @@ public:
 	void start(void);
 	// stops the control of motors
 	void stop(void);
-	std::vector<char> gyroXYZ;  //XXX test
+	std::vector<uint8_t> gyroXYZ;  //XXX test
 private:
 	// callback function for gyroscope generated interrupts
 	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);

@@ -17,7 +17,7 @@ Gyroscope::Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority prior
     pGyroInterruptPort = new GPIO(GYRO_INT_PIN, PI_INPUT, PI_PUD_DOWN);
 
     // Gyroscope data ready on INT 1_A/G pin
-    std::vector<char> data = {0x02};
+    std::vector<uint8_t> data = {0x02};
     writeData(ImuRegisters::INT1_CTRL, data);
     // gyroscope output data rate 238 Hz, 245 dps, LPF=29 Hz
     // LPF2 output for interrupts and DataReg

@@ -20,7 +20,7 @@ MapOfI2cBuses I2cBus::buses;
 I2cBus::I2cBus(I2cBusId i2cBusId)
 	: busId(i2cBusId)
 {
-	pData = new char[DataBufSize];
+	pData = new uint8_t[DataBufSize];
 	if(pData == nullptr)
 	{
 		Program::getInstance().terminate(MEMORY_ALLOCATION_ERROR);
@@ -75,7 +75,7 @@ void I2cBus::handler(void)
                 if(std::get<1>(dataContainer) == 0)
                 {
                     // i2c write operation
-                    int result = i2cWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), &std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
+                    int result = i2cWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)&std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
                     if(result)
                     {
                         Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, " device=", std::get<1>(*iDevice)->address);
@@ -88,8 +88,8 @@ void I2cBus::handler(void)
                     {
                         Program::getInstance().terminate(I2C_BUFFER_SIZE);
                     }
-                    int no_of_bytes = i2cReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), pData, std::get<1>(dataContainer));
-                    std::vector<char> data(pData, pData+no_of_bytes);
+                    int no_of_bytes = i2cReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)pData, std::get<1>(dataContainer));
+                    std::vector<uint8_t> data(pData, pData+no_of_bytes);
                     {
                         //push received data to receive queue
                         std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
@@ -193,7 +193,7 @@ I2cDevice::~I2cDevice()
 /*
  * puts i2c data to send into send queue and notifies i2c bus handler
  */
-void I2cDevice::writeData(unsigned registerAddress, std::vector<char> data)
+void I2cDevice::writeData(unsigned registerAddress, std::vector<uint8_t> data)
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
@@ -209,7 +209,7 @@ void I2cDevice::readDataRequest(unsigned registerAddress, unsigned length)
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
-        dataToSend.push(I2cDataContainer{registerAddress, length, std::vector<char>()});
+        dataToSend.push(I2cDataContainer{registerAddress, length, std::vector<uint8_t>()});
     }
     pI2cBus->requestToSend();
 }
