@@ -8,7 +8,9 @@
 #ifndef SRC_MOTOR_H_
 #define SRC_MOTOR_H_
 
+
 #include "i2c.h"
+#include "PCA9685.h"
 
 class Motor : public I2cDevice
 {

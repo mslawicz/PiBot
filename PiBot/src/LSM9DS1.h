@@ -8,7 +8,6 @@
 #ifndef SRC_LSM9DS1_H_
 #define SRC_LSM9DS1_H_
 
-#define LSM9DS1_AG	0x68
 
 enum ImuRegisters
 {

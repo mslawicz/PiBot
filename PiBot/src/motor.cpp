@@ -6,11 +6,13 @@
  */
 
 #include "motor.h"
+#include <vector>
 
 Motor::Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority)
     : I2cDevice(busId, address, priority)
 {
-    // TODO Auto-generated constructor stub
+    // register auto increment enable
+    writeData(PCA9685Registers::MODE1, std::vector<uint8_t>{0x20});
 
 }
 
