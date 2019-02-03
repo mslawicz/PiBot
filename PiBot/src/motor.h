@@ -17,6 +17,7 @@ class Motor : public I2cDevice
 public:
     Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
     ~Motor();
+    void test(void);    //XXX test
 };
 
 #endif /* SRC_MOTOR_H_ */

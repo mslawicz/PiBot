@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
+	Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR); // motor test object
 
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	Drive testDrive;	//XXX test
@@ -36,6 +37,7 @@ int main(int argc, char* argv[])
 	//while(UserKey.read());
 	//gpioDelay(1000);
 
+	testMotor.test();
 
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point event = start;
@@ -56,8 +58,6 @@ int main(int argc, char* argv[])
 	        }
 	    }
 	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 1);
-
-	Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR);
 
 
     testDrive.stop(); // XXX test
