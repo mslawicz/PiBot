@@ -10,7 +10,7 @@
 
 #include <pigpio.h>
 
-#define GYRO_INT    4
+#define GYRO_INT_PIN    4
 
 class GPIO
 {

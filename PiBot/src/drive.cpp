@@ -11,7 +11,8 @@
 Drive::Drive()
 {
     pGyroscope = new Gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);
-
+    // set gyroscope interrupt pin as input
+    GPIO gyroscopeInterruptPin(GYRO_INT_PIN, PI_INPUT, PI_PUD_DOWN);
 }
 
 Drive::~Drive()
@@ -26,7 +27,9 @@ Drive::~Drive()
 void Drive::start(void)
 {
 	// enable gyroscope interrupts
-	gpioSetISRFuncEx(GYRO_INT, RISING_EDGE, 0, Drive::gyroInterruptCallback, this);
+	gpioSetISRFuncEx(GYRO_INT_PIN, RISING_EDGE, 0, Drive::gyroInterruptCallback, this);
+	// trig the first data readout
+	pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, 6);
 }
 
 /*
@@ -35,7 +38,7 @@ void Drive::start(void)
 void Drive::stop(void)
 {
 	// disable gyroscope interrupts
-	gpioSetISRFuncEx(GYRO_INT, RISING_EDGE, 0, nullptr, this);
+	gpioSetISRFuncEx(GYRO_INT_PIN, RISING_EDGE, 0, nullptr, this);
 }
 
 /*

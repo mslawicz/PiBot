@@ -11,6 +11,7 @@
 #include "logger.h"
 #include "drive.h"	//XXX for test
 #include <iostream>
+#include <chrono>
 
 int main(int argc, char* argv[])
 {
@@ -34,19 +35,22 @@ int main(int argc, char* argv[])
 	//while(UserKey.read());
 	//gpioDelay(1000);
 
-	std::chrono::steady_clock::time_point event = std::chrono::steady_clock::now();
-
-	while(terminatePin.read())
+	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point now;
+	do
 	{
-	    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() >= 10)
-	    {
-	        loopMark.write(1);
-	        event = now;
-	        loopMark.write(0);
-	    }
+	    now = std::chrono::steady_clock::now();
+	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 5);
+//	while(terminatePin.read())
+//	{
+//	    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+//	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() >= 10)
+//	    {
+//	        loopMark.write(1);
+//	        event = now;
+//	        loopMark.write(0);
+//	    }
 
-	}
     testDrive.stop(); // XXX test
 
 	Program::getInstance().terminate();
