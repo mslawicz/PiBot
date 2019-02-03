@@ -42,28 +42,20 @@ int main(int argc, char* argv[])
 	do
 	{
 	    now = std::chrono::steady_clock::now();
-	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() > 500)
+	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() > 250)
 	    {
 	        event = now;
 	        if(testDrive.gyroXYZ.size()>=6)
 	        {
-	            std::cout << testDrive.gyroXYZ[0] + ((int)testDrive.gyroXYZ[1] << 8) << std::endl;
+	            std::cout << ((int16_t)(testDrive.gyroXYZ[0] | (testDrive.gyroXYZ[1] << 8))) / (double)0x7FFF << std::endl;
 	        }
 	        else
 	        {
 	            std::cout << "---" << std::endl;
 	        }
 	    }
-	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 5);
-//	while(terminatePin.read())
-//	{
-//	    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-//	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() >= 10)
-//	    {
-//	        loopMark.write(1);
-//	        event = now;
-//	        loopMark.write(0);
-//	    }
+	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 20);
+
 
     testDrive.stop(); // XXX test
 
