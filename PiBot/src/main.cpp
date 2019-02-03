@@ -10,6 +10,7 @@
 #include "program.h"
 #include "logger.h"
 #include "drive.h"	//XXX for test
+#include "motor.h"  //XXX for test
 #include <iostream>
 #include <chrono>
 
@@ -54,7 +55,9 @@ int main(int argc, char* argv[])
 	            std::cout << "---" << std::endl;
 	        }
 	    }
-	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 5);
+	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 1);
+
+	Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR);
 
 
     testDrive.stop(); // XXX test
