@@ -74,8 +74,10 @@ void Drive::pitchControl(int level, uint32_t tick)
     if(!pGyroscope->receiveQueueEmpty())
     {
         // there's something in a reception queue
-        pGyroscope->getData();
+        auto data = pGyroscope->getData();
+        gyroXYZ = std::get<2>(data);    //XXX for test
     }
+
 
     // send read data request; this data is to be used in the next function call
     pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, 6);

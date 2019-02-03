@@ -35,11 +35,25 @@ int main(int argc, char* argv[])
 	//while(UserKey.read());
 	//gpioDelay(1000);
 
+
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point event = start;
 	std::chrono::steady_clock::time_point now;
 	do
 	{
 	    now = std::chrono::steady_clock::now();
+	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() > 500)
+	    {
+	        event = now;
+	        if(testDrive.gyroXYZ.size()>=6)
+	        {
+	            std::cout << testDrive.gyroXYZ[0] + ((int)testDrive.gyroXYZ[1] << 8) << std::endl;
+	        }
+	        else
+	        {
+	            std::cout << "---" << std::endl;
+	        }
+	    }
 	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 5);
 //	while(terminatePin.read())
 //	{

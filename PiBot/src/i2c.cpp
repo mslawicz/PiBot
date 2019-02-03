@@ -93,7 +93,7 @@ void I2cBus::handler(void)
                     {
                         //push received data to receive queue
                         std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
-                        std::get<1>(*iDevice)->receivedData.push(I2cDataContainer{});
+                        std::get<1>(*iDevice)->receivedData.push(I2cDataContainer{std::get<0>(dataContainer), no_of_bytes, data});
                     }
                 }
 
