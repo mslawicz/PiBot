@@ -30,7 +30,8 @@ enum ExitCode
 	I2C_NOT_OPENED,
 	WRONG_I2C_DEVICE,
 	WRONG_I2C_BUS,
-	I2C_BUFFER_SIZE
+	I2C_BUFFER_SIZE,
+	BAD_MOTOR_NO
 };
 
 // definition of logged messages severity level

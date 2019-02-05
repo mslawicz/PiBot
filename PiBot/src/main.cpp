@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
-	Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR); // motor test object
+	Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
 
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	Drive testDrive;	//XXX test
