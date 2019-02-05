@@ -37,28 +37,38 @@ int main(int argc, char* argv[])
 	//while(UserKey.read());
 	//gpioDelay(1000);
 
-	testMotor.test();
+	//testMotor.test();
 
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point event = start;
-	std::chrono::steady_clock::time_point now;
-	do
-	{
-	    now = std::chrono::steady_clock::now();
-	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() > 250)
-	    {
-	        event = now;
-	        if(testDrive.gyroXYZ.size()>=6)
-	        {
-	            std::cout << ((int16_t)(testDrive.gyroXYZ[0] | (testDrive.gyroXYZ[1] << 8))) / (double)0x7FFF << std::endl;
-	        }
-	        else
-	        {
-	            std::cout << "---" << std::endl;
-	        }
-	    }
-	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 1);
-
+//	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+//    std::chrono::steady_clock::time_point event = start;
+//	std::chrono::steady_clock::time_point now;
+//	do
+//	{
+//	    now = std::chrono::steady_clock::now();
+//	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() > 250)
+//	    {
+//	        event = now;
+//	        if(testDrive.gyroXYZ.size()>=6)
+//	        {
+//	            std::cout << ((int16_t)(testDrive.gyroXYZ[0] | (testDrive.gyroXYZ[1] << 8))) / (double)0x7FFF << std::endl;
+//	        }
+//	        else
+//	        {
+//	            std::cout << "---" << std::endl;
+//	        }
+//	    }
+//	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 1);
+	std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	testMotor.setSpeed(0.2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    testMotor.setSpeed(0);
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    testMotor.setSpeed(-0.5);
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    testMotor.setSpeed(-0.7);
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    testMotor.setSpeed(0, true);
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
     testDrive.stop(); // XXX test
 

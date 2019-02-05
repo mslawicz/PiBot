@@ -26,8 +26,12 @@ Motor::Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority, uin
         Program::getInstance().terminate(ExitCode::BAD_MOTOR_NO);
     }
     // register auto increment enable
-    // change on ACK, output totem pole
-    writeData(PCA9685Registers::MODE1, std::vector<uint8_t>{0x20, 0x0C});
+    // change on STOP, SLEEP on, output totem pole
+    writeData(PCA9685Registers::MODE1, std::vector<uint8_t>{0x30, 0x04});
+    // prescale
+    writeData(PCA9685Registers::PRE_SCALE, std::vector<uint8_t>{0x0A});
+    // change on STOP, SLEEP off, output totem pole
+    writeData(PCA9685Registers::MODE1, std::vector<uint8_t>{0x20, 0x04});
     lastSpeed = 0.0F;
 }
 
