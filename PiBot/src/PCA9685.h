@@ -11,7 +11,8 @@
 enum PCA9685Registers
 {
     MODE1 = 0x00,
-    LED0_ON_L = 0x06
+    LED0_ON_L = 0x06,
+    PRE_SCALE = 0xFE
 };
 
 
