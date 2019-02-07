@@ -20,6 +20,7 @@
 
 enum I2cPriority
 {
+    PCA9685_PR,
     MOTOR_PR,
     GYROSCOPE_PR,
     ACCELEROMETER_PR,
@@ -32,6 +33,7 @@ enum I2cDeviceAddress
     ACCELEROMETER_ADDR = GYROSCOPE_ADDR,
     MAGNETOMETER_ADDR = 0x1E,
     MOTOR_ADDR = 0x6F,
+    PCA9685_ADDR = MOTOR_ADDR,
     PCA9685_ALL_ADDR = 0x70
 };
 

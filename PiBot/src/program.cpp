@@ -20,6 +20,7 @@ Program& Program::getInstance(void)
 
 Program::Program()
 {
+    pChipPCA9685 = nullptr;
 }
 
 Program::~Program()
@@ -93,6 +94,9 @@ void Program::initialize(void)
 	{
 		bus.second->startHandler();
 	}
+
+	// create object which configures PCA9685 chip
+	pChipPCA9685 = new PCA9685(I2cBusId::I2C1, I2cDeviceAddress::PCA9685_ADDR, I2cPriority::PCA9685_PR);
 }
 
 /*
@@ -127,6 +131,8 @@ void Program::terminate(ExitCode exitCode)
 	{
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
+
+	delete pChipPCA9685;
 
 	//terminate i2c handlers and delete i2c bus objects
 	for(auto bus : I2cBus::buses)

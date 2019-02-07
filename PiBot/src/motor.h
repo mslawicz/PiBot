@@ -10,25 +10,10 @@
 
 
 #include "i2c.h"
-#include "PCA9685.h"
-#include <mutex>
 
 #define CONST_1 (uint8_t)1
 #define CONST_0 (uint8_t)0
 
-/*
- * class of a PCA9685 control device
- * its purpose is an one-time configuration of the device
- */
-class PCA9685 : public I2cDevice
-{
-public:
-    static std::once_flag onceFlag;
-private:
-    PCA9685(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
-    void config(void);
-    friend class Motor;
-};
 
 /*
  * class of a DC motor
