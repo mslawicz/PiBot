@@ -13,6 +13,7 @@
 #include "motor.h"  //XXX for test
 #include <iostream>
 #include <chrono>
+#include <cmath> //XXX for test
 
 int main(int argc, char* argv[])
 {
@@ -34,8 +35,6 @@ int main(int argc, char* argv[])
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	Drive testDrive;	//XXX test
 	testDrive.start();	// XXX test
-	//while(UserKey.read());
-	//gpioDelay(1000);
 
 	//testMotor.test();
 
@@ -58,17 +57,20 @@ int main(int argc, char* argv[])
 //	        }
 //	    }
 //	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 1);
-	std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	testMotor.setSpeed(0.2);
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    testMotor.setSpeed(0);
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    testMotor.setSpeed(-0.5);
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    testMotor.setSpeed(-0.7);
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    testMotor.setSpeed(0, true);
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+
+    float speed = 0.0;
+    float delta = 0.03;
+    while(terminatePin.read())
+    {
+        testMotor.setSpeed(speed);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        speed += delta;
+        if(fabs(speed)>1.0)
+        {
+            delta *= -1.0;
+        }
+    }
 
     testDrive.stop(); // XXX test
 

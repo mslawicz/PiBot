@@ -12,6 +12,18 @@
 #include <map>
 #include <cmath>
 
+// once-call flag for PCA9685 configuration
+std::once_flag PCA9685::onceFlag;
+
+/*
+ * constructor of a device for configuration of PCA9685 chip
+ */
+PCA9685::PCA9685(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority)
+    : I2cDevice(busId, address, priority)
+{
+
+}
+
 /*
  * creates the motor
  * all drive motors should be created with the same priority
@@ -25,6 +37,8 @@ Motor::Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority, uin
     {
         Program::getInstance().terminate(ExitCode::BAD_MOTOR_NO);
     }
+    // create device for PCA9685 chip configuration
+    PCA9685 chipPCA9685(busId, address, priority);
     // register auto increment enable
     // change on STOP, SLEEP on, output totem pole
     writeData(PCA9685Registers::MODE1, std::vector<uint8_t>{0x30, 0x04});
