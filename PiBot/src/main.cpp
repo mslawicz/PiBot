@@ -17,24 +17,22 @@
 
 int main(int argc, char* argv[])
 {
-	Logger::getInstance().logEvent(INFO, "PiBot started");
 	Program::getInstance().parseArguments(argc, argv);
 	Program::getInstance().initialize();
 
 
-	std::cout << "gpio hardware revision: " << gpioHardwareRevision() << std::endl;
-	GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
-	GPIO loopMark(12, PI_OUTPUT);
+	//GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
+	//GPIO loopMark(12, PI_OUTPUT);
 	//GPIO GreenLED(23, PI_OUTPUT);
 
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
-	Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
+	//Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
 
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	Drive testDrive;	//XXX test
-	testDrive.start();	// XXX test
+	//Drive testDrive;	//XXX test
+	//testDrive.start();	// XXX test
 
 	//testMotor.test();
 
@@ -61,9 +59,9 @@ int main(int argc, char* argv[])
 
     float speed = 0.0;
     float delta = 0.03;
-    while(terminatePin.read())
+    while(0/*terminatePin.read()*/)
     {
-        testMotor.setSpeed(speed);
+        //testMotor.setSpeed(speed);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         speed += delta;
         if(fabs(speed)>1.0)
@@ -72,9 +70,11 @@ int main(int argc, char* argv[])
         }
     }
 
-    testDrive.stop(); // XXX test
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //testDrive.stop(); // XXX test
 
 	Program::getInstance().terminate();
+	//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	return 0;
 }
 

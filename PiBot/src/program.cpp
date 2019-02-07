@@ -9,7 +9,7 @@
 #include "gpio.h"
 
 /*
- * get the singleto program object
+ * get the singleton program object
  */
 Program& Program::getInstance(void)
 {
@@ -85,7 +85,11 @@ void Program::initialize(void)
 
 	}
 
+	Logger::getInstance().logEvent(INFO, "PiBot started");
+
 	GPIO::initialize();
+	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", gpioHardwareRevision());
+
 	// create and register in a map I2C1 bus object
 	new I2cBus(I2C1);
 
