@@ -15,6 +15,7 @@
 #include <chrono>
 #include <iomanip>
 #include <set>
+#include <thread>
 
 // definition of program exit codes
 enum ExitCode
@@ -82,10 +83,8 @@ public:
 	 */
 	void addSink(char sink) { sinks.insert(sink); }
 
-	/*
-	 * sets logger level threshold
-	 */
-	void setLevelThreshold(MessageLevel level) { levelThreshold = level; }
+	void start(MessageLevel level);
+	void stop(void);
 
 private:
 	// map for printing message levels
@@ -97,16 +96,11 @@ private:
 			{DEBUG, "debug"}
 	};
 
-	std::stringstream messageStream;
+    // private constructor prevents from more objects creation
+    Logger();
 
-	// logger message level threshold
-	MessageLevel levelThreshold;
-
-	// sink container
-	std::set<char> sinks;
-
-	// private constructor prevents from more objects creation
-	Logger();
+    // logger handler to be launched in a new thread
+    void handler(void);
 
 	/*
 	 * put next argument into stream
@@ -126,6 +120,16 @@ private:
 	    }
 
 	void sendMessage(std::string message);
+
+    std::stringstream messageStream;
+
+    // logger message level threshold
+    MessageLevel levelThreshold;
+
+    // sink container
+    std::set<char> sinks;
+
+    std::thread* pLoggerHandlerThread;
 };
 
 #endif /* SRC_LOGGER_H_ */

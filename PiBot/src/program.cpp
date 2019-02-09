@@ -58,7 +58,7 @@ void Program::initialize(void)
 	}
 
 	// 'error' is the default logger level
-	Logger::getInstance().setLevelThreshold(MessageLevel::ERROR);
+	MessageLevel definedLevel = MessageLevel::ERROR;
 	if (isOptionProvided("-l"))
 	{
 		// logger severity threshold declaration
@@ -68,23 +68,23 @@ void Program::initialize(void)
 			// there's at least one parameter defined
 			if (params[0] == "none")
 			{
-				Logger::getInstance().setLevelThreshold(MessageLevel::NONE);
+			    definedLevel = MessageLevel::NONE;
 			}
 			else if (params[0] == "warning")
 			{
-				Logger::getInstance().setLevelThreshold(MessageLevel::WARNING);
+			    definedLevel = MessageLevel::WARNING;
 			}
 			else if (params[0] == "info")
 			{
-				Logger::getInstance().setLevelThreshold(MessageLevel::INFO);
+			    definedLevel = MessageLevel::INFO;
 			}
 			else if (params[0] == "debug")
 			{
-				Logger::getInstance().setLevelThreshold(MessageLevel::DEBUG);
+			    definedLevel = MessageLevel::DEBUG;
 			}
 		}
-
 	}
+	Logger::getInstance().start(definedLevel);
 
 	GPIO::initialize();
 	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", gpioHardwareRevision());
@@ -142,7 +142,7 @@ void Program::terminate(ExitCode exitCode)
 		delete bus.second;
 	}
 
-	//TODO: save log to file here
+	Logger::getInstance().stop();
 
 	if (exitCode != ExitCode::OK)
 	{
