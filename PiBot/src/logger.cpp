@@ -22,6 +22,7 @@ Logger::Logger()
 	// logger starts in info level
 	levelThreshold = MessageLevel::INFO;
 	pLoggerHandlerThread = nullptr;
+	exitHandler = true;
 }
 
 Logger::~Logger()
@@ -47,6 +48,15 @@ void Logger::sendMessage(std::string message)
 void Logger::handler(void)
 {
     logEvent(INFO, "logger handler started");
+    do
+    {
+        std::this_thread::yield();
+        std::unique_lock<std::mutex> lock(loggerMutex);
+        queueEvent.wait(lock, [this]() {return (exitHandler); });
+        lock.unlock();
+
+
+    } while (!exitHandler);
 }
 
 /*
@@ -55,7 +65,11 @@ void Logger::handler(void)
 void Logger::start(MessageLevel level)
 {
     levelThreshold = level;
-    pLoggerHandlerThread = new std::thread(&Logger::handler, this);
+    if(level != MessageLevel::NONE)
+    {
+        exitHandler = false;
+        pLoggerHandlerThread = new std::thread(&Logger::handler, this);
+    }
 }
 
 /*
@@ -64,8 +78,8 @@ void Logger::start(MessageLevel level)
 void Logger::stop(void)
 {
     logEvent(INFO, "logger stop request");
-//    exitHandler = true;
-//    queueEvent.notify_one();
+    exitHandler = true;
+    queueEvent.notify_one();
     pLoggerHandlerThread->join();
     delete pLoggerHandlerThread;
 }

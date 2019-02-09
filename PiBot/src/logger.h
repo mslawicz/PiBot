@@ -16,6 +16,8 @@
 #include <iomanip>
 #include <set>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 // definition of program exit codes
 enum ExitCode
@@ -130,6 +132,9 @@ private:
     std::set<char> sinks;
 
     std::thread* pLoggerHandlerThread;
+    bool exitHandler;
+    std::mutex loggerMutex;
+    std::condition_variable queueEvent;
 };
 
 #endif /* SRC_LOGGER_H_ */
