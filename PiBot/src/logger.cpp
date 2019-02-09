@@ -57,9 +57,16 @@ void Logger::handler(void)
         lock.unlock();
         while(!eventQueue.empty())
         {
-            std::lock_guard<std::mutex> lock(queueMutex);
-            std::cout << "#####\n";
-            eventQueue.pop();
+            eventContainer event;
+            {
+                std::lock_guard<std::mutex> lock(queueMutex);
+                event = eventQueue.front();
+                eventQueue.pop();
+            }
+            if(std::get<0>(event) <= levelThreshold)
+            {
+                sendMessage(std::get<1>(event));
+            }
         }
 
 

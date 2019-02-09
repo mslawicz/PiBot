@@ -42,11 +42,11 @@ enum ExitCode
 // definition of logged messages severity level
 enum MessageLevel
 {
-	NONE,
 	ERROR,
 	WARNING,
 	INFO,
-	DEBUG
+	DEBUG,
+	NONE
 };
 
 typedef std::tuple<MessageLevel, std::string> eventContainer;
@@ -98,11 +98,11 @@ public:
 private:
 	// map for printing message levels
 	const std::map<MessageLevel, std::string> MessageLevelText = {
-			{NONE, "none"},
 			{ERROR, "error"},
 			{WARNING, "warning"},
 			{INFO, "info"},
-			{DEBUG, "debug"}
+			{DEBUG, "debug"},
+			{NONE, "none"}
 	};
 
     // private constructor prevents from more objects creation
@@ -125,7 +125,6 @@ private:
 	 */
 	void takeNextArgument()
 	    {
-			sendMessage(messageStream.str());   //qqq to be removed
 			{
                 std::lock_guard<std::mutex> lock(queueMutex);
                 eventQueue.push(eventContainer{currentMessageLevel, messageStream.str()});
