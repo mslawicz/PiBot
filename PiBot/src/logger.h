@@ -60,16 +60,16 @@ public:
 	{
 		if(level <= levelThreshold)
 		{
-			message.str(std::string());
+		    messageStream.str(std::string());
 			auto now = std::chrono::system_clock::now();
 			auto time = std::chrono::system_clock::to_time_t(now);
 			auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) - std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
-			message << std::put_time(std::localtime(&time), "%H:%M:%S.");
-			message << std::setw(3) << std::setfill('0') << milliseconds.count() << "->";
-			message << MessageLevelText.find(level)->second.c_str() << "->";
+			messageStream << std::put_time(std::localtime(&time), "%H:%M:%S.");
+			messageStream << std::setw(3) << std::setfill('0') << milliseconds.count() << "->";
+			messageStream << MessageLevelText.find(level)->second.c_str() << "->";
 			takeNextArgument(args...);
 			// restore default stream manipulators
-			message << std::dec;
+			messageStream << std::dec;
 		}
 	}
 
@@ -97,7 +97,7 @@ private:
 			{DEBUG, "debug"}
 	};
 
-	std::stringstream message;
+	std::stringstream messageStream;
 
 	// logger message level threshold
 	MessageLevel levelThreshold;
@@ -113,7 +113,7 @@ private:
 	 */
 	template<typename First, typename... Rest> void takeNextArgument(First arg0, Rest... args)
 	{
-		message << arg0;
+		messageStream << arg0;
 	    takeNextArgument(args...);
 	}
 
@@ -122,7 +122,7 @@ private:
 	 */
 	void takeNextArgument()
 	    {
-			sendMessage(message.str());
+			sendMessage(messageStream.str());
 	    }
 
 	void sendMessage(std::string message);

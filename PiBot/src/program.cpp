@@ -57,6 +57,8 @@ void Program::initialize(void)
 		}
 	}
 
+	// 'error' is the default logger level
+	Logger::getInstance().setLevelThreshold(MessageLevel::ERROR);
 	if (isOptionProvided("-l"))
 	{
 		// logger severity threshold declaration

@@ -19,8 +19,8 @@ Logger& Logger::getInstance(void)
 
 Logger::Logger()
 {
-	// default logger level threshold
-	levelThreshold = MessageLevel::ERROR;
+	// logger starts in info level
+	levelThreshold = MessageLevel::INFO;
 }
 
 Logger::~Logger()
