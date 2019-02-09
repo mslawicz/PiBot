@@ -140,12 +140,6 @@ void I2cBus::stopHandler(void)
     pI2cHandlerThread->join();
     delete pI2cHandlerThread;
     Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler terminated");
-
-    for (auto device : devices)
-    {
-        Logger::getInstance().logEvent(INFO, "I2C device deleted: bus=", busId, ", address=0x", std::hex, std::get<1>(device)->address, ", priority=0x", std::get<1>(device)->priority );
-        delete std::get<1>(device);
-    }
 }
 
 /*
@@ -155,6 +149,22 @@ void I2cBus::registerDevice(I2cDeviceContainer newDevice)
 {
     devices.push_back(newDevice);
     std::sort(devices.begin(), devices.end());
+}
+
+/*
+ * unregisters i2c device from the vector
+ */
+void I2cBus::unregisterDevice(I2cDevice* pDevice)
+{
+    for (auto iDevice = devices.begin(); iDevice < devices.end(); iDevice++)
+    {
+        if(std::get<1>(*iDevice) == pDevice)
+        {
+            devices.erase(iDevice);
+            Logger::getInstance().logEvent(INFO, "unregistering I2C device: bus=", busId, ", address=0x", std::hex, pDevice->address, ", priority=0x", pDevice->priority );
+            break;
+        }
+    }
 }
 
 /*
@@ -195,6 +205,7 @@ I2cDevice::~I2cDevice()
 	{
 		i2cClose(handle);
 	}
+	pI2cBus->unregisterDevice(this);
 }
 
 /*

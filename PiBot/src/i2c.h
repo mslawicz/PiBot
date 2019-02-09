@@ -71,6 +71,7 @@ private:
     void handler(void);
     void requestToSend(void);
     void registerDevice(I2cDeviceContainer newDevice);
+    void unregisterDevice(I2cDevice* pDevice);
     I2cBusId busId;
 	uint8_t* pData;
 	const unsigned DataBufSize = 30;
