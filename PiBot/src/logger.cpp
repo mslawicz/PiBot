@@ -53,8 +53,14 @@ void Logger::handler(void)
     {
         std::this_thread::yield();
         std::unique_lock<std::mutex> lock(loggerHandlerMutex);
-        queueEvent.wait(lock, [this]() {return (exitHandler); });
+        queueEvent.wait(lock, [this]() {return (!eventQueue.empty() || exitHandler); });
         lock.unlock();
+        while(!eventQueue.empty())
+        {
+            std::lock_guard<std::mutex> lock(queueMutex);
+            std::cout << "#####\n";
+            eventQueue.pop();
+        }
 
 
     } while (!exitHandler);
