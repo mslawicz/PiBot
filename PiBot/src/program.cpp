@@ -88,7 +88,7 @@ void Program::initialize(void)
 	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", gpioHardwareRevision());
 
 	// create and register in a map I2C1 bus object
-	new I2cBus(I2C1);   //qqq this one is never deleted!
+	new I2cBus(I2C1);
 
 	//start handlers of all i2c buses
 	for(auto bus : I2cBus::buses)
