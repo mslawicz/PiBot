@@ -35,7 +35,6 @@ private:
 	Program();
 	void displayHelp(void);
 	std::map<std::string, std::vector<std::string>> options;
-	PCA9685* pChipPCA9685;
 };
 
 #endif /* SRC_PROGRAM_H_ */
