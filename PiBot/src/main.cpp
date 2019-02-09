@@ -22,47 +22,23 @@ int main(int argc, char* argv[])
 	Program::getInstance().initialize();
 
 
-	//GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
+	GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
 	//GPIO loopMark(12, PI_OUTPUT);
 	//GPIO GreenLED(23, PI_OUTPUT);
 
 	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
-	//Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
-
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	//Drive testDrive;	//XXX test
-	//testDrive.start();	// XXX test
+	Drive testDrive;	//XXX test
+	testDrive.start();	// XXX test
 
-	//testMotor.test();
-
-//	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-//    std::chrono::steady_clock::time_point event = start;
-//	std::chrono::steady_clock::time_point now;
-//	do
-//	{
-//	    now = std::chrono::steady_clock::now();
-//	    if(std::chrono::duration_cast<std::chrono::milliseconds>(now - event).count() > 250)
-//	    {
-//	        event = now;
-//	        if(testDrive.gyroXYZ.size()>=6)
-//	        {
-//	            std::cout << ((int16_t)(testDrive.gyroXYZ[0] | (testDrive.gyroXYZ[1] << 8))) / (double)0x7FFF << std::endl;
-//	        }
-//	        else
-//	        {
-//	            std::cout << "---" << std::endl;
-//	        }
-//	    }
-//	} while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < 1);
-
-
+    Motor* pTestMotor = new Motor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
     float speed = 0.0;
     float delta = 0.03;
-    while(0/*terminatePin.read()*/)
+    while(terminatePin.read())
     {
-        //testMotor.setSpeed(speed);
+        pTestMotor->setSpeed(speed);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         speed += delta;
         if(fabs(speed)>1.0)
@@ -71,8 +47,8 @@ int main(int argc, char* argv[])
         }
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    //testDrive.stop(); // XXX test
+    //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    testDrive.stop(); // XXX test
 
 	Program::getInstance().terminate();
 	return 0;
