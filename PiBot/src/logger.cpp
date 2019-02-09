@@ -23,6 +23,7 @@ Logger::Logger()
 	levelThreshold = MessageLevel::INFO;
 	pLoggerHandlerThread = nullptr;
 	exitHandler = true;
+	currentMessageLevel = MessageLevel::NONE;
 }
 
 Logger::~Logger()
@@ -51,7 +52,7 @@ void Logger::handler(void)
     do
     {
         std::this_thread::yield();
-        std::unique_lock<std::mutex> lock(loggerMutex);
+        std::unique_lock<std::mutex> lock(loggerHandlerMutex);
         queueEvent.wait(lock, [this]() {return (exitHandler); });
         lock.unlock();
 

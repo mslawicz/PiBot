@@ -18,6 +18,8 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <tuple>
+#include <queue>
 
 // definition of program exit codes
 enum ExitCode
@@ -47,6 +49,8 @@ enum MessageLevel
 	DEBUG
 };
 
+typedef std::tuple<MessageLevel, std::string> eventContainer;
+
 // singleton class of logger
 // it provides necessary initializations
 class Logger
@@ -63,6 +67,9 @@ public:
 	{
 		if(level <= levelThreshold)
 		{
+		    // this mutex prevents from writing to messageStream by more than one thread at a time
+		    std::lock_guard<std::mutex> lock(messageMutex);
+		    currentMessageLevel = level;
 		    messageStream.str(std::string());
 			auto now = std::chrono::system_clock::now();
 			auto time = std::chrono::system_clock::to_time_t(now);
@@ -118,7 +125,12 @@ private:
 	 */
 	void takeNextArgument()
 	    {
-			sendMessage(messageStream.str());
+			sendMessage(messageStream.str());   //qqq to be removed
+			{
+                std::lock_guard<std::mutex> lock(queueMutex);
+                eventQueue.push(eventContainer{currentMessageLevel, messageStream.str()});
+			}
+			queueEvent.notify_one();
 	    }
 
 	void sendMessage(std::string message);
@@ -133,8 +145,12 @@ private:
 
     std::thread* pLoggerHandlerThread;
     bool exitHandler;
-    std::mutex loggerMutex;
+    std::mutex loggerHandlerMutex;
     std::condition_variable queueEvent;
+    std::mutex messageMutex;
+    MessageLevel currentMessageLevel;
+    std::queue<eventContainer> eventQueue;
+    std::mutex queueMutex;
 };
 
 #endif /* SRC_LOGGER_H_ */
