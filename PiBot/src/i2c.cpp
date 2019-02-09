@@ -139,6 +139,13 @@ void I2cBus::stopHandler(void)
     queueEvent.notify_one();
     pI2cHandlerThread->join();
     delete pI2cHandlerThread;
+    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler terminated");
+
+    for (auto device : devices)
+    {
+        Logger::getInstance().logEvent(INFO, "I2C device deleted: bus=", busId, ", address=0x", std::hex, std::get<1>(device)->address, ", priority=0x", std::get<1>(device)->priority );
+        delete std::get<1>(device);
+    }
 }
 
 /*
@@ -168,7 +175,7 @@ I2cDevice::I2cDevice(I2cBusId i2cBusId, I2cDeviceAddress deviceAddres, I2cPriori
 
 	if(handle >= 0)
 	{
-		Logger::getInstance().logEvent(INFO, "I2C device opened: bus=", busId, ", address=0x", std::hex, address);
+		Logger::getInstance().logEvent(INFO, "I2C device opened: bus=", busId, ", address=0x", std::hex, address, " priority=0x", priority);
 	}
 	else
 	{
