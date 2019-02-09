@@ -30,25 +30,31 @@ int main(int argc, char* argv[])
 	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
 
 	//	std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	Drive testDrive;	//XXX test
-	testDrive.start();	// XXX test
 
-    Motor* pTestMotor = new Motor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
-    float speed = 0.0;
-    float delta = 0.03;
-    while(terminatePin.read())
-    {
-        pTestMotor->setSpeed(speed);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        speed += delta;
-        if(fabs(speed)>1.0)
+
+	{
+	    //scope of motor and drive objects
+	    Drive testDrive;    //XXX test
+	    testDrive.start();  // XXX test
+
+        Motor TestMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
+        float speed = 0.0;
+        float delta = 0.03;
+        while(terminatePin.read())
         {
-            delta *= -1.0;
+            TestMotor.setSpeed(speed);
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            speed += delta;
+            if(fabs(speed)>1.0)
+            {
+                delta *= -1.0;
+            }
         }
-    }
+
+        testDrive.stop(); // XXX test
+	}
 
     //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    testDrive.stop(); // XXX test
 
 	Program::getInstance().terminate();
 	return 0;
