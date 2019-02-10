@@ -38,10 +38,11 @@ Motor::~Motor()
 
 void Motor::test()
 {
+    writeData(PCA9685Registers::LED0_ON_L+8*4+1, std::vector<uint8_t>{0x10});
     // PWM0 always on, PWM1 always off
-    writeData(PCA9685Registers::LED0_ON_L, std::vector<uint8_t>{0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10});
+    //writeData(PCA9685Registers::LED0_ON_L, std::vector<uint8_t>{0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10});
     // PWM14 ~50%, PWM15 ~25% delayed ~0.5T
-    writeData(PCA9685Registers::LED0_ON_L + 14*4, std::vector<uint8_t>{0x00, 0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x0C});
+    //writeData(PCA9685Registers::LED0_ON_L + 14*4, std::vector<uint8_t>{0x00, 0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x0C});
 }
 
 /*

@@ -78,7 +78,7 @@ void I2cBus::handler(void)
                     int result = i2cWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)&std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
                     if(result)
                     {
-                        Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, " device=", std::hex, std::get<1>(*iDevice)->address);
+                        Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, ", device=", std::hex, std::get<1>(*iDevice)->address, ", error=", result);
                     }
                 }
                 else
