@@ -19,8 +19,8 @@ PCA9685::PCA9685(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority)
     // register auto increment enable
     // SLEEP on
     writeData(PCA9685Registers::MODE1, std::vector<uint8_t>{0x30});
-    // prescale
-    writeData(PCA9685Registers::PRE_SCALE, std::vector<uint8_t>{0x0A});
+    // prescale 1279 Hz
+    writeData(PCA9685Registers::PRE_SCALE, std::vector<uint8_t>{0x04});
     // SLEEP off
     writeData(PCA9685Registers::MODE1, std::vector<uint8_t>{0x20});
 }
