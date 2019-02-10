@@ -36,16 +36,34 @@ int main(int argc, char* argv[])
 	    //Drive testDrive;    //XXX test
 	    //testDrive.start();  // XXX test
 
-        Motor TestMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
-        float speed = 0.0;
+        Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
+        float speed = 0.8;
         float delta = 0.03;
+        uint16_t value = 0x0000;
         while(terminatePin.read())
         {
-            TestMotor.test();
-            //TestMotor.setSpeed(speed);
-            //TestMotor.readDataRequest(0x26, 12);
+            //testMotor.test();
+            //testMotor.setSpeed(speed);
+            //testMotor.readDataRequest(0x26, 12);
+            uint8_t valH = (value >> 8) & 0x0F;
+            uint8_t valL = value & 0xFF;
+            testMotor.writeData(PCA9685Registers::LED0_ON_L+8*4, std::vector<uint8_t>{0x00, 0x00, valL, valH});
+            testMotor.readDataRequest(PCA9685Registers::LED0_ON_L+8*4, 4);
+            while(testMotor.receiveQueueEmpty());
+            auto receivedData = testMotor.getData();
+            if(std::get<2>(receivedData)[2] != valL)
+            {
+                Logger::getInstance().logEvent(ERROR, "valL");
+            }
+            if(std::get<2>(receivedData)[3] != valH)
+            {
+                Logger::getInstance().logEvent(ERROR, "valH");
+            }
+            value += 11;
+            value = value & 0xFFF;
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
-            speed += delta;
+            //speed += delta;
+            speed *= -1.0;
             if(fabs(speed)>1.0)
             {
                 delta *= -1.0;
