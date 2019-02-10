@@ -33,17 +33,16 @@ int main(int argc, char* argv[])
 
 	{
 	    //scope of motor and drive objects
-	    //Drive testDrive;    //XXX test
-	    //testDrive.start();  // XXX test
+	    Drive testDrive;    //XXX test
+	    testDrive.start();  // XXX test
 
         Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
         float speed = 0.8;
         float delta = 0.03;
         testMotor.test();
-        while(0*terminatePin.read())
+        while(terminatePin.read())
         {
             testMotor.setSpeed(speed);
-            //testMotor.readDataRequest(0x26, 12);
             std::this_thread::sleep_for(std::chrono::milliseconds(7));
             speed += delta;
             if(fabs(speed)>1.0)
@@ -53,7 +52,7 @@ int main(int argc, char* argv[])
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        //testDrive.stop(); // XXX test
+        testDrive.stop(); // XXX test
 	}
 
 	Program::getInstance().terminate();
