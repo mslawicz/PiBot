@@ -11,7 +11,12 @@
 class PID
 {
 public:
-    PID();
+    PID(float coefficientP, float coefficientI, float coefficientD);
+    float calculate(float measuredValue, float referenceValue);
+private:
+    float kP, kI, kD;
+    float previousError;
+    float integral;
 };
 
 #endif /* SRC_PID_H_ */

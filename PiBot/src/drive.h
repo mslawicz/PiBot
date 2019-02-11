@@ -21,7 +21,7 @@ public:
 	void start(void);
 	// stops the control of motors
 	void stop(void);
-	std::vector<uint8_t> gyroXYZ;  //XXX test
+	float getPitchAngularRate(void) const {return pitchAngularRate;}    //XXX test
 private:
 	// callback function for gyroscope generated interrupts
 	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
@@ -29,6 +29,7 @@ private:
 	void pitchControl(int level, uint32_t tick);
 	// pointer to gyroscope device
 	Gyroscope* pGyroscope;
+	float pitchAngularRate;
 };
 
 #endif /* SRC_DRIVE_H_ */

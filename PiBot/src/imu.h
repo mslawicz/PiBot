@@ -17,6 +17,8 @@ class Gyroscope : public I2cDevice
 public:
     Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
     ~Gyroscope();
+    // gyroscope full scale range in radians / second
+    const float range = 4.27605666739;
 };
 
 #endif /* SRC_IMU_H_ */

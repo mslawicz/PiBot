@@ -11,6 +11,7 @@
 Drive::Drive()
 {
     pGyroscope = new Gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);
+    pitchAngularRate = 0.0;
 }
 
 Drive::~Drive()
@@ -67,19 +68,21 @@ void Drive::gyroInterruptCallback(int gpio, int level, uint32_t tick,
  */
 void Drive::pitchControl(int level, uint32_t tick)
 {
-    GPIO interMark(16, PI_OUTPUT);
-    interMark.write(1);
+    const unsigned dataLength = 6;
     if(!pGyroscope->receiveQueueEmpty())
     {
-        // there's something in a reception queue
+        // there's data in the reception queue
         auto data = pGyroscope->getData();
-        gyroXYZ = std::get<2>(data);    //XXX for test
+        if((std::get<0>(data) == ImuRegisters::OUT_X_L_G) && (std::get<1>(data) == dataLength))
+        {
+            //valid data received
+            pitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
+        }
     }
 
 
     // send read data request; this data is to be used in the next function call
-    pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, 6);
-    interMark.write(0);
+    pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, dataLength);
 }
 
 

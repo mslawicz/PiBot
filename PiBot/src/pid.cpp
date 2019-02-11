@@ -7,9 +7,20 @@
 
 #include "pid.h"
 
-PID::PID()
+PID::PID(float coefficientP, float coefficientI, float coefficientD)
+    : kP(coefficientP)
+    , kI(coefficientI)
+    , kD(coefficientD)
 {
-    // TODO Auto-generated constructor stub
-
+    previousError = 0.0f;
+    integral = 0.0f;
 }
 
+float PID::calculate(float measuredValue, float referenceValue)
+{
+    float error = measuredValue - referenceValue;
+    integral += error;
+    float output = kP * error + kI * integral + kD * (error - previousError);
+    previousError = error;
+    return output;
+}
