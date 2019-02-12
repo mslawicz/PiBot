@@ -95,6 +95,7 @@ public:
 	void clearReceiveQueue(void);
 	bool receiveQueueEmpty(void) const {return receivedData.empty();}
 	I2cDataContainer getData(void);
+	I2cDataContainer getLastData(void);
 private:
 	I2cBusId busId;
 	I2cDeviceAddress address;

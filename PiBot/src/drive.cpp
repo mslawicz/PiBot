@@ -72,7 +72,7 @@ void Drive::pitchControl(int level, uint32_t tick)
     if(!pGyroscope->receiveQueueEmpty())
     {
         // there's data in the reception queue
-        auto data = pGyroscope->getData();
+        auto data = pGyroscope->getLastData();
         if((std::get<0>(data) == ImuRegisters::OUT_X_L_G) && (std::get<1>(data) == dataLength))
         {
             //valid data received

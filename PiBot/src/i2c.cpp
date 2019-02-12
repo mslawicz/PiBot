@@ -255,3 +255,19 @@ I2cDataContainer I2cDevice::getData(void)
     }
     return data;
 }
+
+/*
+ * gets lastdata container from the receive queue
+ * clears the queue
+ */
+I2cDataContainer I2cDevice::getLastData(void)
+{
+    I2cDataContainer data;
+    if(!receivedData.empty())
+    {
+        std::lock_guard<std::mutex> lock(receiveQueueMutex);
+        data = receivedData.back();
+        receivedData = std::queue<I2cDataContainer>();
+    }
+    return data;
+}
