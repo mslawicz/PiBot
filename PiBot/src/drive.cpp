@@ -12,12 +12,16 @@ Drive::Drive()
 {
     pGyroscope = new Gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);
     pitchAngularRate = 0.0;
+    pPitchPID = new PID(0.2, 0.05, 0.05);
+    pTestMotor = new Motor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // XXX motor test object
+    calculatedSpeed = 0.0;
 }
 
 Drive::~Drive()
 {
 	delete pGyroscope;
-
+	delete pPitchPID;
+	delete pTestMotor; //XXX test
 }
 
 /*
@@ -77,6 +81,8 @@ void Drive::pitchControl(int level, uint32_t tick)
         {
             //valid data received
             pitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
+            calculatedSpeed = pPitchPID->calculate(pitchAngularRate, 0.0);
+            pTestMotor->setSpeed(calculatedSpeed);
         }
     }
 

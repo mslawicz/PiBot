@@ -10,7 +10,6 @@
 #include "program.h"
 #include "logger.h"
 #include "drive.h"	//XXX for test
-#include "motor.h"  //XXX for test
 #include <iostream>
 #include <chrono>
 #include <cmath> //XXX for test
@@ -37,20 +36,17 @@ int main(int argc, char* argv[])
 	    Drive testDrive;    //XXX test
 	    testDrive.start();  // XXX test
 
-        Motor testMotor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // motor test object
         float speed = 0.8;
         float delta = 0.3;
-        testMotor.test();
         while(terminatePin.read())
         {
-            testMotor.setSpeed(speed);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(250));
             speed += delta;
             if(fabs(speed)>1.0)
             {
                 delta *= -1.0;
             }
-            std::cout << "\r--> " << testDrive.getPitchAngularRate() << "        " << std::flush;
+            Logger::getInstance().logEvent(INFO, "speed=", testDrive.getTestValue());
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
