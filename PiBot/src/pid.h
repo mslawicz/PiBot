@@ -12,7 +12,7 @@ class PID
 {
 public:
     PID(float coefficientP, float coefficientI, float coefficientD);
-    float calculate(float measuredValue, float referenceValue);
+    float calculate(float setPointValue, float measuredProcessValue);
 private:
     float kP, kI, kD;
     float previousError;

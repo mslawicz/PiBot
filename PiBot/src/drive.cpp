@@ -81,7 +81,7 @@ void Drive::pitchControl(int level, uint32_t tick)
         {
             //valid data received
             pitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
-            calculatedSpeed = pPitchPID->calculate(pitchAngularRate, 0.0);
+            calculatedSpeed = pPitchPID->calculate(0.0, pitchAngularRate);
             pTestMotor->setSpeed(calculatedSpeed);
         }
     }

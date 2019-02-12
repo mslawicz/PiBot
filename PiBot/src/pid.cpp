@@ -16,9 +16,9 @@ PID::PID(float coefficientP, float coefficientI, float coefficientD)
     integral = 0.0f;
 }
 
-float PID::calculate(float measuredValue, float referenceValue)
+float PID::calculate(float setPointValue, float measuredProcessValue)
 {
-    float error = measuredValue - referenceValue;
+    float error = setPointValue - measuredProcessValue;
     integral += error;
     float output = kP * error + kI * integral + kD * (error - previousError);
     previousError = error;
