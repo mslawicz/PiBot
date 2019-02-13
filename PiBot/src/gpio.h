@@ -28,7 +28,7 @@ class GPIO
 public:
 	static void initialize(void);
 	static void terminate(void);
-	GPIO(GpioPin gpio_number, unsigned mode, unsigned pull = PI_PUD_OFF);
+	GPIO(GpioPin gpioNumber, unsigned mode, unsigned pull = PI_PUD_OFF);
 	int read(void) const {return gpioRead(gpio_number);}
 	void write(unsigned level) {gpioWrite(gpio_number, level);}
 	void toggle(void) {gpioWrite(gpio_number, gpioRead(gpio_number) ^ 0x01);}
@@ -38,6 +38,10 @@ private:
 	unsigned gpio_number;
 };
 
-
+class PushButton : public GPIO
+{
+public:
+    PushButton(GpioPin gpioNumber, uint32_t debounceTime = 20000);
+};
 
 #endif /* SRC_GPIO_H_ */

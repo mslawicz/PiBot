@@ -23,10 +23,10 @@ void GPIO::terminate(void)
 	gpioTerminate();
 }
 
-GPIO::GPIO(GpioPin gpio_number, unsigned mode, unsigned pull)
-	: gpio_number(gpio_number)
+GPIO::GPIO(GpioPin gpioNumber, unsigned mode, unsigned pull)
+	: gpio_number(gpioNumber)
 {
-	auto result = gpioSetMode(gpio_number, mode);
+	auto result = gpioSetMode(gpioNumber, mode);
 	if(result == PI_BAD_GPIO)
 	{
 		Program::getInstance().terminate(BAD_GPIO_NUMBER);
@@ -35,6 +35,11 @@ GPIO::GPIO(GpioPin gpio_number, unsigned mode, unsigned pull)
 	{
 		Program::getInstance().terminate(BAD_GPIO_MODE);
 	}
-	gpioSetPullUpDown(gpio_number, pull);
+	gpioSetPullUpDown(gpioNumber, pull);
 }
 
+PushButton::PushButton(GpioPin gpioNumber, uint32_t debounceTime)
+    : GPIO(gpioNumber, PI_INPUT, PI_PUD_UP)
+{
+
+}
