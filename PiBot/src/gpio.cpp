@@ -40,6 +40,49 @@ GPIO::GPIO(GpioPin gpioNumber, unsigned mode, unsigned pull)
 
 PushButton::PushButton(GpioPin gpioNumber, uint32_t debounceTime)
     : GPIO(gpioNumber, PI_INPUT, PI_PUD_UP)
+    , debounce_time(debounceTime)
 {
+    state = 0;
+    eventTime = 0;
+    keyIsPressed = false;
+    keyHasBeenPressed = false;
+}
 
+void PushButton::stateMachine(void)
+{
+    switch(state)
+    {
+    case 0:
+        // idle state
+        if(read() == 0)
+        {
+            // pushbutton pressed
+            eventTime = gpioTick();
+            state = 1;
+        }
+        break;
+    case 1:
+        // wait for stabilization after press
+        if(read() == 1)
+        {
+            // bouncing or released
+            state = 0;
+        }
+        else if(gpioTick() - eventTime >= debounce_time)
+        {
+            // key is pressed long enough
+            keyIsPressed = keyHasBeenPressed = true;
+            state = 5;
+        }
+        break;
+    case 5:
+        // key is pressed - wait for release
+        if(read() == 1)
+        {
+            // key has been released
+            keyIsPressed = false;
+            state = 0;
+        }
+        break;
+    }
 }

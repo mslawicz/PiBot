@@ -42,6 +42,13 @@ class PushButton : public GPIO
 {
 public:
     PushButton(GpioPin gpioNumber, uint32_t debounceTime = 20000);
+private:
+    void stateMachine(void);
+    uint32_t debounce_time;
+    uint8_t state;
+    uint32_t eventTime;
+    bool keyIsPressed;
+    bool keyHasBeenPressed;
 };
 
 #endif /* SRC_GPIO_H_ */
