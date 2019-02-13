@@ -23,7 +23,7 @@ void GPIO::terminate(void)
 	gpioTerminate();
 }
 
-GPIO::GPIO(unsigned gpio_number, unsigned mode, unsigned pull)
+GPIO::GPIO(GpioPin gpio_number, unsigned mode, unsigned pull)
 	: gpio_number(gpio_number)
 {
 	auto result = gpioSetMode(gpio_number, mode);

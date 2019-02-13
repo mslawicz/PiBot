@@ -31,7 +31,7 @@ void Drive::start(void)
 {
 	// enable gyroscope interrupts
     // interrupt function is called either on interrupt signal or after stated timeout in ms
-	gpioSetISRFuncEx(GYRO_INT_PIN, RISING_EDGE, 10, Drive::gyroInterruptCallback, this);
+	gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 10, Drive::gyroInterruptCallback, this);
 }
 
 /*
@@ -40,7 +40,7 @@ void Drive::start(void)
 void Drive::stop(void)
 {
 	// disable gyroscope interrupts
-	gpioSetISRFuncEx(GYRO_INT_PIN, RISING_EDGE, 0, nullptr, this);
+	gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 0, nullptr, this);
 }
 
 /*

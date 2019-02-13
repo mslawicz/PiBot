@@ -14,7 +14,7 @@ Gyroscope::Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority prior
     : I2cDevice(busId, address, priority)
 {
     // set gyroscope interrupt pin as input
-    GPIO gyroscopeInterruptPin(GYRO_INT_PIN, PI_INPUT, PI_PUD_DOWN);
+    GPIO gyroscopeInterruptPin(GpioPin::GYRO_INT, PI_INPUT, PI_PUD_DOWN);
 
     // Gyroscope data ready on INT 1_A/G pin
     writeData(ImuRegisters::INT1_CTRL, std::vector<uint8_t>{0x02});

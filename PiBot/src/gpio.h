@@ -10,14 +10,25 @@
 
 #include <pigpio.h>
 
-#define GYRO_INT_PIN    4
+enum GpioPin
+{
+    GYRO_INT = 4,   //TODO change to another one
+    SW1 = 5,
+    SW2 = 24,
+    SW3 = 22,
+    SW4 = 23,
+    SW5 = 4,
+    SW6 = 17,
+    BACKLIGHT = 27,
+    IR_RECEIVER = 26
+};
 
 class GPIO
 {
 public:
 	static void initialize(void);
 	static void terminate(void);
-	GPIO(unsigned gpio_number, unsigned mode, unsigned pull = PI_PUD_OFF);
+	GPIO(GpioPin gpio_number, unsigned mode, unsigned pull = PI_PUD_OFF);
 	int read(void) const {return gpioRead(gpio_number);}
 	void write(unsigned level) {gpioWrite(gpio_number, level);}
 	void toggle(void) {gpioWrite(gpio_number, gpioRead(gpio_number) ^ 0x01);}

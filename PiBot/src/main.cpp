@@ -22,36 +22,12 @@ int main(int argc, char* argv[])
 	Program::getInstance().initialize();
 
 
-	GPIO terminatePin(21, PI_INPUT, PI_PUD_UP);
-	//GPIO loopMark(12, PI_OUTPUT);
-	//GPIO GreenLED(23, PI_OUTPUT);
+	GPIO terminatePin(GpioPin::SW5, PI_INPUT, PI_PUD_UP);
+	GPIO backlightPin(GpioPin::BACKLIGHT, PI_OUTPUT);
+	backlightPin.write(0);
 
-	gpioSetPullUpDown(2, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
-	gpioSetPullUpDown(3, PI_PUD_UP);	// XXX temporary for LSM9DS1 I2C purpose
+	std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
-
-
-	{
-	    //scope of motor and drive objects
-	    Drive testDrive;    //XXX test
-	    testDrive.start();  // XXX test
-
-        float speed = 0.8;
-        float delta = 0.3;
-        while(terminatePin.read())
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(250));
-            speed += delta;
-            if(fabs(speed)>1.0)
-            {
-                delta *= -1.0;
-            }
-            Logger::getInstance().logEvent(INFO, "speed=", testDrive.getTestValue());
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        testDrive.stop(); // XXX test
-	}
 
 	Program::getInstance().terminate();
 	return 0;
