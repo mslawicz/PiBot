@@ -21,10 +21,19 @@ int main(int argc, char* argv[])
 	Program::getInstance().parseArguments(argc, argv);
 	Program::getInstance().initialize();
 
+	PushButton testPB(GpioPin::SW1);
+	PushButton exitButton(GpioPin::SW2);
 
-	GPIO terminatePin(GpioPin::SW5, PI_INPUT, PI_PUD_UP);
 	GPIO backlightPin(GpioPin::BACKLIGHT, PI_OUTPUT);
 	backlightPin.write(0);
+
+	while(!exitButton.hasBeenPressed())
+	{
+	    if(testPB.hasBeenPressed())
+	    {
+	        Logger::getInstance().logEvent(INFO, "SW1 has been pressed");
+	    }
+	}
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(250));
 

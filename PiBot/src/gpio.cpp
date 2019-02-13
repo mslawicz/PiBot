@@ -48,6 +48,10 @@ PushButton::PushButton(GpioPin gpioNumber, uint32_t debounceTime)
     keyHasBeenPressed = false;
 }
 
+/*
+ * pushbutton state machine
+ * it should be called in all access routins
+ */
 void PushButton::stateMachine(void)
 {
     switch(state)
@@ -85,4 +89,16 @@ void PushButton::stateMachine(void)
         }
         break;
     }
+}
+
+/*
+ * returns true if the button has been pressed since the last call
+ * the hasBeenPressed flag is cleared
+ */
+bool PushButton::hasBeenPressed(void)
+{
+    stateMachine();
+    auto result = keyHasBeenPressed;
+    keyHasBeenPressed = false;
+    return result;
 }
