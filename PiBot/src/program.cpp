@@ -7,6 +7,7 @@
 
 #include "program.h"
 #include "gpio.h"
+#include "spi.h"
 
 /*
  * get the singleton program object
@@ -99,6 +100,15 @@ void Program::initialize(void)
 		bus.second->startHandler();
 	}
 
+	// create and register in a map SPI channel object
+	new SpiChannel(SpiChannelId::MainSPI);
+
+    //start handlers of all SPI channels
+    for(auto channel : SpiChannel::channels)
+    {
+        channel.second->startHandler();
+    }
+
 	// create object which configures PCA9685 chip
 	pDevicePCA9685 = new PCA9685(I2cBusId::I2C1, I2cDeviceAddress::PCA9685_ADDR, I2cPriority::PCA9685_PR);
 }
@@ -149,6 +159,13 @@ void Program::terminate(ExitCode exitCode)
 		bus.second->stopHandler();
 		delete bus.second;
 	}
+
+    //terminate SPI handlers and delete SPI channel objects
+    for(auto channel : SpiChannel::channels)
+    {
+        channel.second->stopHandler();
+        delete channel.second;
+    }
 
 	Logger::getInstance().stop();
 
