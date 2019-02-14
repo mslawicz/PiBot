@@ -9,6 +9,7 @@
 #include "program.h"
 #include "logger.h"
 #include "drive.h"	//XXX for test
+#include "display.h" //XXX test
 #include <iostream>
 #include <chrono>
 #include <cmath> //XXX for test
@@ -25,6 +26,8 @@ int main(int argc, char* argv[])
 
 	GPIO backlightPin(GpioPin::BACKLIGHT, PI_OUTPUT);
 	backlightPin.write(0);
+
+	Display display(SpiChannelId::MainSPI, SpiPriority::DISPLAY);   //XXX test
 
 	while(!exitButton.hasBeenPressed())
 	{
