@@ -20,7 +20,8 @@ enum GpioPin
     SW5 = 4,
     SW6 = 17,
     BACKLIGHT = 27,
-    IR_RECEIVER = 26
+    IR_RECEIVER = 26,
+    TMP_EXIT = 21
 };
 
 class GPIO

@@ -23,7 +23,7 @@ SpiChannel::SpiChannel(SpiChannelId spiChannelId)
     exitHandler = true;
     pSpiHandlerThread = nullptr;
     queueEmpty.test_and_set();
-    // register this i2c bus object in the bus map
+    // register this SPI channel object in the channel map
     SpiChannel::channels.emplace(channelId, this);
     Logger::getInstance().logEvent(INFO, "SPI channel#", channelId, " initialized");
 }

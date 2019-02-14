@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	Program::getInstance().initialize();
 
 	PushButton testPB(GpioPin::SW1);
-	PushButton exitButton(GpioPin::SW2);
+	PushButton exitButton(GpioPin::TMP_EXIT);
 
 	GPIO backlightPin(GpioPin::BACKLIGHT, PI_OUTPUT);
 	backlightPin.write(0);
