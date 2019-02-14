@@ -6,7 +6,6 @@
  */
 
 #include "gpio.h"
-#include "i2c.h"
 #include "program.h"
 #include "logger.h"
 #include "drive.h"	//XXX for test
