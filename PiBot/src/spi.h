@@ -9,11 +9,18 @@
 #define SRC_SPI_H_
 
 #include <map>
+#include <thread>
+#include <condition_variable>
 
 enum SpiChannelId
 {
     MainSPI,
     AuxSPI
+};
+
+enum SpiPriority
+{
+    DISPLAY
 };
 
 class SpiChannel;
@@ -25,25 +32,25 @@ typedef std::map<SpiChannelId, SpiChannel*> MapOfSpiChannels;
 class SpiChannel
 {
 public:
-//    I2cBus(I2cBusId i2cBusId);
-//    ~I2cBus();
+      SpiChannel(SpiChannelId spiChannelId);
+      ~SpiChannel();
 //    void startHandler(void);
 //    void stopHandler(void);
-//    static MapOfI2cBuses buses;
+      static MapOfSpiChannels channels;
 //    friend class I2cDevice;
 private:
 //    void handler(void);
 //    void requestToSend(void);
 //    void registerDevice(I2cDeviceContainer newDevice);
 //    void unregisterDevice(I2cDevice* pDevice);
-//    I2cBusId busId;
-//    uint8_t* pData;
-//    const unsigned DataBufSize = 30;
+      SpiChannelId channelId;
+      uint8_t* pData;
+      const unsigned DataBufSize = 30;
 //    std::mutex handlerMutex;
-//    std::condition_variable queueEvent;
-//    bool exitHandler;
-//    std::thread* pI2cHandlerThread;
-//    std::atomic_flag queueEmpty;
+      std::condition_variable queueEvent;
+      bool exitHandler;
+      std::thread* pSpiHandlerThread;
+      std::atomic_flag queueEmpty;
 //    std::vector<I2cDeviceContainer> devices;
 };
 
