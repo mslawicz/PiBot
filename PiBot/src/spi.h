@@ -34,8 +34,8 @@ class SpiChannel
 public:
       SpiChannel(SpiChannelId spiChannelId);
       ~SpiChannel();
-//    void startHandler(void);
-//    void stopHandler(void);
+      void startHandler(void);
+      void stopHandler(void);
       static MapOfSpiChannels channels;
 //    friend class I2cDevice;
 private:

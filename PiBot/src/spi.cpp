@@ -35,3 +35,26 @@ SpiChannel::~SpiChannel()
         pData = nullptr;
     }
 }
+
+/*
+ * creates a new thread for SPI channel handler
+ */
+void SpiChannel::startHandler(void)
+{
+    Logger::getInstance().logEvent(INFO, "SPI channel#", channelId, " handler start request");
+    exitHandler = false;
+    //SSS pI2cHandlerThread = new std::thread(&I2cBus::handler, this);
+}
+
+/*
+ * initiate stop of SPI channel handler
+ */
+void SpiChannel::stopHandler(void)
+{
+    Logger::getInstance().logEvent(INFO, "SPI channel#", channelId, " handler stop request");
+    exitHandler = true;
+    queueEvent.notify_one();
+    pSpiHandlerThread->join();
+    delete pSpiHandlerThread;
+    Logger::getInstance().logEvent(INFO, "SPI channel#", channelId, " handler terminated");
+}
