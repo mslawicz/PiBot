@@ -124,7 +124,12 @@ void Program::terminate(ExitCode exitCode)
 		{ I2C_NOT_OPENED, "I2C opening error" },
 		{ WRONG_I2C_DEVICE, "Wrong I2C device" },
 		{ WRONG_I2C_BUS, "Wrong I2C bus" },
-		{ I2C_BUFFER_SIZE, "I2C receive buffer too small" }
+		{ I2C_BUFFER_SIZE, "I2C receive buffer too small" },
+		{ SPI_BUFFER_SIZE, "SPI receive buffer too small" },
+		{ BAD_MOTOR_NO, "Bad motor number" },
+        { WRONG_SPI_DEVICE, "Wrong SPI device" },
+        { WRONG_SPI_CHANNEL, "Wrong SPI bus" },
+        { SPI_NOT_OPENED, "SPI opening error" },
 	};
 
 	if (exitCode == ExitCode::OK)

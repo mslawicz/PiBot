@@ -36,7 +36,11 @@ enum ExitCode
 	WRONG_I2C_DEVICE,
 	WRONG_I2C_BUS,
 	I2C_BUFFER_SIZE,
-	BAD_MOTOR_NO
+	BAD_MOTOR_NO,
+	SPI_BUFFER_SIZE,
+	WRONG_SPI_DEVICE,
+	WRONG_SPI_CHANNEL,
+	SPI_NOT_OPENED,
 };
 
 // definition of logged messages severity level
