@@ -90,28 +90,43 @@ void SpiChannel::handler(void)
                     dataContainer = std::get<1>(*iDevice)->dataToSend.front();
                     std::get<1>(*iDevice)->dataToSend.pop();
                 }
-                if(std::get<1>(dataContainer) == 0)
+                if(std::get<0>(dataContainer) == 0)
                 {
-                    // SPI write operation
-                    int result = 1;//SSSSPIWriteSPIBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)&std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
+                    // SPI write only operation
+                    int result = spiWrite(std::get<1>(*iDevice)->handle, (char*)&std::get<1>(dataContainer)[0], std::get<1>(dataContainer).size());
                     if(result)
                     {
                         Logger::getInstance().logEvent(ERROR, "SPI write error: channel=", channelId, ", error=", result);
                     }
                 }
-                else
+                else if(std::get<0>(dataContainer) == std::get<1>(dataContainer).size())
                 {
-                    // SPI read operation
-                    if(std::get<1>(dataContainer) > DataBufSize)
+                    // SPI transfer (read/write) operation
+                    if(std::get<0>(dataContainer) > DataBufSize)
                     {
                         Program::getInstance().terminate(SPI_BUFFER_SIZE);
                     }
-                    int no_of_bytes = 1;//SSS SPIReadSPIBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)pData, std::get<1>(dataContainer));
-                    std::vector<uint8_t> data(pData, pData+no_of_bytes);
+                    int noOfBytes = spiXfer(std::get<1>(*iDevice)->handle, (char*)&std::get<1>(dataContainer)[0], (char*)pData, std::get<0>(dataContainer));
+                    std::vector<uint8_t> data(pData, pData+noOfBytes);
                     {
                         //push received data to receive queue
                         std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
-                        std::get<1>(*iDevice)->receivedData.push(SpiDataContainer{std::get<0>(dataContainer), no_of_bytes, data});
+                        std::get<1>(*iDevice)->receivedData.push(SpiDataContainer{noOfBytes, data});
+                    }
+                }
+                else
+                {
+                    // SPI read only operation
+                    if(std::get<0>(dataContainer) > DataBufSize)
+                    {
+                        Program::getInstance().terminate(SPI_BUFFER_SIZE);
+                    }
+                    int noOfBytes = spiRead(std::get<1>(*iDevice)->handle, (char*)pData, std::get<0>(dataContainer));
+                    std::vector<uint8_t> data(pData, pData+noOfBytes);
+                    {
+                        //push received data to receive queue
+                        std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
+                        std::get<1>(*iDevice)->receivedData.push(SpiDataContainer{noOfBytes, data});
                     }
                 }
 
