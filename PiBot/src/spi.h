@@ -68,7 +68,7 @@ private:
 class SpiDevice
 {
 public:
-      SpiDevice(SpiChannelId spiChannelId, SpiPriority devicePriority, unsigned bitRate);
+      SpiDevice(SpiChannelId spiChannelId, SpiPriority devicePriority, unsigned bitRate, unsigned flags = 0);
       // this makes this class abstract
       virtual ~SpiDevice() = 0;
       friend class SpiChannel;
