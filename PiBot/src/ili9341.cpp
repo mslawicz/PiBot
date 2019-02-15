@@ -8,7 +8,7 @@
 #include "ili9341.h"
 
 Ili9341::Ili9341(SpiChannelId spiChannelId, SpiPriority priority)
-    : SpiDevice(spiChannelId, priority, Ili9341BitRate)
+    : SpiDevice(spiChannelId, priority, 100000)
 {
 
 }

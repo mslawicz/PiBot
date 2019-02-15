@@ -94,7 +94,7 @@ void SpiChannel::handler(void)
                 {
                     // SPI write only operation
                     int result = spiWrite(std::get<1>(*iDevice)->handle, (char*)&std::get<1>(dataContainer)[0], std::get<1>(dataContainer).size());
-                    if(result)
+                    if(result < 0)
                     {
                         Logger::getInstance().logEvent(ERROR, "SPI write error: channel=", channelId, ", error=", result);
                     }

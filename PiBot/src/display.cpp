@@ -8,7 +8,7 @@
 #include "display.h"
 
 Display::Display()
-    : Ili9341(driverChannelId, driverPriority)
+    : Ili9341(SpiChannelId::SPI_MAIN, SpiPriority::DISPLAY)
 {
 
 

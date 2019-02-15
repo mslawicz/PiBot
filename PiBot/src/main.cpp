@@ -27,9 +27,10 @@ int main(int argc, char* argv[])
 	GPIO backlightPin(GpioPin::BACKLIGHT, PI_OUTPUT);
 	backlightPin.write(0);
 
-	Display display();   //XXX test
+	Display display;   //XXX test
+	display.writeDataRequest(std::vector<uint8_t>{0x12, 0x34, 0x56});
 
-	while(!exitButton.hasBeenPressed())
+	while(exitButton.hasBeenPressed())
 	{
 	    if(testPB.hasBeenPressed())
 	    {

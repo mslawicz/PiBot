@@ -138,7 +138,7 @@ void Program::terminate(ExitCode exitCode)
 		{ SPI_BUFFER_SIZE, "SPI receive buffer too small" },
 		{ BAD_MOTOR_NO, "Bad motor number" },
         { WRONG_SPI_DEVICE, "Wrong SPI device" },
-        { WRONG_SPI_CHANNEL, "Wrong SPI bus" },
+        { WRONG_SPI_CHANNEL, "Wrong SPI channel" },
         { SPI_NOT_OPENED, "SPI opening error" },
 	};
 

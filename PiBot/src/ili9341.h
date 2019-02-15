@@ -16,7 +16,6 @@ public:
     Ili9341(SpiChannelId spiChannelId, SpiPriority priority);
     ~Ili9341();
 private:
-    const unsigned Ili9341BitRate = 100000;
 };
 
 
