@@ -156,7 +156,7 @@ void SpiChannel::unregisterDevice(SpiDevice* pDevice)
 /*
  * constructor of a new SPI device
  */
-SpiDevice::SpiDevice(SpiChannelId spiChannelId, SpiPriority devicePriority)
+SpiDevice::SpiDevice(SpiChannelId spiChannelId, SpiPriority devicePriority, unsigned bitRate)
     : channelId(spiChannelId)
     , priority(devicePriority)
 {
@@ -166,7 +166,7 @@ SpiDevice::SpiDevice(SpiChannelId spiChannelId, SpiPriority devicePriority)
     }
 
     pSpiChannel = SpiChannel::channels.find(channelId)->second;
-    handle = 1;//SSS SPIOpen(busId, address, 0);
+    handle = spiOpen(channelId, bitRate, 0);
 
     if(handle >= 0)
     {
@@ -188,7 +188,7 @@ SpiDevice::~SpiDevice()
 {
     if(handle >= 0)
     {
-        //SSS SpiClose(handle);
+        spiClose(handle);
     }
     pSpiChannel->unregisterDevice(this);
 }
