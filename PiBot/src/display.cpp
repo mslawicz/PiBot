@@ -7,10 +7,10 @@
 
 #include "display.h"
 
-Display::Display(SpiChannelId spiChannelId, SpiPriority devicePriority)
-    : SpiDevice(spiChannelId, devicePriority)
+Display::Display()
+    : Ili9341(driverChannelId, driverPriority)
 {
-    // TODO Auto-generated constructor stub
+
 
 }
 

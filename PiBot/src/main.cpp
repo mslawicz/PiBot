@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 	GPIO backlightPin(GpioPin::BACKLIGHT, PI_OUTPUT);
 	backlightPin.write(0);
 
-	Display display(SpiChannelId::SPI_MAIN, SpiPriority::DISPLAY);   //XXX test
+	Display display();   //XXX test
 
 	while(!exitButton.hasBeenPressed())
 	{
