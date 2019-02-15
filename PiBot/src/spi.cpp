@@ -144,6 +144,15 @@ void SpiChannel::handler(void)
 }
 
 /*
+ * notify handler about queue activity
+ */
+void SpiChannel::requestToSend(void)
+{
+    queueEmpty.clear();
+    queueEvent.notify_one();
+}
+
+/*
  * registers SPI device in the vector (sorted by priority)
  */
 void SpiChannel::registerDevice(SpiDeviceContainer newDevice)
@@ -206,4 +215,80 @@ SpiDevice::~SpiDevice()
         spiClose(handle);
     }
     pSpiChannel->unregisterDevice(this);
+}
+
+/*
+ * puts SPI data to send into send queue and notifies SPI bus handler
+ */
+void SpiDevice::writeDataRequest(std::vector<uint8_t> data)
+{
+    {
+        std::lock_guard<std::mutex> lock(sendQueueMutex);
+        dataToSend.push(SpiDataContainer{0, data});
+    }
+    pSpiChannel->requestToSend();
+}
+
+/*
+ * puts SPI data read request into send queue and notifies SPI bus handler
+ */
+void SpiDevice::readDataRequest(unsigned length)
+{
+    {
+        std::lock_guard<std::mutex> lock(sendQueueMutex);
+        dataToSend.push(SpiDataContainer{length, std::vector<uint8_t>()});
+    }
+    pSpiChannel->requestToSend();
+}
+
+/*
+ * puts SPI data to send and read request into send queue and notifies SPI bus handler
+ */
+void SpiDevice::transferDataRequest(std::vector<uint8_t> data)
+{
+    {
+        std::lock_guard<std::mutex> lock(sendQueueMutex);
+        dataToSend.push(SpiDataContainer{data.size(), data});
+    }
+    pSpiChannel->requestToSend();
+}
+
+/*
+ * clears device reception queue without reading it
+ */
+void SpiDevice::clearReceiveQueue(void)
+{
+    std::lock_guard<std::mutex> lock(receiveQueueMutex);
+    receivedData = std::queue<SpiDataContainer>();
+}
+
+/*
+ * gets data container from the receive queue
+ */
+SpiDataContainer SpiDevice::getData(void)
+{
+    SpiDataContainer data;
+    if(!receivedData.empty())
+    {
+        std::lock_guard<std::mutex> lock(receiveQueueMutex);
+        data = receivedData.front();
+        receivedData.pop();
+    }
+    return data;
+}
+
+/*
+ * gets lastdata container from the receive queue
+ * clears the queue
+ */
+SpiDataContainer SpiDevice::getLastData(void)
+{
+    SpiDataContainer data;
+    if(!receivedData.empty())
+    {
+        std::lock_guard<std::mutex> lock(receiveQueueMutex);
+        data = receivedData.back();
+        receivedData = std::queue<SpiDataContainer>();
+    }
+    return data;
 }
