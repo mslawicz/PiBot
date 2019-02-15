@@ -17,8 +17,8 @@
 
 enum SpiChannelId
 {
-    MainSPI,
-    AuxSPI
+    SPI_MAIN,
+    SPI_AUX
 };
 
 enum SpiPriority

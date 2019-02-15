@@ -101,7 +101,7 @@ void Program::initialize(void)
 	}
 
 	// create and register in a map SPI channel object
-	new SpiChannel(SpiChannelId::MainSPI);
+	new SpiChannel(SpiChannelId::SPI_MAIN);
 
     //start handlers of all SPI channels
     for(auto channel : SpiChannel::channels)
