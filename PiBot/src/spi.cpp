@@ -51,3 +51,27 @@ SpiDevice::~SpiDevice()
     }
     pSerialBus->unregisterDevice(this);
 }
+
+/*
+ * writes data to SPI device
+ */
+int SpiDevice::writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data)
+{
+    return spiWrite(handle, (char*)&data[0], data.size());
+}
+
+/*
+ * reads data from SPI device
+ */
+int SpiDevice::readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length)
+{
+    return spiRead(handle, (char*)dataBuffer, length);
+}
+
+/*
+ * writes data to and reads data from SPI device
+ */
+int SpiDevice::exchangeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data, uint8_t* dataBuffer)
+{
+    return spiXfer(handle, (char*)&data[0], (char*)dataBuffer, data.size());
+}
