@@ -102,9 +102,9 @@ protected:
     virtual int readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length) = 0;
     virtual int exchangeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data, uint8_t* dataBuffer) = 0;
     int handle;
-private:
     SerialBusId busId;
     SerialPriority priority;
+private:
     uint8_t address;
     SerialBus* pSerialBus;
     std::queue<SerialDataContainer> dataToSend;

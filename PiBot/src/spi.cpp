@@ -16,8 +16,6 @@
  */
 SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsigned bitRate, unsigned flags)
     : SerialDevice(spiBusId, devicePriority, 0)
-    , busId(spiBusId)
-    , priority(devicePriority)
 {
     if(SerialBus::buses.find(busId) == SerialBus::buses.end())
     {
@@ -29,7 +27,7 @@ SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsign
 
     if(handle >= 0)
     {
-        Logger::getInstance().logEvent(INFO, "SPI device opened: bus=", busId, ", priority=0x", priority);
+        Logger::getInstance().logEvent(INFO, "SPI device opened: bus=0x", std::hex, busId, ", priority=0x", priority);
     }
     else
     {
