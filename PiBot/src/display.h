@@ -17,8 +17,6 @@ public:
     Display();
     ~Display();
 private:
-    const SpiChannelId driverChannelId = SpiChannelId::SPI_MAINi;
-    const SpiPriority driverPriority = SpiPriority::DISPLAY;
 };
 
 #endif /* SRC_DISPLAY_H_ */

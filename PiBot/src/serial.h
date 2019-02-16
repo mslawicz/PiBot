@@ -58,6 +58,8 @@ public:
     ~SerialBus();
     void startHandler(void);
     void stopHandler(void);
+    void registerDevice(SerialDeviceContainer newDevice);
+    void unregisterDevice(SerialDevice* pDevice);
     static MapOfSerialBuses buses;
     friend class SerialDevice;
 private:
@@ -70,8 +72,6 @@ private:
     };
     void handler(void);
     void requestToSend(void);
-    void registerDevice(SerialDeviceContainer newDevice);
-    void unregisterDevice(SerialDevice* pDevice);
     SerialBusId busId;
     uint8_t* pData;
     const unsigned DataBufSize = 32;
@@ -101,11 +101,11 @@ protected:
     virtual int writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data) = 0;
     virtual int readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length) = 0;
     virtual int exchangeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data, uint8_t* dataBuffer) = 0;
+    int handle;
 private:
     SerialBusId busId;
     SerialPriority priority;
     uint8_t address;
-    int handle;
     SerialBus* pSerialBus;
     std::queue<SerialDataContainer> dataToSend;
     std::queue<SerialDataContainer> receivedData;

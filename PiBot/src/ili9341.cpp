@@ -7,8 +7,8 @@
 
 #include "ili9341.h"
 
-Ili9341::Ili9341(SpiChannelId spiChannelId, SpiPriority priority)
-    : SpiDevice(spiChannelId, priority, 100000)
+Ili9341::Ili9341(SerialBusId spiBusId, SerialPriority priority)
+    : SpiDevice(spiBusId, priority, 100000)
 {
 
 }

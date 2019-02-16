@@ -102,14 +102,14 @@ void Program::initialize(void)
 		bus.second->startHandler();
 	}
 
-	// create and register in a map SPI channel object
-	new SpiChannel(SpiChannelId::SPI_MAINi);
-
-    //start handlers of all SPI channels
-    for(auto channel : SpiChannel::channels)
-    {
-        channel.second->startHandler();
-    }
+//	// create and register in a map SPI channel object
+//	new SpiChannel(SpiChannelId::SPI_MAINi);
+//
+//    //start handlers of all SPI channels
+//    for(auto channel : SpiChannel::channels)
+//    {
+//        channel.second->startHandler();
+//    }
     //XXX end of removal section
 
     // create serial buses
@@ -151,7 +151,7 @@ void Program::terminate(ExitCode exitCode)
 		{ SPI_BUFFER_SIZE, "SPI receive buffer too small" },
 		{ BAD_MOTOR_NO, "Bad motor number" },
         { WRONG_SPI_DEVICE, "Wrong SPI device" },
-        { WRONG_SPI_CHANNEL, "Wrong SPI channel" },
+        { WRONG_SPI_BUS, "Wrong SPI bus" },
         { SPI_NOT_OPENED, "SPI opening error" },
 	};
 
@@ -166,18 +166,18 @@ void Program::terminate(ExitCode exitCode)
 
 	delete pDevicePCA9685;
 
-	//terminate i2c handlers and delete i2c bus objects
+	//terminate i2c handlers and delete i2c bus objects XXX to be removed
 	for(auto bus : I2cBus::buses)
 	{
 		bus.second->stopHandler();
 		delete bus.second;
 	}
 
-    //terminate SPI handlers and delete SPI channel objects
-    for(auto channel : SpiChannel::channels)
+    //terminate serial handlers and delete serial bus objects
+    for(auto bus : SerialBus::buses)
     {
-        channel.second->stopHandler();
-        delete channel.second;
+        bus.second->stopHandler();
+        delete bus.second;
     }
 
 	Logger::getInstance().stop();
