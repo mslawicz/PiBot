@@ -8,6 +8,14 @@
 #ifndef SRC_SERIAL_H_
 #define SRC_SERIAL_H_
 
+#include <vector>
+#include <tuple>
+#include <map>
+#include <mutex>
+#include <condition_variable>
+#include <thread>
+#include <queue>
+
 class SerialBus;
 class SerialDevice;
 
@@ -17,16 +25,16 @@ class SerialDevice;
 typedef std::tuple<unsigned, unsigned, std::vector<uint8_t>>   SerialDataContainer;
 
 // typedef for serial device definition: priority, pointer to SerialDevice object
-typedef std::tuple<SerialPriority, SerialDevice*> SerialDeviceContainer;
+typedef std::tuple<unsigned, SerialDevice*> SerialDeviceContainer;
 
 // typedef for the map of serial buses: bus id, pointer to SerialBus object
-typedef std::map<SerialBusId, SerialBus*> MapOfSerialBuses;
+typedef std::map<unsigned, SerialBus*> MapOfSerialBuses;
 
 
 class SerialBus
 {
 public:
-    SerialBus(SerialBusId serialBusId);
+    SerialBus(unsigned serialBusId);
     ~SerialBus();
     void startHandler(void);
     void stopHandler(void);
@@ -37,7 +45,7 @@ private:
     void requestToSend(void);
     void registerDevice(SerialDeviceContainer newDevice);
     void unregisterDevice(SerialDevice* pDevice);
-    SerialBusId busId;
+    unsigned busId;
     uint8_t* pData;
     const unsigned DataBufSize = 30;
     std::mutex handlerMutex;
@@ -51,20 +59,21 @@ private:
 class SerialDevice
 {
 public:
-    SerialDevice(SerialBusId serialBusId, SerialDeviceAddress deviceAddres, SerialPriority devicePriority);
+    SerialDevice(unsigned serialBusId, unsigned devicePriority, uint8_t deviceAddres = 0);
     // this makes this class abstract
     virtual ~SerialDevice() = 0;
     friend class SerialBus;
-    void writeData(unsigned registerAddress, std::vector<uint8_t> data);
+    void writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
     void readDataRequest(unsigned registerAddress, unsigned length);
+    void exchangeDataRequest(std::vector<uint8_t> data);
     void clearReceiveQueue(void);
     bool receiveQueueEmpty(void) const {return receivedData.empty();}
     SerialDataContainer getData(void);
     SerialDataContainer getLastData(void);
 private:
-    SerialBusId busId;
-    SerialDeviceAddress address;
-    SerialPriority priority;
+    unsigned busId;
+    uint8_t address;
+    unsigned priority;
     int handle;
     SerialBus* pSerialBus;
     std::queue<SerialDataContainer> dataToSend;
