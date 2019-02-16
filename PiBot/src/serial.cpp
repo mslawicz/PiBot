@@ -15,7 +15,7 @@ MapOfSerialBuses SerialBus::buses;
 /*
  * constructor of the serial bus object
  */
-SerialBus::SerialBus(unsigned serialBusId)
+SerialBus::SerialBus(SerialBusId serialBusId)
     : busId(serialBusId)
 {
     pData = new uint8_t[DataBufSize];
@@ -47,7 +47,7 @@ SerialBus::~SerialBus()
  */
 void SerialBus::handler(void)
 {
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler started");
+    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler started");
     do
     {
         std::this_thread::yield();
@@ -67,13 +67,15 @@ void SerialBus::handler(void)
                 {
                     // queue modification protected by mutex
                     std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->sendQueueMutex);
+                    // get the first data container
                     dataContainer = std::get<1>(*iDevice)->dataToSend.front();
+                    // remove this container from the queue
                     std::get<1>(*iDevice)->dataToSend.pop();
                 }
                 if(std::get<1>(dataContainer) == 0)
                 {
-                    // serial write operation
-                    int result = serialWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)&std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
+                    // number of bytes to read = 0 -> serial write operation
+                    int result = 1;//XXX serialWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)&std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
                     if(result)
                     {
                         Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, ", device=", std::hex, std::get<1>(*iDevice)->address, ", error=", result);
@@ -81,17 +83,31 @@ void SerialBus::handler(void)
                 }
                 else
                 {
-                    // serial read operation
+                    // number of bytes to read > 0 -> read or exchange operations
                     if(std::get<1>(dataContainer) > DataBufSize)
                     {
+                        // the read data buffer is too small
                         Program::getInstance().terminate(I2C_BUFFER_SIZE);
                     }
-                    int no_of_bytes = serialReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)pData, std::get<1>(dataContainer));
-                    std::vector<uint8_t> data(pData, pData+no_of_bytes);
+
+                    int noOfBytesReceived;
+
+                    if(std::get<1>(dataContainer) == std::get<2>(dataContainer).size())
+                    {
+                        // number of bytes to read = size of data vector -> serial exchange (write+read) operation
+                        noOfBytesReceived = 1;//XXX
+                    }
+                    else
+                    {
+                        // data read operation
+                        noOfBytesReceived = 1;//XXX serialReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)pData, std::get<1>(dataContainer));
+                    }
+
+                    std::vector<uint8_t> data(pData, pData+noOfBytesReceived);
                     {
                         //push received data to receive queue
                         std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
-                        std::get<1>(*iDevice)->receivedData.push(SerialDataContainer{std::get<0>(dataContainer), no_of_bytes, data});
+                        std::get<1>(*iDevice)->receivedData.push(SerialDataContainer{std::get<0>(dataContainer), noOfBytesReceived, data});
                     }
                 }
 

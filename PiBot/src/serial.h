@@ -18,8 +18,10 @@
 
 enum SerialBusId
 {
+    // I2C buses
     I2C0 = 0x0000,
     I2C1,
+    // SPI buses
     SPI_MAIN = 0x0100,
     SPI_AUX
 };
