@@ -90,9 +90,9 @@ public:
     // this makes this class abstract
     virtual ~SerialDevice();
     friend class SerialBus;
-    void writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
-    void readDataRequest(unsigned registerAddress, unsigned length);
-    void exchangeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
+    void writeDataRequest(std::vector<uint8_t> data, unsigned registerAddress = 0);
+    void readDataRequest(unsigned length, unsigned registerAddress = 0);
+    void exchangeDataRequest(std::vector<uint8_t> data, unsigned registerAddress = 0);
     void clearReceiveQueue(void);
     bool receiveQueueEmpty(void) const {return receivedData.empty();}
     SerialDataContainer getData(void);

@@ -55,7 +55,8 @@ SpiDevice::~SpiDevice()
  */
 int SpiDevice::writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data)
 {
-    return spiWrite(handle, (char*)&data[0], data.size());
+    // returns 0 if all characters are sent
+    return (spiWrite(handle, (char*)&data[0], data.size()) != static_cast<int>(data.size()));
 }
 
 /*
