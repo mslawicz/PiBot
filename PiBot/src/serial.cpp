@@ -139,7 +139,7 @@ void SerialBus::requestToSend(void)
  */
 void SerialBus::startHandler(void)
 {
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler start request");
+    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler start request");
     exitHandler = false;
     pSerialHandlerThread = new std::thread(&SerialBus::handler, this);
 }
@@ -149,12 +149,12 @@ void SerialBus::startHandler(void)
  */
 void SerialBus::stopHandler(void)
 {
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler stop request");
+    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler stop request");
     exitHandler = true;
     queueEvent.notify_one();
     pSerialHandlerThread->join();
     delete pSerialHandlerThread;
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler terminated");
+    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler terminated");
 }
 
 /*
@@ -176,7 +176,7 @@ void SerialBus::unregisterDevice(SerialDevice* pDevice)
         if(std::get<1>(*iDevice) == pDevice)
         {
             devices.erase(iDevice);
-            Logger::getInstance().logEvent(INFO, "unregistering I2C device: bus=", busId, ", address=0x", std::hex, pDevice->address, ", priority=0x", pDevice->priority );
+            Logger::getInstance().logEvent(INFO, "unregistering serial device: bus=", busId, ", address=0x", std::hex, pDevice->address, ", priority=0x", pDevice->priority );
             break;
         }
     }
@@ -190,6 +190,7 @@ SerialDevice::SerialDevice(SerialBusId serialBusId, SerialPriority devicePriorit
     , priority(devicePriority)
     , address(deviceAddres)
 {
+    handle = -1;
     if(SerialBus::buses.find(busId) == SerialBus::buses.end())
     {
         Program::getInstance().terminate(WRONG_SERIAL_BUS);
@@ -212,6 +213,7 @@ void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
+        // for read operation the number of data to read = 0
         dataToSend.push(SerialDataContainer{registerAddress, 0, data});
     }
     pSerialBus->requestToSend();
@@ -224,7 +226,21 @@ void SerialDevice::readDataRequest(unsigned registerAddress, unsigned length)
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
+        // for write operation the send data vector is empty
         dataToSend.push(SerialDataContainer{registerAddress, length, std::vector<uint8_t>()});
+    }
+    pSerialBus->requestToSend();
+}
+
+/*
+ * puts serial data to initiate exchange into send queue and notifies serial bus handler
+ */
+void SerialDevice::exchangeDataRequest(unsigned registerAddress, std::vector<uint8_t> data)
+{
+    {
+        std::lock_guard<std::mutex> lock(sendQueueMutex);
+        // for exchange operation the send data vector length equals the number of data to read
+        dataToSend.push(SerialDataContainer{registerAddress, data.size(), data});
     }
     pSerialBus->requestToSend();
 }

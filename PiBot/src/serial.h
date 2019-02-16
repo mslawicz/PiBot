@@ -85,7 +85,7 @@ public:
     friend class SerialBus;
     void writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
     void readDataRequest(unsigned registerAddress, unsigned length);
-    void exchangeDataRequest(std::vector<uint8_t> data);
+    void exchangeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
     void clearReceiveQueue(void);
     bool receiveQueueEmpty(void) const {return receivedData.empty();}
     SerialDataContainer getData(void);
