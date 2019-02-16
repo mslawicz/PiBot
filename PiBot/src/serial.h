@@ -92,6 +92,8 @@ public:
     SerialDataContainer getLastData(void);
 protected:
     virtual int writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data) = 0;
+    virtual int readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length) = 0;
+    virtual int exchangeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data, uint8_t* dataBuffer) = 0;
 private:
     SerialBusId busId;
     SerialPriority priority;

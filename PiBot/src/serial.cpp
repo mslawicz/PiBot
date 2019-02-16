@@ -96,12 +96,12 @@ void SerialBus::handler(void)
                     if(std::get<1>(dataContainer) == std::get<2>(dataContainer).size())
                     {
                         // number of bytes to read = size of data vector -> serial exchange (write+read) operation
-                        noOfBytesReceived = 1;//XXX
+                        noOfBytesReceived = std::get<1>(*iDevice)->exchangeData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), std::get<2>(dataContainer), pData);
                     }
                     else
                     {
                         // data read operation
-                        noOfBytesReceived = 1;//XXX serialReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)pData, std::get<1>(dataContainer));
+                        noOfBytesReceived = std::get<1>(*iDevice)->readData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), pData, std::get<1>(dataContainer));
                     }
 
                     std::vector<uint8_t> data(pData, pData+noOfBytesReceived);
