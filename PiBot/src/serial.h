@@ -16,6 +16,24 @@
 #include <thread>
 #include <queue>
 
+enum SerialBusId
+{
+    I2C0 = 0x0000,
+    I2C1,
+    SPI_MAIN = 0x0100,
+    SPI_AUX
+};
+
+enum SerialPriority
+{
+    PCA9685_PR,
+    MOTOR_PR,
+    GYROSCOPE_PR,
+    ACCELEROMETER_PR,
+    MAGNETOMETER_PR,
+    DISPLAY_PR
+};
+
 class SerialBus;
 class SerialDevice;
 
@@ -25,16 +43,16 @@ class SerialDevice;
 typedef std::tuple<unsigned, unsigned, std::vector<uint8_t>>   SerialDataContainer;
 
 // typedef for serial device definition: priority, pointer to SerialDevice object
-typedef std::tuple<unsigned, SerialDevice*> SerialDeviceContainer;
+typedef std::tuple<SerialPriority, SerialDevice*> SerialDeviceContainer;
 
 // typedef for the map of serial buses: bus id, pointer to SerialBus object
-typedef std::map<unsigned, SerialBus*> MapOfSerialBuses;
+typedef std::map<SerialBusId, SerialBus*> MapOfSerialBuses;
 
 
 class SerialBus
 {
 public:
-    SerialBus(unsigned serialBusId);
+    SerialBus(SerialBusId serialBusId);
     ~SerialBus();
     void startHandler(void);
     void stopHandler(void);
@@ -45,7 +63,7 @@ private:
     void requestToSend(void);
     void registerDevice(SerialDeviceContainer newDevice);
     void unregisterDevice(SerialDevice* pDevice);
-    unsigned busId;
+    SerialBusId busId;
     uint8_t* pData;
     const unsigned DataBufSize = 30;
     std::mutex handlerMutex;
@@ -59,7 +77,7 @@ private:
 class SerialDevice
 {
 public:
-    SerialDevice(unsigned serialBusId, unsigned devicePriority, uint8_t deviceAddres = 0);
+    SerialDevice(SerialBusId serialBusId, SerialPriority devicePriority, uint8_t deviceAddres = 0);
     // this makes this class abstract
     virtual ~SerialDevice() = 0;
     friend class SerialBus;
@@ -71,9 +89,9 @@ public:
     SerialDataContainer getData(void);
     SerialDataContainer getLastData(void);
 private:
-    unsigned busId;
+    SerialBusId busId;
     uint8_t address;
-    unsigned priority;
+    SerialPriority priority;
     int handle;
     SerialBus* pSerialBus;
     std::queue<SerialDataContainer> dataToSend;

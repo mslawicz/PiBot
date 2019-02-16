@@ -6,6 +6,8 @@
  */
 
 #include "serial.h"
+#include "logger.h"
+#include "program.h"
 
 MapOfSerialBuses SerialBus::buses;
 
@@ -13,7 +15,7 @@ MapOfSerialBuses SerialBus::buses;
 /*
  * constructor of the serial bus object
  */
-SerialBus::SerialBus(SerialBusId serialBusId)
+SerialBus::SerialBus(unsigned serialBusId)
     : busId(serialBusId)
 {
     pData = new uint8_t[DataBufSize];
