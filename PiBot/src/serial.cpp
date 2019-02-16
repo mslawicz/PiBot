@@ -29,7 +29,7 @@ SerialBus::SerialBus(SerialBusId serialBusId)
     queueEmpty.test_and_set();
     // register this serial bus object in the bus map
     SerialBus::buses.emplace(busId, this);
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " initialized");
+    Logger::getInstance().logEvent(INFO, "Serial bus ", names.find(busId)->second, " initialized");
 }
 
 SerialBus::~SerialBus()
@@ -48,7 +48,7 @@ SerialBus::~SerialBus()
  */
 void SerialBus::handler(void)
 {
-    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler started");
+    Logger::getInstance().logEvent(INFO, "Serial bus ", names.find(busId)->second, " handler started");
     do
     {
         std::this_thread::yield();
@@ -139,7 +139,7 @@ void SerialBus::requestToSend(void)
  */
 void SerialBus::startHandler(void)
 {
-    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler start request");
+    Logger::getInstance().logEvent(INFO, "Serial bus ", names.find(busId)->second, " handler start request");
     exitHandler = false;
     pSerialHandlerThread = new std::thread(&SerialBus::handler, this);
 }
@@ -149,12 +149,12 @@ void SerialBus::startHandler(void)
  */
 void SerialBus::stopHandler(void)
 {
-    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler stop request");
+    Logger::getInstance().logEvent(INFO, "Serial bus ", names.find(busId)->second, " handler stop request");
     exitHandler = true;
     queueEvent.notify_one();
     pSerialHandlerThread->join();
     delete pSerialHandlerThread;
-    Logger::getInstance().logEvent(INFO, "Serial bus #", busId, " handler terminated");
+    Logger::getInstance().logEvent(INFO, "Serial bus ", names.find(busId)->second, " handler terminated");
 }
 
 /*
@@ -176,7 +176,7 @@ void SerialBus::unregisterDevice(SerialDevice* pDevice)
         if(std::get<1>(*iDevice) == pDevice)
         {
             devices.erase(iDevice);
-            Logger::getInstance().logEvent(INFO, "unregistering serial device: bus=", busId, ", address=0x", std::hex, pDevice->address, ", priority=0x", pDevice->priority );
+            Logger::getInstance().logEvent(INFO, "unregistering serial device: bus=", names.find(busId)->second, ", address=0x", std::hex, pDevice->address, ", priority=0x", pDevice->priority );
             break;
         }
     }
@@ -193,6 +193,7 @@ SerialDevice::SerialDevice(SerialBusId serialBusId, SerialPriority devicePriorit
     handle = -1;
     if(SerialBus::buses.find(busId) == SerialBus::buses.end())
     {
+        Logger::getInstance().logEvent(ERROR, "Cannot create serial device in bus=0x", std::hex, busId);
         Program::getInstance().terminate(WRONG_SERIAL_BUS);
     }
 

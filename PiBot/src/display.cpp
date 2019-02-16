@@ -8,7 +8,7 @@
 #include "display.h"
 
 Display::Display()
-    : Ili9341(SpiChannelId::SPI_MAIN, SpiPriority::DISPLAY)
+    : Ili9341(SpiChannelId::SPI_MAINi, SpiPriority::DISPLAY)
 {
 
 

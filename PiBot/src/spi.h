@@ -8,6 +8,7 @@
 #ifndef SRC_SPI_H_
 #define SRC_SPI_H_
 
+#include "serial.h"
 #include <map>
 #include <thread>
 #include <condition_variable>
@@ -17,8 +18,8 @@
 
 enum SpiChannelId
 {
-    SPI_MAIN,
-    SPI_AUX
+    SPI_MAINi,
+    SPI_AUXi
 };
 
 enum SpiPriority

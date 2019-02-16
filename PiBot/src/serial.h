@@ -61,6 +61,13 @@ public:
     static MapOfSerialBuses buses;
     friend class SerialDevice;
 private:
+    const std::map<SerialBusId, std::string> names
+    {
+        {I2C0, "I2C0"},
+        {I2C1, "I2C1"},
+        {SPI_MAIN, "SPI-main"},
+        {SPI_AUX, "SPI-aux"}
+    };
     void handler(void);
     void requestToSend(void);
     void registerDevice(SerialDeviceContainer newDevice);

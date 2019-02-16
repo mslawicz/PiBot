@@ -8,6 +8,7 @@
 #include "program.h"
 #include "gpio.h"
 #include "spi.h"
+#include "serial.h"
 
 /*
  * get the singleton program object
@@ -91,6 +92,7 @@ void Program::initialize(void)
 	GPIO::initialize();
 	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", gpioHardwareRevision());
 
+	// XXX I2c and SPI buses are to be removed
 	// create and register in a map I2C1 bus object
 	new I2cBus(I2C1i);
 
@@ -101,12 +103,23 @@ void Program::initialize(void)
 	}
 
 	// create and register in a map SPI channel object
-	new SpiChannel(SpiChannelId::SPI_MAIN);
+	new SpiChannel(SpiChannelId::SPI_MAINi);
 
     //start handlers of all SPI channels
     for(auto channel : SpiChannel::channels)
     {
         channel.second->startHandler();
+    }
+    //XXX end of removal section
+
+    // create serial buses
+    new SerialBus(SerialBusId::I2C0);
+    new SerialBus(SerialBusId::SPI_MAIN);
+
+    // start handlers of all serial devices
+    for(auto bus : SerialBus::buses)
+    {
+        bus.second->startHandler();
     }
 
 	// create object which configures PCA9685 chip
