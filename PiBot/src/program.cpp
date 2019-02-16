@@ -92,7 +92,7 @@ void Program::initialize(void)
 	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", gpioHardwareRevision());
 
 	// create and register in a map I2C1 bus object
-	new I2cBus(I2C1);
+	new I2cBus(I2C1i);
 
 	//start handlers of all i2c buses
 	for(auto bus : I2cBus::buses)
@@ -110,7 +110,7 @@ void Program::initialize(void)
     }
 
 	// create object which configures PCA9685 chip
-	pDevicePCA9685 = new PCA9685(I2cBusId::I2C1, I2cDeviceAddress::PCA9685_ADDR, I2cPriority::PCA9685_PR);
+	pDevicePCA9685 = new PCA9685(I2cBusId::I2C1i, I2cDeviceAddress::PCA9685_ADDR, I2cPriority::PCA9685_PRi);
 }
 
 /*
@@ -133,7 +133,7 @@ void Program::terminate(ExitCode exitCode)
 		{ HELP_REQUEST, "Program help requested" },
 		{ I2C_NOT_OPENED, "I2C opening error" },
 		{ WRONG_I2C_DEVICE, "Wrong I2C device" },
-		{ WRONG_I2C_BUS, "Wrong I2C bus" },
+		{ WRONG_SERIAL_BUS, "Wrong serial bus" },
 		{ I2C_BUFFER_SIZE, "I2C receive buffer too small" },
 		{ SPI_BUFFER_SIZE, "SPI receive buffer too small" },
 		{ BAD_MOTOR_NO, "Bad motor number" },

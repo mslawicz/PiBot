@@ -8,6 +8,7 @@
 #include "serial.h"
 #include "logger.h"
 #include "program.h"
+#include <algorithm>
 
 MapOfSerialBuses SerialBus::buses;
 
@@ -75,10 +76,10 @@ void SerialBus::handler(void)
                 if(std::get<1>(dataContainer) == 0)
                 {
                     // number of bytes to read = 0 -> serial write operation
-                    int result = 1;//XXX serialWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)&std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
+                    int result = std::get<1>(*iDevice)->writeData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), std::get<2>(dataContainer));
                     if(result)
                     {
-                        Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, ", device=", std::hex, std::get<1>(*iDevice)->address, ", error=", result);
+                        Logger::getInstance().logEvent(ERROR, "Serial device write error: bus=", busId, ", device=", std::hex, std::get<1>(*iDevice)->address, ", error=", result);
                     }
                 }
                 else
@@ -184,30 +185,17 @@ void SerialBus::unregisterDevice(SerialDevice* pDevice)
 /*
  * constructor of a new serial device
  */
-SerialDevice::SerialDevice(SerialBusId serialBusId, SerialDeviceAddress deviceAddres, SerialPriority devicePriority)
+SerialDevice::SerialDevice(SerialBusId serialBusId, SerialPriority devicePriority, uint8_t deviceAddres)
     : busId(serialBusId)
-    , address(deviceAddres)
     , priority(devicePriority)
+    , address(deviceAddres)
 {
     if(SerialBus::buses.find(busId) == SerialBus::buses.end())
     {
-        Program::getInstance().terminate(WRONG_I2C_BUS);
+        Program::getInstance().terminate(WRONG_SERIAL_BUS);
     }
 
     pSerialBus = SerialBus::buses.find(busId)->second;
-    handle = serialOpen(busId, address, 0);
-
-    if(handle >= 0)
-    {
-        Logger::getInstance().logEvent(INFO, "I2C device opened: bus=", busId, ", address=0x", std::hex, address, " priority=0x", priority);
-    }
-    else
-    {
-        Program::getInstance().terminate(I2C_NOT_OPENED);
-    }
-
-    // register this serial device in the bus object map of devices
-    pSerialBus->registerDevice(SerialDeviceContainer{priority, this});
 }
 
 /*
@@ -215,17 +203,12 @@ SerialDevice::SerialDevice(SerialBusId serialBusId, SerialDeviceAddress deviceAd
  */
 SerialDevice::~SerialDevice()
 {
-    if(handle >= 0)
-    {
-        serialClose(handle);
-    }
-    pSerialBus->unregisterDevice(this);
 }
 
 /*
  * puts serial data to send into send queue and notifies serial bus handler
  */
-void SerialDevice::writeData(unsigned registerAddress, std::vector<uint8_t> data)
+void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data)
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);

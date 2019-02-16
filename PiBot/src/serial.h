@@ -67,7 +67,7 @@ private:
     void unregisterDevice(SerialDevice* pDevice);
     SerialBusId busId;
     uint8_t* pData;
-    const unsigned DataBufSize = 30;
+    const unsigned DataBufSize = 32;
     std::mutex handlerMutex;
     std::condition_variable queueEvent;
     bool exitHandler;
@@ -81,7 +81,7 @@ class SerialDevice
 public:
     SerialDevice(SerialBusId serialBusId, SerialPriority devicePriority, uint8_t deviceAddres = 0);
     // this makes this class abstract
-    virtual ~SerialDevice() = 0;
+    virtual ~SerialDevice();
     friend class SerialBus;
     void writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
     void readDataRequest(unsigned registerAddress, unsigned length);
@@ -90,10 +90,12 @@ public:
     bool receiveQueueEmpty(void) const {return receivedData.empty();}
     SerialDataContainer getData(void);
     SerialDataContainer getLastData(void);
+protected:
+    virtual int writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data) = 0;
 private:
     SerialBusId busId;
-    uint8_t address;
     SerialPriority priority;
+    uint8_t address;
     int handle;
     SerialBus* pSerialBus;
     std::queue<SerialDataContainer> dataToSend;

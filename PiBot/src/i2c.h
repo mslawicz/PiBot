@@ -20,11 +20,11 @@
 
 enum I2cPriority
 {
-    PCA9685_PR,
-    MOTOR_PR,
-    GYROSCOPE_PR,
-    ACCELEROMETER_PR,
-    MAGNETOMETER_PR
+    PCA9685_PRi,
+    MOTOR_PRi,
+    GYROSCOPE_PRi,
+    ACCELEROMETER_PRi,
+    MAGNETOMETER_PRi
 };
 
 enum I2cDeviceAddress
@@ -39,8 +39,8 @@ enum I2cDeviceAddress
 
 enum I2cBusId
 {
-    I2C0,
-    I2C1
+    I2C0i,
+    I2C1i
 };
 
 class I2cBus;

@@ -177,7 +177,7 @@ I2cDevice::I2cDevice(I2cBusId i2cBusId, I2cDeviceAddress deviceAddres, I2cPriori
 {
 	if(I2cBus::buses.find(busId) == I2cBus::buses.end())
 	{
-		Program::getInstance().terminate(WRONG_I2C_BUS);
+		Program::getInstance().terminate(WRONG_SERIAL_BUS);
 	}
 
 	pI2cBus = I2cBus::buses.find(busId)->second;

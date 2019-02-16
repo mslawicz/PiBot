@@ -10,10 +10,10 @@
 
 Drive::Drive()
 {
-    pGyroscope = new Gyroscope(I2cBusId::I2C1, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PR);
+    pGyroscope = new Gyroscope(I2cBusId::I2C1i, I2cDeviceAddress::GYROSCOPE_ADDR, I2cPriority::GYROSCOPE_PRi);
     pitchAngularRate = 0.0;
     pPitchPID = new PID(0.2, 0.05, 0.05);
-    pTestMotor = new Motor(I2cBusId::I2C1, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PR, 0); // XXX motor test object
+    pTestMotor = new Motor(I2cBusId::I2C1i, I2cDeviceAddress::MOTOR_ADDR, I2cPriority::MOTOR_PRi, 0); // XXX motor test object
     calculatedSpeed = 0.0;
 }
 
