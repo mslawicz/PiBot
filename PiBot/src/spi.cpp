@@ -34,16 +34,14 @@ SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsign
         Program::getInstance().terminate(SPI_NOT_OPENED);
     }
 
-    // register this SPI device in the channel object map of devices
+    // register this SPI device in the bus object map of devices
     pSerialBus->registerDevice(SerialDeviceContainer{priority, this});
 
     pPinCD = new GPIO(pinCD, PI_OUTPUT);
     pPinCD->write(1);
 }
 
-/*
- * pure virtual destructor
- */
+
 SpiDevice::~SpiDevice()
 {
     if(handle >= 0)

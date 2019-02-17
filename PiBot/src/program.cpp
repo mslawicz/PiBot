@@ -146,7 +146,7 @@ void Program::terminate(ExitCode exitCode)
 		{ HELP_REQUEST, "Program help requested" },
 		{ I2C_NOT_OPENED, "I2C opening error" },
 		{ WRONG_I2C_DEVICE, "Wrong I2C device" },
-		{ WRONG_SERIAL_BUS, "Wrong serial bus" },
+		{ WRONG_I2C_BUS, "Wrong I2C bus" },
 		{ I2C_BUFFER_SIZE, "I2C receive buffer too small" },
 		{ SPI_BUFFER_SIZE, "SPI receive buffer too small" },
 		{ BAD_MOTOR_NO, "Bad motor number" },

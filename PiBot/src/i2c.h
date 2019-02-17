@@ -9,14 +9,8 @@
 #define SRC_I2C_H_
 
 #include "serial.h"
-//#include <pigpio.h>
 #include <vector>
-//#include <thread>
-//#include <mutex>
-//#include <condition_variable>
-//#include <map>
-//#include <atomic>
-//#include <tuple>
+#include <mutex>
 #include <queue>
 
 enum I2cDeviceAddress
@@ -34,7 +28,7 @@ enum I2cDeviceAddress
 class I2cDevice : public SerialDevice
 {
 public:
-	I2cDevice(SerialBusId spiBusId, SerialPriority devicePriority, I2cDeviceAddress deviceAddres);
+	I2cDevice(SerialBusId i2cBusId, SerialPriority devicePriority, I2cDeviceAddress deviceAddres);
 	~I2cDevice();
 private:
     int writeData(unsigned handle, unsigned command, std::vector<uint8_t> data) override;
