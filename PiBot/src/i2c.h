@@ -8,24 +8,16 @@
 #ifndef SRC_I2C_H_
 #define SRC_I2C_H_
 
-#include <pigpio.h>
+#include "serial.h"
+//#include <pigpio.h>
 #include <vector>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <map>
-#include <atomic>
-#include <tuple>
+//#include <thread>
+//#include <mutex>
+//#include <condition_variable>
+//#include <map>
+//#include <atomic>
+//#include <tuple>
 #include <queue>
-
-enum I2cPriority
-{
-    PCA9685_PRi,
-    MOTOR_PRi,
-    GYROSCOPE_PRi,
-    ACCELEROMETER_PRi,
-    MAGNETOMETER_PRi
-};
 
 enum I2cDeviceAddress
 {
@@ -37,73 +29,20 @@ enum I2cDeviceAddress
     PCA9685_ALL_ADDR = 0x70
 };
 
-enum I2cBusId
-{
-    I2C0i,
-    I2C1i
-};
-
-class I2cBus;
-class I2cDevice;
-
-// typedef for sent/received i2c data container:
-// data sent container: register address, no of bytes requested to read (0=write only), vector of data to send (may be empty when read request)
-// data received container: register address, no of bytes read (==length of vector), vector of data received
-typedef std::tuple<unsigned, unsigned, std::vector<uint8_t>>   I2cDataContainer;
-
-// typedef for i2c device definition: priority, pointer to I2cDevice object
-typedef std::tuple<I2cPriority, I2cDevice*> I2cDeviceContainer;
-
-// typedef for the map of i2c buses: bus id, pointer to I2cBus object
-typedef std::map<I2cBusId, I2cBus*> MapOfI2cBuses;
 
 
-class I2cBus
+class I2cDevice : public SerialDevice
 {
 public:
-	I2cBus(I2cBusId i2cBusId);
-	~I2cBus();
-    void startHandler(void);
-    void stopHandler(void);
-    static MapOfI2cBuses buses;
-    friend class I2cDevice;
+	I2cDevice(SerialBusId spiBusId, SerialPriority devicePriority, I2cDeviceAddress deviceAddres);
+	~I2cDevice();
 private:
-    void handler(void);
-    void requestToSend(void);
-    void registerDevice(I2cDeviceContainer newDevice);
-    void unregisterDevice(I2cDevice* pDevice);
-    I2cBusId busId;
-	uint8_t* pData;
-	const unsigned DataBufSize = 30;
-    std::mutex handlerMutex;
-    std::condition_variable queueEvent;
-    bool exitHandler;
-    std::thread* pI2cHandlerThread;
-    std::atomic_flag queueEmpty;
-    std::vector<I2cDeviceContainer> devices;
-};
-
-class I2cDevice
-{
-public:
-	I2cDevice(I2cBusId i2cBusId, I2cDeviceAddress deviceAddres, I2cPriority devicePriority);
-	// this makes this class abstract
-	virtual ~I2cDevice() = 0;
-	friend class I2cBus;
-	void writeData(unsigned registerAddress, std::vector<uint8_t> data);
-	void readDataRequest(unsigned registerAddress, unsigned length);
-	void clearReceiveQueue(void);
-	bool receiveQueueEmpty(void) const {return receivedData.empty();}
-	I2cDataContainer getData(void);
-	I2cDataContainer getLastData(void);
-private:
-	I2cBusId busId;
+    int writeData(unsigned handle, unsigned command, std::vector<uint8_t> data) override;
+    int readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length) override;
+    SerialBus* pSerialBus;  //TODO move it to base class
 	I2cDeviceAddress address;
-	I2cPriority priority;
-	int handle;
-	I2cBus* pI2cBus;
-    std::queue<I2cDataContainer> dataToSend;
-    std::queue<I2cDataContainer> receivedData;
+    std::queue<SerialDataContainer> dataToSend;
+    std::queue<SerialDataContainer> receivedData;
     std::mutex sendQueueMutex;
     std::mutex receiveQueueMutex;
 };

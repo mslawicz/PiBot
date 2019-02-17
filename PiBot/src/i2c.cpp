@@ -5,172 +5,18 @@
  *      Author: Marcin
  */
 
-#include "i2c.h"
-#include "logger.h"
-#include "program.h"
-#include <algorithm>
-#include <stdlib.h>
-
-MapOfI2cBuses I2cBus::buses;
+//#include "i2c.h"
+//#include "logger.h"
+//#include "program.h"
+//#include <algorithm>
+//#include <stdlib.h>
 
 
-/*
- * constructor of the i2c bus object
- */
-I2cBus::I2cBus(I2cBusId i2cBusId)
-	: busId(i2cBusId)
-{
-	pData = new uint8_t[DataBufSize];
-	if(pData == nullptr)
-	{
-		Program::getInstance().terminate(MEMORY_ALLOCATION_ERROR);
-	}
-    exitHandler = true;
-    pI2cHandlerThread = nullptr;
-    queueEmpty.test_and_set();
-    // register this i2c bus object in the bus map
-    I2cBus::buses.emplace(busId, this);
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " initialized");
-}
-
-I2cBus::~I2cBus()
-{
-	if(pData != nullptr)
-	{
-		delete[] pData;
-		pData = nullptr;
-	}
-}
-
-/*
- * i2c bus handler
- * transmit i2c frames for all devices in a bus
- * to be run in a separate thread
- */
-void I2cBus::handler(void)
-{
-	Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler started");
-    do
-    {
-        std::this_thread::yield();
-        std::unique_lock<std::mutex> lock(handlerMutex);
-        queueEvent.wait(lock, [this]() {return (!queueEmpty.test_and_set() || exitHandler); });
-        lock.unlock();
-
-        auto iDevice = devices.begin();
-        // iterate through all registered i2c devices until their send queues are empty
-        while(iDevice != devices.end())
-        {
-            //if the queue is not empty - pop message
-            if(!std::get<1>(*iDevice)->dataToSend.empty())
-            {
-                // the sending queue of this i2c device is not empty
-                I2cDataContainer dataContainer;
-                {
-                    // queue modification protected by mutex
-                    std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->sendQueueMutex);
-                    dataContainer = std::get<1>(*iDevice)->dataToSend.front();
-                    std::get<1>(*iDevice)->dataToSend.pop();
-                }
-                if(std::get<1>(dataContainer) == 0)
-                {
-                    // i2c write operation
-                    int result = i2cWriteI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)&std::get<2>(dataContainer)[0], std::get<2>(dataContainer).size());
-                    if(result)
-                    {
-                        Logger::getInstance().logEvent(ERROR, "I2C write error: bus=", busId, ", device=", std::hex, std::get<1>(*iDevice)->address, ", error=", result);
-                    }
-                }
-                else
-                {
-                    // i2c read operation
-                    if(std::get<1>(dataContainer) > DataBufSize)
-                    {
-                        Program::getInstance().terminate(I2C_BUFFER_SIZE);
-                    }
-                    int no_of_bytes = i2cReadI2CBlockData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), (char*)pData, std::get<1>(dataContainer));
-                    std::vector<uint8_t> data(pData, pData+no_of_bytes);
-                    {
-                        //push received data to receive queue
-                        std::lock_guard<std::mutex> lock(std::get<1>(*iDevice)->receiveQueueMutex);
-                        std::get<1>(*iDevice)->receivedData.push(I2cDataContainer{std::get<0>(dataContainer), no_of_bytes, data});
-                    }
-                }
-
-                // after transmission start from the beginning
-                iDevice = devices.begin();
-            }
-            else
-            {
-                // if nothing to transmit - move to next device
-                iDevice++;
-            }
-        }
-
-    } while (!exitHandler);
-}
-
-/*
- * notify handler about queue activity
- */
-void I2cBus::requestToSend(void)
-{
-    queueEmpty.clear();
-    queueEvent.notify_one();
-}
-
-/*
- * creates a new thread for i2c bus handler
- */
-void I2cBus::startHandler(void)
-{
-	Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler start request");
-    exitHandler = false;
-    pI2cHandlerThread = new std::thread(&I2cBus::handler, this);
-}
-
-/*
- * initiate stop of i2c bus handler
- */
-void I2cBus::stopHandler(void)
-{
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler stop request");
-    exitHandler = true;
-    queueEvent.notify_one();
-    pI2cHandlerThread->join();
-    delete pI2cHandlerThread;
-    Logger::getInstance().logEvent(INFO, "I2C bus #", busId, " handler terminated");
-}
-
-/*
- * registers i2c device in the vector (sorted by priority)
- */
-void I2cBus::registerDevice(I2cDeviceContainer newDevice)
-{
-    devices.push_back(newDevice);
-    std::sort(devices.begin(), devices.end());
-}
-
-/*
- * unregisters i2c device from the vector
- */
-void I2cBus::unregisterDevice(I2cDevice* pDevice)
-{
-    for (auto iDevice = devices.begin(); iDevice < devices.end(); iDevice++)
-    {
-        if(std::get<1>(*iDevice) == pDevice)
-        {
-            devices.erase(iDevice);
-            Logger::getInstance().logEvent(INFO, "unregistering I2C device: bus=", busId, ", address=0x", std::hex, pDevice->address, ", priority=0x", pDevice->priority );
-            break;
-        }
-    }
-}
 
 /*
  * constructor of a new i2c device
  */
-I2cDevice::I2cDevice(I2cBusId i2cBusId, I2cDeviceAddress deviceAddres, I2cPriority devicePriority)
+I2cDevice::I2cDevice(SerialBusId spiBusId, SerialPriority devicePriority, I2cDeviceAddress deviceAddres)
 	: busId(i2cBusId)
 	, address(deviceAddres)
 	, priority(devicePriority)
