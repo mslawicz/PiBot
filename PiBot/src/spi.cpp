@@ -59,8 +59,19 @@ SpiDevice::~SpiDevice()
  */
 int SpiDevice::writeData(unsigned handle, unsigned command, std::vector<uint8_t> data)
 {
-    // returns 0 if all characters are sent
-    return (spiWrite(handle, (char*)&data[0], data.size()) != static_cast<int>(data.size()));
+    bool error;
+    // send command
+    pPinCD->write(0);
+    error = spiWrite(handle, (char*)&command, 1) != 1;
+
+    // send data
+    if(data.size() > 0)
+    {
+        pPinCD->write(1);
+        // returns 0 if all characters are sent
+        error |= spiWrite(handle, (char*)&data[0], data.size()) != static_cast<int>(data.size());
+    }
+    return error;
 }
 
 /*
@@ -68,6 +79,12 @@ int SpiDevice::writeData(unsigned handle, unsigned command, std::vector<uint8_t>
  */
 int SpiDevice::readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length)
 {
+    // send command
+    pPinCD->write(0);
+    spiWrite(handle, (char*)&command, 1);
+
+    // read data
+    pPinCD->write(1);
     return spiRead(handle, (char*)dataBuffer, length);
 }
 
@@ -76,5 +93,11 @@ int SpiDevice::readData(unsigned handle, unsigned command, uint8_t* dataBuffer, 
  */
 int SpiDevice::exchangeData(unsigned handle, unsigned command, std::vector<uint8_t> data, uint8_t* dataBuffer)
 {
+    // send command
+    pPinCD->write(0);
+    spiWrite(handle, (char*)&command, 1);
+
+    // exchange data
+    pPinCD->write(1);
     return spiXfer(handle, (char*)&data[0], (char*)dataBuffer, data.size());
 }

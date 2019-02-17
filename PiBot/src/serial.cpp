@@ -210,7 +210,7 @@ SerialDevice::~SerialDevice()
 /*
  * puts serial data to send into send queue and notifies serial bus handler
  */
-void SerialDevice::writeDataRequest(std::vector<uint8_t> data, unsigned registerAddress)
+void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data)
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
@@ -223,7 +223,7 @@ void SerialDevice::writeDataRequest(std::vector<uint8_t> data, unsigned register
 /*
  * puts serial data to initiate reception into send queue and notifies serial bus handler
  */
-void SerialDevice::readDataRequest(unsigned length, unsigned registerAddress)
+void SerialDevice::readDataRequest(unsigned registerAddress, unsigned length)
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
@@ -236,7 +236,7 @@ void SerialDevice::readDataRequest(unsigned length, unsigned registerAddress)
 /*
  * puts serial data to initiate exchange into send queue and notifies serial bus handler
  */
-void SerialDevice::exchangeDataRequest(std::vector<uint8_t> data, unsigned registerAddress)
+void SerialDevice::exchangeDataRequest(unsigned registerAddress, std::vector<uint8_t> data)
 {
     {
         std::lock_guard<std::mutex> lock(sendQueueMutex);
