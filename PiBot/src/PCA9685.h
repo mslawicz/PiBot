@@ -25,7 +25,7 @@ enum PCA9685Registers
 class PCA9685 : public I2cDevice
 {
 public:
-    PCA9685(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
+    PCA9685(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address);
 };
 
 #endif /* SRC_PCA9685_H_ */

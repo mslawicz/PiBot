@@ -19,8 +19,8 @@
  * all drive motors should be created with the same priority
  * motorNo = number of the motor 0-3 (described as M1..M4)
  */
-Motor::Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority, uint8_t motorNo)
-    : I2cDevice(busId, address, priority)
+Motor::Motor(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address, uint8_t motorNo)
+    : I2cDevice(busId, priority, address)
     , motorNo(motorNo)
 {
     if(motorNo >= MaxMotors)
@@ -39,9 +39,9 @@ Motor::~Motor()
 void Motor::test()
 {
     // PWM0 always on, PWM1 always off
-    writeData(PCA9685Registers::LED0_ON_L, std::vector<uint8_t>{0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10});
+    writeDataRequest(PCA9685Registers::LED0_ON_L, std::vector<uint8_t>{0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10});
     // PWM14 ~50%, PWM15 ~25% delayed ~0.5T
-    writeData(PCA9685Registers::LED0_ON_L + 14*4, std::vector<uint8_t>{0x00, 0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x0C});
+    writeDataRequest(PCA9685Registers::LED0_ON_L + 14*4, std::vector<uint8_t>{0x00, 0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x0C});
 }
 
 /*
@@ -83,7 +83,7 @@ void Motor::setSpeed(float speed, bool motorOff)
     }
 
     // write data to PWM channels registers
-    writeData(PCA9685Registers::LED0_ON_L + 4 * registers.begin()->first, dataToWrite);
+    writeDataRequest(PCA9685Registers::LED0_ON_L + 4 * registers.begin()->first, dataToWrite);
     // store the current speed
     lastSpeed = speed;
 }

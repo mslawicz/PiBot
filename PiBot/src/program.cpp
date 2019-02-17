@@ -92,38 +92,18 @@ void Program::initialize(void)
 	GPIO::initialize();
 	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", gpioHardwareRevision());
 
-	// XXX I2c and SPI buses are to be removed
-	// create and register in a map I2C1 bus object
-	new I2cBus(I2C1i);
-
-	//start handlers of all i2c buses
-	for(auto bus : I2cBus::buses)
-	{
-		bus.second->startHandler();
-	}
-
-//	// create and register in a map SPI channel object
-//	new SpiChannel(SpiChannelId::SPI_MAINi);
-//
-//    //start handlers of all SPI channels
-//    for(auto channel : SpiChannel::channels)
-//    {
-//        channel.second->startHandler();
-//    }
-    //XXX end of removal section
-
     // create serial buses
-    new SerialBus(SerialBusId::I2C0);
+    new SerialBus(SerialBusId::I2C1);
     new SerialBus(SerialBusId::SPI_MAIN);
 
-    // start handlers of all serial devices
+    // start handlers of all serial buses
     for(auto bus : SerialBus::buses)
     {
         bus.second->startHandler();
     }
 
 	// create object which configures PCA9685 chip
-	pDevicePCA9685 = new PCA9685(I2cBusId::I2C1i, I2cDeviceAddress::PCA9685_ADDR, I2cPriority::PCA9685_PRi);
+	pDevicePCA9685 = new PCA9685(SerialBusId::I2C1, SerialPriority::PCA9685_PR, I2cDeviceAddress::PCA9685_ADDR);
 }
 
 /*
@@ -153,6 +133,7 @@ void Program::terminate(ExitCode exitCode)
         { WRONG_SPI_DEVICE, "Wrong SPI device" },
         { WRONG_SPI_BUS, "Wrong SPI bus" },
         { SPI_NOT_OPENED, "SPI opening error" },
+        { WRONG_SERIAL_BUS, "Wrong serial bus" },
 	};
 
 	if (exitCode == ExitCode::OK)
@@ -165,13 +146,6 @@ void Program::terminate(ExitCode exitCode)
 	}
 
 	delete pDevicePCA9685;
-
-	//terminate i2c handlers and delete i2c bus objects XXX to be removed
-	for(auto bus : I2cBus::buses)
-	{
-		bus.second->stopHandler();
-		delete bus.second;
-	}
 
     //terminate serial handlers and delete serial bus objects
     for(auto bus : SerialBus::buses)

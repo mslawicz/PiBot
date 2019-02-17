@@ -15,7 +15,7 @@
 class Gyroscope : public I2cDevice
 {
 public:
-    Gyroscope(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority);
+    Gyroscope(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address);
     ~Gyroscope();
     // gyroscope full scale range in radians / second
     const float range = 4.27605666739;

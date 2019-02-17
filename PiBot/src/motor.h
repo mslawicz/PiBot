@@ -21,7 +21,7 @@
 class Motor : public I2cDevice
 {
 public:
-    Motor(I2cBusId busId, I2cDeviceAddress address, I2cPriority priority, uint8_t motorNo);
+    Motor(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address, uint8_t motorNo);
     ~Motor();
     void test(void);    //XXX test
     void setSpeed(float speed, bool motorOff = false);
