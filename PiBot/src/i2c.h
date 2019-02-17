@@ -31,8 +31,8 @@ public:
 	I2cDevice(SerialBusId i2cBusId, SerialPriority devicePriority, I2cDeviceAddress deviceAddres);
 	~I2cDevice();
 private:
-    int writeData(unsigned handle, unsigned command, std::vector<uint8_t> data) override;
-    int readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length) override;
+    int writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data) override;
+    int readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length) override;
     SerialBus* pSerialBus;  //TODO move it to base class
 	I2cDeviceAddress address;
     std::queue<SerialDataContainer> dataToSend;

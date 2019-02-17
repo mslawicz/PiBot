@@ -49,12 +49,12 @@ I2cDevice::~I2cDevice()
 	pSerialBus->unregisterDevice(this);
 }
 
-int I2cDevice::writeData(unsigned handle, unsigned command, std::vector<uint8_t> data)
+int I2cDevice::writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data)
 {
-
+    return i2cWriteI2CBlockData(handle, registerAddress, (char*)&data[0], data.size());
 }
 
-int I2cDevice::readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length)
+int I2cDevice::readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length)
 {
-
+    return i2cReadI2CBlockData(handle, registerAddress, (char*)dataBuffer, length);
 }
