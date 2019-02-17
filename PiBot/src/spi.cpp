@@ -38,6 +38,7 @@ SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsign
     pSerialBus->registerDevice(SerialDeviceContainer{priority, this});
 
     pPinCD = new GPIO(pinCD, PI_OUTPUT);
+    pPinCD->write(1);
 }
 
 /*
