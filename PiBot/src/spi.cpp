@@ -57,7 +57,7 @@ SpiDevice::~SpiDevice()
 /*
  * writes data to SPI device
  */
-int SpiDevice::writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data)
+int SpiDevice::writeData(unsigned handle, unsigned command, std::vector<uint8_t> data)
 {
     // returns 0 if all characters are sent
     return (spiWrite(handle, (char*)&data[0], data.size()) != static_cast<int>(data.size()));
@@ -66,7 +66,7 @@ int SpiDevice::writeData(unsigned handle, unsigned registerAddress, std::vector<
 /*
  * reads data from SPI device
  */
-int SpiDevice::readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length)
+int SpiDevice::readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length)
 {
     return spiRead(handle, (char*)dataBuffer, length);
 }
@@ -74,7 +74,7 @@ int SpiDevice::readData(unsigned handle, unsigned registerAddress, uint8_t* data
 /*
  * writes data to and reads data from SPI device
  */
-int SpiDevice::exchangeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data, uint8_t* dataBuffer)
+int SpiDevice::exchangeData(unsigned handle, unsigned command, std::vector<uint8_t> data, uint8_t* dataBuffer)
 {
     return spiXfer(handle, (char*)&data[0], (char*)dataBuffer, data.size());
 }

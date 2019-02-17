@@ -40,8 +40,8 @@ class SerialBus;
 class SerialDevice;
 
 // typedef for sent/received serial data container:
-// data sent container: register address, no of bytes requested to read (0=write only), vector of data to send (may be empty when read request)
-// data received container: register address, no of bytes read (==length of vector), vector of data received
+// data sent container: register address / command, no of bytes requested to read (0=write only), vector of data to send (may be empty when read request)
+// data received container: register address / command, no of bytes read (==length of vector), vector of data received
 typedef std::tuple<unsigned, unsigned, std::vector<uint8_t>>   SerialDataContainer;
 
 // typedef for serial device definition: priority, pointer to SerialDevice object

@@ -20,9 +20,9 @@ public:
       // this makes this class abstract
       ~SpiDevice();
 private:
-      int writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data) override;
-      int readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length) override;
-      int exchangeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data, uint8_t* dataBuffer) override;
+      int writeData(unsigned handle, unsigned command, std::vector<uint8_t> data) override;
+      int readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length) override;
+      int exchangeData(unsigned handle, unsigned command, std::vector<uint8_t> data, uint8_t* dataBuffer) override;
       SerialBus* pSerialBus;
       std::queue<SerialDataContainer> dataToSend;
       std::queue<SerialDataContainer> receivedData;
