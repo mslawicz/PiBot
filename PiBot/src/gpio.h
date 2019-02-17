@@ -13,15 +13,16 @@
 enum GpioPin
 {
     GYRO_INT = 4,   //TODO change to another one
+    SW5 = 4,
     SW1 = 5,
-    SW2 = 24,
+    SW6 = 17,
+    TMP_EXIT = 21,
     SW3 = 22,
     SW4 = 23,
-    SW5 = 4,
-    SW6 = 17,
-    BACKLIGHT = 27,
+    SW2 = 24,
+    ILI9341_CD = 25,
     IR_RECEIVER = 26,
-    TMP_EXIT = 21
+    BACKLIGHT = 27
 };
 
 class GPIO

@@ -6,9 +6,10 @@
  */
 
 #include "ili9341.h"
+#include "gpio.h"
 
 Ili9341::Ili9341(SerialBusId spiBusId, SerialPriority priority)
-    : SpiDevice(spiBusId, priority, 100000)
+    : SpiDevice(spiBusId, priority, 100000, GpioPin::ILI9341_CD)
 {
 
 }

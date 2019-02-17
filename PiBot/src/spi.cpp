@@ -14,7 +14,7 @@
 /*
  * constructor of a new SPI device
  */
-SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsigned bitRate, unsigned flags)
+SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsigned bitRate, GpioPin pinCD, unsigned flags)
     : SerialDevice(spiBusId, devicePriority, 0)
 {
     if(SerialBus::buses.find(busId) == SerialBus::buses.end())
@@ -36,6 +36,8 @@ SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsign
 
     // register this SPI device in the channel object map of devices
     pSerialBus->registerDevice(SerialDeviceContainer{priority, this});
+
+    pPinCD = new GPIO(pinCD, PI_OUTPUT);
 }
 
 /*
@@ -48,6 +50,8 @@ SpiDevice::~SpiDevice()
         spiClose(handle);
     }
     pSerialBus->unregisterDevice(this);
+
+    delete pPinCD;
 }
 
 /*

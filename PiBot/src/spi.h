@@ -11,11 +11,12 @@
 #include "serial.h"
 #include <mutex>
 #include <queue>
+#include "gpio.h"
 
 class SpiDevice : public SerialDevice
 {
 public:
-      SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsigned bitRate, unsigned flags = 0);
+      SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsigned bitRate, GpioPin pinCD, unsigned flags = 0);
       // this makes this class abstract
       ~SpiDevice();
 private:
@@ -27,6 +28,7 @@ private:
       std::queue<SerialDataContainer> receivedData;
       std::mutex sendQueueMutex;
       std::mutex receiveQueueMutex;
+      GPIO* pPinCD;
 };
 
 #endif /* SRC_SPI_H_ */
