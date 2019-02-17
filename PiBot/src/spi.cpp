@@ -88,16 +88,3 @@ int SpiDevice::readData(unsigned handle, unsigned command, uint8_t* dataBuffer, 
     return spiRead(handle, (char*)dataBuffer, length);
 }
 
-/*
- * writes data to and reads data from SPI device
- */
-int SpiDevice::exchangeData(unsigned handle, unsigned command, std::vector<uint8_t> data, uint8_t* dataBuffer)
-{
-    // send command
-    pPinCD->write(0);
-    spiWrite(handle, (char*)&command, 1);
-
-    // exchange data
-    pPinCD->write(1);
-    return spiXfer(handle, (char*)&data[0], (char*)dataBuffer, data.size());
-}

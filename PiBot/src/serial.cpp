@@ -84,25 +84,14 @@ void SerialBus::handler(void)
                 }
                 else
                 {
-                    // number of bytes to read > 0 -> read or exchange operations
+                    // number of bytes to read > 0 -> read operation
                     if(std::get<1>(dataContainer) > DataBufSize)
                     {
                         // the read data buffer is too small
                         Program::getInstance().terminate(I2C_BUFFER_SIZE);
                     }
 
-                    int noOfBytesReceived;
-
-                    if(std::get<1>(dataContainer) == std::get<2>(dataContainer).size())
-                    {
-                        // number of bytes to read = size of data vector -> serial exchange (write+read) operation
-                        noOfBytesReceived = std::get<1>(*iDevice)->exchangeData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), std::get<2>(dataContainer), pData);
-                    }
-                    else
-                    {
-                        // data read operation
-                        noOfBytesReceived = std::get<1>(*iDevice)->readData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), pData, std::get<1>(dataContainer));
-                    }
+                    int noOfBytesReceived = std::get<1>(*iDevice)->readData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), pData, std::get<1>(dataContainer));
 
                     std::vector<uint8_t> data(pData, pData+noOfBytesReceived);
                     {
@@ -221,7 +210,7 @@ void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_
 }
 
 /*
- * puts serial data to initiate reception into send queue and notifies serial bus handler
+ * puts serial data into send queue to initiate reception and notifies serial bus handler
  */
 void SerialDevice::readDataRequest(unsigned registerAddress, unsigned length)
 {
@@ -229,19 +218,6 @@ void SerialDevice::readDataRequest(unsigned registerAddress, unsigned length)
         std::lock_guard<std::mutex> lock(sendQueueMutex);
         // for write operation the send data vector is empty
         dataToSend.push(SerialDataContainer{registerAddress, length, std::vector<uint8_t>()});
-    }
-    pSerialBus->requestToSend();
-}
-
-/*
- * puts serial data to initiate exchange into send queue and notifies serial bus handler
- */
-void SerialDevice::exchangeDataRequest(unsigned registerAddress, std::vector<uint8_t> data)
-{
-    {
-        std::lock_guard<std::mutex> lock(sendQueueMutex);
-        // for exchange operation the send data vector length equals the number of data to read
-        dataToSend.push(SerialDataContainer{registerAddress, data.size(), data});
     }
     pSerialBus->requestToSend();
 }

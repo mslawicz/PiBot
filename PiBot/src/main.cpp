@@ -32,8 +32,7 @@ int main(int argc, char* argv[])
 	display.writeDataRequest(1, std::vector<uint8_t>{});
 	std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	// read display info
-	display.readDataRequest(4, 4);
-	//display.exchangeDataRequest(3, std::vector<uint8_t>{0x78, 0x9A});
+	display.readDataRequest(0x09, 4);
 	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());

@@ -92,7 +92,6 @@ public:
     friend class SerialBus;
     void writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
     void readDataRequest(unsigned registerAddress, unsigned length);
-    void exchangeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
     void clearReceiveQueue(void);
     bool receiveQueueEmpty(void) const {return receivedData.empty();}
     SerialDataContainer getData(void);
@@ -100,7 +99,6 @@ public:
 protected:
     virtual int writeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data) = 0;
     virtual int readData(unsigned handle, unsigned registerAddress, uint8_t* dataBuffer, unsigned length) = 0;
-    virtual int exchangeData(unsigned handle, unsigned registerAddress, std::vector<uint8_t> data, uint8_t* dataBuffer) = 0;
     int handle;
     SerialBusId busId;
     SerialPriority priority;
