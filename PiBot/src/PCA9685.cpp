@@ -15,7 +15,7 @@
 PCA9685::PCA9685(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address)
     : I2cDevice(busId, priority, address)
 {
-    Logger::getInstance().logEvent(INFO, "PCA9685 setup: bus=", busId, ", address=0x", std::hex, address);
+    Logger::getInstance().logEvent(INFO, "PCA9685 setup: bus=", busId, ", address=0x", std::hex, address); //TODO name instead of number; check other places
     // register auto increment enable
     // SLEEP on
     writeDataRequest(PCA9685Registers::MODE1, std::vector<uint8_t>{0x30});

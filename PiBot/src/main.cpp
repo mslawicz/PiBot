@@ -46,6 +46,8 @@ int main(int argc, char* argv[])
 //	    }
 //	    std::cout << std::endl;
 //	}
+	Drive myDrive;  //XXX test
+	myDrive.start();
 
 	while(exitButton.hasBeenPressed())
 	{
@@ -55,8 +57,8 @@ int main(int argc, char* argv[])
 	    }
 	}
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(250));
-
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	myDrive.stop();
 
 	Program::getInstance().terminate();
 	return 0;
