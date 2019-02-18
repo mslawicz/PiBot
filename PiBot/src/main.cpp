@@ -29,23 +29,25 @@ int main(int argc, char* argv[])
 
 	Display display;   //XXX test
 	// command display reset
-	//display.writeDataRequest(1, std::vector<uint8_t>{});
-	//::this_thread::sleep_for(std::chrono::milliseconds(20));
+	display.writeDataRequest(1, std::vector<uint8_t>{});
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	display.writeDataRequest(1, std::vector<uint8_t>{});
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	// read display info
-//	display.readDataRequest(0x04, 4);
-//	display.readDataRequest(0x09, 5);
-//	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());
-//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());
-//	while(!display.receiveQueueEmpty())
-//	{
-//	    auto data = display.getData();
-//	    for(auto byte : std::get<2>(data))
-//	    {
-//	        std::cout << "{" << (int)byte << "}";
-//	    }
-//	    std::cout << std::endl;
-//	}
+	display.readDataRequest(0x04, 4);
+	display.readDataRequest(0x09, 5);
+	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());
+	while(!display.receiveQueueEmpty())
+	{
+	    auto data = display.getData();
+	    for(auto byte : std::get<2>(data))
+	    {
+	        std::cout << "{" << (int)byte << "}";
+	    }
+	    std::cout << std::endl;
+	}
 	Drive myDrive;  //XXX test
 	myDrive.start();
 
@@ -57,7 +59,7 @@ int main(int argc, char* argv[])
 	    }
 	}
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	myDrive.stop();
 
 	Program::getInstance().terminate();

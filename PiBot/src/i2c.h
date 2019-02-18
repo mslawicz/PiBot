@@ -10,8 +10,7 @@
 
 #include "serial.h"
 #include <vector>
-#include <mutex>
-#include <queue>
+
 
 enum I2cDeviceAddress
 {

@@ -9,8 +9,7 @@
 #define SRC_SPI_H_
 
 #include "serial.h"
-#include <mutex>
-#include <queue>
+#include <vector>
 #include "gpio.h"
 
 class SpiDevice : public SerialDevice

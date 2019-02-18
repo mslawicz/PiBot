@@ -43,19 +43,22 @@ SpiDevice::~SpiDevice()
  */
 int SpiDevice::writeData(unsigned handle, unsigned command, std::vector<uint8_t> data)
 {
+    bool error = false;
     if(command > 0)
     {
-        // command must be the first byte
+        // write command
         pPinCD->write(0);
-        data.emplace(data.begin(), (char)command);
-    }
-    else
-    {
-        // write data only
-        pPinCD->write(1);
+        error |= (spiWrite(handle, (char*)&command, 1) != 1);
     }
 
-    return spiWrite(handle, (char*)&data[0], data.size()) != static_cast<int>(data.size());
+    if(data.size() > 0)
+    {
+        // write data
+        pPinCD->write(1);
+        error |= (spiWrite(handle, (char*)&data[0], data.size()) != static_cast<int>(data.size()));
+    }
+
+    return static_cast<int>(error);
 }
 
 /*
@@ -64,22 +67,10 @@ int SpiDevice::writeData(unsigned handle, unsigned command, std::vector<uint8_t>
 int SpiDevice::readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length)
 {
     int noOfBytesReceived;
-
-    if(command > 0)
-    {
-        // command must be sent before read
-        pPinCD->write(0);
-        uint8_t dataToWrite[length+1] = {0};
-        dataToWrite[0] = command & 0xFF;
-        noOfBytesReceived = spiXfer(handle, (char*)dataToWrite, (char*)dataBuffer, length+1);
-    }
-    else
-    {
-        // read data only
-        pPinCD->write(1);
-        noOfBytesReceived = spiRead(handle, (char*)dataBuffer, length);
-    }
-
+    // command must be sent before read
+    uint8_t dataToWrite[length+1] = {0};
+    dataToWrite[0] = command & 0xFF;
+    noOfBytesReceived = spiXfer(handle, (char*)dataToWrite, (char*)dataBuffer, length+1);
     return noOfBytesReceived;
 }
 
