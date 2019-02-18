@@ -22,10 +22,6 @@ public:
 private:
       int writeData(unsigned handle, unsigned command, std::vector<uint8_t> data) override;
       int readData(unsigned handle, unsigned command, uint8_t* dataBuffer, unsigned length) override;
-      std::queue<SerialDataContainer> dataToSend;
-      std::queue<SerialDataContainer> receivedData;
-      std::mutex sendQueueMutex;
-      std::mutex receiveQueueMutex;
       GPIO* pPinCD;
 };
 
