@@ -187,6 +187,9 @@ SerialDevice::SerialDevice(SerialBusId serialBusId, SerialPriority devicePriorit
     }
 
     pSerialBus = SerialBus::buses.find(busId)->second;
+
+    // register this serial device in the map of devices for this bus
+    pSerialBus->registerDevice(SerialDeviceContainer{priority, this});
 }
 
 /*
@@ -194,6 +197,7 @@ SerialDevice::SerialDevice(SerialBusId serialBusId, SerialPriority devicePriorit
  */
 SerialDevice::~SerialDevice()
 {
+    pSerialBus->unregisterDevice(this);
 }
 
 /*

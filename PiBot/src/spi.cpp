@@ -17,12 +17,6 @@
 SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsigned bitRate, GpioPin pinCD, unsigned flags)
     : SerialDevice(spiBusId, devicePriority, 0)
 {
-    if(SerialBus::buses.find(busId) == SerialBus::buses.end())
-    {
-        Program::getInstance().terminate(WRONG_SPI_BUS);
-    }
-
-    pSerialBus = SerialBus::buses.find(busId)->second;
     handle = spiOpen(busId & 0xFF, bitRate, flags);
 
     if(handle >= 0)
@@ -34,9 +28,6 @@ SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsign
         Program::getInstance().terminate(SPI_NOT_OPENED);
     }
 
-    // register this SPI device in the bus object map of devices
-    pSerialBus->registerDevice(SerialDeviceContainer{priority, this});
-
     pPinCD = new GPIO(pinCD, PI_OUTPUT);
     pPinCD->write(1);
 }
@@ -44,12 +35,6 @@ SpiDevice::SpiDevice(SerialBusId spiBusId, SerialPriority devicePriority, unsign
 
 SpiDevice::~SpiDevice()
 {
-    if(handle >= 0)
-    {
-        spiClose(handle);
-    }
-    pSerialBus->unregisterDevice(this);
-
     delete pPinCD;
 }
 
