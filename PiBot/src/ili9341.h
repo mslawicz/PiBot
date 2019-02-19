@@ -90,7 +90,8 @@ class Ili9341 : public SpiDevice
 public:
     Ili9341(SerialBusId spiBusId, SerialPriority priority);
     ~Ili9341();
-private:
+protected:
+    void initialize(void);
 };
 
 

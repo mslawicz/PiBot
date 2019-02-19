@@ -10,8 +10,7 @@
 Display::Display()
     : Ili9341(SerialBusId::SPI_MAIN, SerialPriority::DISPLAY_PR)
 {
-
-
+    initialize();
 }
 
 Display::~Display()
