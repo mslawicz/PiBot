@@ -91,6 +91,7 @@ public:
     virtual ~SerialDevice();
     friend class SerialBus;
     void writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data);
+    void writeDataRequest(unsigned registerAddress);
     void readDataRequest(unsigned registerAddress, unsigned length);
     void clearReceiveQueue(void);
     bool receiveQueueEmpty(void) const {return receivedData.empty();}

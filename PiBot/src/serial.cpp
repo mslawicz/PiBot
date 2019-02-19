@@ -214,6 +214,15 @@ void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_
 }
 
 /*
+ * puts serial data to send into send queue and notifies serial bus handler
+ * no user data is sent (empty vector of bytes)
+ */
+void SerialDevice::writeDataRequest(unsigned registerAddress)
+{
+    writeDataRequest(registerAddress, std::vector<uint8_t>{});
+}
+
+/*
  * puts serial data into send queue to initiate reception and notifies serial bus handler
  */
 void SerialDevice::readDataRequest(unsigned registerAddress, unsigned length)

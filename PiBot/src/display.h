@@ -16,6 +16,7 @@ class Display : public Ili9341
 public:
     Display();
     ~Display();
+    void setBackLight(float level);
 private:
 };
 

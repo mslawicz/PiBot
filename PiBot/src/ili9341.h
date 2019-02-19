@@ -37,6 +37,7 @@ enum Ili9341Registers
     PTLAR = 0x30,
     MADCTL = 0x36,
     PIXFMT = 0x3A,
+    WRDISBV = 0x51,
     FRMCTR1 = 0xB1,
     FRMCTR2 = 0xB2,
     FRMCTR3 = 0xB3,

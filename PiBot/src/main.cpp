@@ -10,6 +10,7 @@
 #include "logger.h"
 #include "drive.h"	//XXX for test
 #include "display.h" //XXX test
+#include "ili9341.h"
 #include <iostream>
 #include <chrono>
 #include <cmath> //XXX for test
@@ -21,46 +22,37 @@ int main(int argc, char* argv[])
 	Program::getInstance().parseArguments(argc, argv);
 	Program::getInstance().initialize();
 
-	PushButton testPB(GpioPin::SW1);
-	PushButton exitButton(GpioPin::TMP_EXIT);
-
-	GPIO backlightPin(GpioPin::BACKLIGHT, PI_OUTPUT);
-	backlightPin.write(0);
-
-	Display display;   //XXX test
-	// command display reset
-	display.writeDataRequest(1, std::vector<uint8_t>{});
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	display.writeDataRequest(1, std::vector<uint8_t>{});
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	// read display info
-	display.readDataRequest(0x04, 4);
-	display.readDataRequest(0x09, 5);
-	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	Logger::getInstance().logEvent(INFO, "SPI queue empty? ", display.receiveQueueEmpty());
-	while(!display.receiveQueueEmpty())
 	{
-	    auto data = display.getData();
-	    for(auto byte : std::get<2>(data))
-	    {
-	        std::cout << "{" << (int)byte << "}";
-	    }
-	    std::cout << std::endl;
-	}
-	Drive myDrive;  //XXX test
-	myDrive.start();
+	    // scope of test objects
+        PushButton testPB(GpioPin::SW1);
+        PushButton exitButton(GpioPin::SW4);
 
-	while(exitButton.hasBeenPressed())
-	{
-	    if(testPB.hasBeenPressed())
-	    {
-	        Logger::getInstance().logEvent(INFO, "SW1 has been pressed");
-	    }
-	}
+        Display display;   //XXX test
+        display.setBackLight(0.2);
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	myDrive.stop();
+
+        Drive myDrive;  //XXX test
+        myDrive.start();
+        display.writeDataRequest(Ili9341Registers::WRDISBV, std::vector<uint8_t>{0x7F});
+        display.writeDataRequest(Ili9341Registers::PASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x22});
+        display.writeDataRequest(Ili9341Registers::CASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x22});
+        display.writeDataRequest(Ili9341Registers::RAMWR, std::vector<uint8_t>{0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00});
+
+        while(!exitButton.hasBeenPressed())
+        {
+            if(testPB.hasBeenPressed())
+            {
+                Logger::getInstance().logEvent(INFO, "SW1 has been pressed");
+                display.writeDataRequest(Ili9341Registers::INVON, std::vector<uint8_t>{});
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                display.writeDataRequest(Ili9341Registers::INVOFF, std::vector<uint8_t>{});
+            }
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        myDrive.stop();
+        display.setBackLight(0.0);
+	}
 
 	Program::getInstance().terminate();
 	return 0;
