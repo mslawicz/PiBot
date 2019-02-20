@@ -92,10 +92,12 @@ class Ili9341 : public SpiDevice
 public:
     Ili9341(SerialBusId spiBusId, SerialPriority priority);
     ~Ili9341();
+    void test(void);
 protected:
     void initialize(void);
 private:
     void setActiveArea(uint16_t leftX, uint16_t topY, uint16_t rightX, uint16_t bottomY);
+    void fillActiveArea(uint16_t color);
     uint16_t maxX;
     uint16_t maxY;
     uint16_t activeLeftX;

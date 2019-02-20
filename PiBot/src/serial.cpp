@@ -216,12 +216,17 @@ void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_
 
 /*
  * puts serial data to send into send queue and notifies serial bus handler
- * data in uint16_t vector
+ * data in uint16_t vector in Big Endian order
  */
 void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint16_t> data)
 {
-    uint8_t* pData = reinterpret_cast<uint8_t*>(&data[0]);
-    writeDataRequest(registerAddress, std::vector<uint8_t>(pData, pData+2*data.size()));
+    std::vector<uint8_t> v8;
+    for(auto element : data)
+    {
+        v8.push_back(static_cast<uint8_t>((element >> 8) & 0xFF));
+        v8.push_back(static_cast<uint8_t>(element & 0xFF));
+    }
+    writeDataRequest(registerAddress, v8);
 }
 
 /*

@@ -9,6 +9,7 @@
 #include "gpio.h"
 #include <thread>
 #include <chrono>
+#include <stdlib.h> // test
 
 Ili9341::Ili9341(SerialBusId spiBusId, SerialPriority priority)
     : SpiDevice(spiBusId, priority, 640000, GpioPin::ILI9341_CD)
@@ -52,4 +53,35 @@ void Ili9341::initialize(void)
     writeDataRequest(Ili9341Registers::DISPON); //Display on
     maxX = 240;
     maxY = 320;
+}
+
+/*
+ * sets active square area for display write operations
+ */
+void Ili9341::setActiveArea(uint16_t leftX, uint16_t topY, uint16_t rightX, uint16_t bottomY)
+{
+    activeLeftX = leftX;
+    activeRightX = rightX;
+    writeDataRequest(Ili9341Registers::CASET, std::vector<uint16_t>{activeLeftX, activeRightX});
+    activeTopY = topY;
+    activeBottomY = bottomY;
+    writeDataRequest(Ili9341Registers::PASET, std::vector<uint16_t>{activeTopY, activeBottomY});
+}
+
+/*
+ * fills active area with solid color
+ */
+void Ili9341::fillActiveArea(uint16_t color)
+{
+    writeDataRequest(Ili9341Registers::RAMWR, std::vector<uint16_t>((activeRightX-activeLeftX+1) * (activeBottomY-activeTopY+1), color));
+}
+
+void Ili9341::test()
+{
+    uint16_t x1 = rand() % 220;
+    uint16_t x2 = x1 + (rand() % (235 - x1)) % 50 + 5;
+    uint16_t y1 = rand() % 280;
+    uint16_t y2 = y1 + (rand() % (315 - x1)) % 50 + 5;
+    setActiveArea(x1,y1,x2,y2);
+    fillActiveArea(rand() & 0xFFFF);
 }

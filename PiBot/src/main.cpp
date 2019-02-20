@@ -33,13 +33,10 @@ int main(int argc, char* argv[])
 
         Drive myDrive;  //XXX test
         myDrive.start();
-        display.writeDataRequest(Ili9341Registers::WRDISBV, std::vector<uint8_t>{0x7F});
-        display.writeDataRequest(Ili9341Registers::PASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x29});
-        display.writeDataRequest(Ili9341Registers::CASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x29});
-        display.writeDataRequest(Ili9341Registers::RAMWR, std::vector<uint16_t>(100, 0x0000));
 
         while(!exitButton.hasBeenPressed())
         {
+            display.test();
             if(testPB.hasBeenPressed())
             {
                 Logger::getInstance().logEvent(INFO, "SW1 has been pressed");
@@ -47,6 +44,7 @@ int main(int argc, char* argv[])
                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
                 display.writeDataRequest(Ili9341Registers::INVOFF, std::vector<uint8_t>{});
             }
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
