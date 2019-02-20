@@ -56,6 +56,7 @@ enum Ili9341Registers
     RDID4 = 0xDD,
     GMCTRP1 = 0xE0,
     GMCTRN1 = 0xE1,
+    IFCTL = 0xF6,
     PWCTR6 = 0xFC
 };
 
@@ -93,6 +94,14 @@ public:
     ~Ili9341();
 protected:
     void initialize(void);
+private:
+    void setActiveArea(uint16_t leftX, uint16_t topY, uint16_t rightX, uint16_t bottomY);
+    uint16_t maxX;
+    uint16_t maxY;
+    uint16_t activeLeftX;
+    uint16_t activeTopY;
+    uint16_t activeRightX;
+    uint16_t activeBottomY;
 };
 
 

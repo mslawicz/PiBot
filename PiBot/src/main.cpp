@@ -34,9 +34,9 @@ int main(int argc, char* argv[])
         Drive myDrive;  //XXX test
         myDrive.start();
         display.writeDataRequest(Ili9341Registers::WRDISBV, std::vector<uint8_t>{0x7F});
-        display.writeDataRequest(Ili9341Registers::PASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x22});
-        display.writeDataRequest(Ili9341Registers::CASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x22});
-        display.writeDataRequest(Ili9341Registers::RAMWR, std::vector<uint8_t>{0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0xF8, 0x00});
+        display.writeDataRequest(Ili9341Registers::PASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x29});
+        display.writeDataRequest(Ili9341Registers::CASET, std::vector<uint8_t>{0x00, 0x20, 0x00, 0x29});
+        display.writeDataRequest(Ili9341Registers::RAMWR, std::vector<uint16_t>(100, 0x0000));
 
         while(!exitButton.hasBeenPressed())
         {

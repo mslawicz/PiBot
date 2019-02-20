@@ -202,6 +202,7 @@ SerialDevice::~SerialDevice()
 
 /*
  * puts serial data to send into send queue and notifies serial bus handler
+ * data in uint8_t vector
  */
 void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_t> data)
 {
@@ -211,6 +212,16 @@ void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint8_
         dataToSend.push(SerialDataContainer{registerAddress, 0, data});
     }
     pSerialBus->requestToSend();
+}
+
+/*
+ * puts serial data to send into send queue and notifies serial bus handler
+ * data in uint16_t vector
+ */
+void SerialDevice::writeDataRequest(unsigned registerAddress, std::vector<uint16_t> data)
+{
+    uint8_t* pData = reinterpret_cast<uint8_t*>(&data[0]);
+    writeDataRequest(registerAddress, std::vector<uint8_t>(pData, pData+2*data.size()));
 }
 
 /*
