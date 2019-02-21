@@ -35,7 +35,9 @@ enum Ili9341Registers
     RAMWR = 0x2C,
     RAMRD = 0x2E,
     PTLAR = 0x30,
+    VSCRDEF = 0x33,
     MADCTL = 0x36,
+    VSCRSADD = 0x37,
     PIXFMT = 0x3A,
     WRCONT = 0x3C,
     WRDISBV = 0x51,
@@ -93,7 +95,8 @@ class Ili9341 : public SpiDevice
 public:
     Ili9341(SerialBusId spiBusId, SerialPriority priority);
     ~Ili9341();
-    void test(void);
+    void test1(void);
+    void test2(void);
 protected:
     void initialize(void);
 private:

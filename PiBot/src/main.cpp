@@ -34,9 +34,10 @@ int main(int argc, char* argv[])
         Drive myDrive;  //XXX test
         myDrive.start();
 
+        display.test2();
         while(!exitButton.hasBeenPressed())
         {
-            display.test();
+            //display.test2();
             if(testPB.hasBeenPressed())
             {
                 Logger::getInstance().logEvent(INFO, "SW1 has been pressed");
