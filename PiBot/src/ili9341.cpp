@@ -12,7 +12,7 @@
 #include <stdlib.h> // test
 
 Ili9341::Ili9341(SerialBusId spiBusId, SerialPriority priority)
-    : SpiDevice(spiBusId, priority, 640000, GpioPin::ILI9341_CD)
+    : SpiDevice(spiBusId, priority, 4000000, GpioPin::ILI9341_CD)
 {
     maxX = maxY = 0;
     activeLeftX = activeTopY = activeRightX = activeBottomY = 0;
@@ -73,7 +73,12 @@ void Ili9341::setActiveArea(uint16_t leftX, uint16_t topY, uint16_t rightX, uint
  */
 void Ili9341::fillActiveArea(uint16_t color)
 {
-    writeDataRequest(Ili9341Registers::RAMWR, std::vector<uint16_t>((activeRightX-activeLeftX+1) * (activeBottomY-activeTopY+1), color));
+    std::vector<uint16_t> rawOfPixels(activeRightX - activeLeftX + 1, color);
+    writeDataRequest(Ili9341Registers::RAMWR, rawOfPixels);
+    for(uint16_t raw = activeTopY; raw < activeBottomY; raw++)
+    {
+        writeDataRequest(Ili9341Registers::WRCONT, rawOfPixels);
+    }
 }
 
 void Ili9341::test()
