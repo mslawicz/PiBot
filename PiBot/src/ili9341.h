@@ -38,14 +38,14 @@ enum Ili9341Registers
     VSCRDEF = 0x33,
     MADCTL = 0x36,
     VSCRSADD = 0x37,
-    PIXFMT = 0x3A,
+    PIXSET = 0x3A,
     WRCONT = 0x3C,
     WRDISBV = 0x51,
     FRMCTR1 = 0xB1,
     FRMCTR2 = 0xB2,
     FRMCTR3 = 0xB3,
     INVCTR = 0xB4,
-    DFUNCTR = 0xB6,
+    DISCTRL = 0xB6,
     PWCTR1 = 0xC0,
     PWCTR2 = 0xC1,
     PWCTR3 = 0xC2,
@@ -97,6 +97,7 @@ public:
     ~Ili9341();
     void test1(void);
     void test2(void);
+    void rectangle(uint16_t positionX, uint16_t positionY, uint16_t width, uint16_t height, uint16_t color);
 protected:
     void initialize(void);
 private:
