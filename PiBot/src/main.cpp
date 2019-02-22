@@ -37,15 +37,13 @@ int main(int argc, char* argv[])
         display.test2();
         while(!exitButton.hasBeenPressed())
         {
-            //display.test2();
+            display.test1();
             if(testPB.hasBeenPressed())
             {
                 Logger::getInstance().logEvent(INFO, "SW1 has been pressed");
-                display.writeDataRequest(Ili9341Registers::INVON, std::vector<uint8_t>{});
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
-                display.writeDataRequest(Ili9341Registers::INVOFF, std::vector<uint8_t>{});
+                display.test3();
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));

@@ -83,12 +83,12 @@ void Ili9341::fillActiveArea(uint16_t color)
 
 void Ili9341::test1()
 {
-    uint16_t x1 = rand() % 220;
-    uint16_t x2 = x1 + (rand() % (235 - x1)) % 50 + 5;
-    uint16_t y1 = rand() % 280;
-    uint16_t y2 = y1 + (rand() % (315 - x1)) % 50 + 5;
-    setActiveArea(x1,y1,x2,y2);
-    fillActiveArea(rand() & 0xFFFF);
+    static uint16_t scroll = 0;
+    writeDataRequest(Ili9341Registers::VSCRSADD, std::vector<uint16_t>{scroll++});
+    if(scroll > 300)
+    {
+        scroll = 0;
+    }
 }
 
 void Ili9341::test2()
@@ -96,13 +96,23 @@ void Ili9341::test2()
 
     setActiveArea(0,0,maxX,maxY);
     fillActiveArea(Ili9341Color::BLACK);
-    // red rectangle from (10,10) to (100,50)
+
+    rectangle(0,300,60,20, Ili9341Color::ORANGE);
+    rectangle(60,300,60,20, Ili9341Color::MAGENTA);
+    rectangle(120,300,60,20, Ili9341Color::YELLOW);
+    rectangle(180,300,60,20, Ili9341Color::CYAN);
+
     writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{0, 300, 20});
-    writeDataRequest(Ili9341Registers::VSCRSADD, std::vector<uint16_t>{20});
+
     rectangle(10,10,100,50, Ili9341Color::RED);
     rectangle(40,60,100,50, Ili9341Color::GREEN);
     rectangle(20,110,150,50, Ili9341Color::BLUE);
 
+}
+
+void Ili9341::test3()
+{
+    rectangle(220,30,20,20, rand() & 0xFFFF);
 }
 
 /*
