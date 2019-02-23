@@ -16,6 +16,10 @@ Display::Display()
     initialize();
     pFont = nullptr;
     characterSpace = 0;
+    textFieldWidth = 0;
+    textAlignment = TextAlignment::CENTER;
+    backgroundColor = Ili9341Color::BLACK;
+    foregroundColor = Ili9341Color::WHITE;
 }
 
 Display::~Display()
@@ -90,16 +94,16 @@ void Display::test3()
  */
 uint16_t Display::getTextWidth(std::string text)
 {
-    uint16_t textLength = 0;
+    uint16_t textWidth = 0;
     if(pFont != nullptr)
     {
         for (char& ch : text)
         {
-            textLength += pFont[6 + ch - pFont[4]] + characterSpace;
+            textWidth += pFont[6 + ch - pFont[4]] + characterSpace;
         }
-        textLength -= characterSpace;
+        textWidth -= characterSpace;
     }
-    return textLength;
+    return textWidth;
 }
 
 /*
@@ -108,5 +112,113 @@ uint16_t Display::getTextWidth(std::string text)
 void Display::setFont(const uint8_t* pNewFont)
 {
     pFont = pNewFont;
+    // character space id calculated from the font height
     characterSpace = 1 + pFont[3] / 8;
+}
+
+/*
+ * render the given text to display
+ */
+void Display::renderText(uint16_t positionX, uint16_t positionY, std::string text)
+{
+    uint16_t textWidth = getTextWidth(text);
+    uint16_t leftSpace = 0;
+    uint16_t rightSpace = 0;
+
+    // if text field is wider than text width - calculate left and right spaces
+    if(textWidth <= textFieldWidth + characterSpace)
+    {
+        switch(textAlignment)
+        {
+        default:
+        case TextAlignment::CENTER:
+            leftSpace = (textFieldWidth - textWidth) / 2;
+            rightSpace = textFieldWidth - textWidth - leftSpace;
+            break;
+        case TextAlignment::LEFT:
+            leftSpace = characterSpace;
+            rightSpace = textFieldWidth - textWidth - leftSpace;
+            break;
+        case TextAlignment::RIGHT:
+            rightSpace = characterSpace;
+            leftSpace = textFieldWidth - textWidth - rightSpace;
+            break;
+        }
+    }
+
+    uint8_t height = pFont[3];
+
+    // set the display area for this rendered text
+    setActiveArea(positionX, positionY, textWidth + leftSpace + rightSpace - 1, height -1);
+
+    // for every raw of pixels
+    for (uint8_t pixelRaw = 0; pixelRaw < height; pixelRaw++)
+    {
+        // create the vector of pixels
+        std::vector<uint16_t> pixels;
+
+        // insert left padding pixels
+        pixels.insert(pixels.end(), leftSpace, backgroundColor);
+
+        // for every character in the text
+        for (unsigned charIndex = 0; charIndex < text.size(); charIndex++)
+        {
+            // add char-to-char space if it is not the first character
+            if(charIndex > 0)
+            {
+                for (uint8_t i = 0; i < characterSpace; i++)
+                {
+                    pixels.push_back(backgroundColor);
+                }
+            }
+
+            // character in the text
+            char character = text[charIndex];
+            // index of this character in the font definitions
+            uint8_t charTabIndex = character - pFont[4];
+            // width of this character in pixels
+            uint8_t charWidth = pFont[6 + charTabIndex];
+            // add width of characters up to the current one
+            unsigned cumulativeWidth = 0;
+            for (uint8_t chI = 0; chI < charTabIndex; chI++)
+            {
+                cumulativeWidth += pFont[6 + chI];
+            }
+            // calculate index of the character definition in the font file
+            unsigned charDefinitionIndex = cumulativeWidth * ((height - 1) / 8 + 1) + 6 + pFont[5];
+            // calculate the page of pixel raws (page has up to 8 raws)
+            uint8_t charPageIndex = pixelRaw / 8;
+            // calculate extra shift of pixel byte (required for the last page)
+            int extraShift = (charPageIndex + 1) * 8 - height;
+            if (extraShift < 0)
+            {
+                extraShift = 0;
+            }
+
+            // for every column of pixels in the char
+            for (uint8_t charColumnIndex = 0; charColumnIndex < charWidth; charColumnIndex++)
+            {
+                // get the byte of pixels
+                uint8_t pixelPattern = pFont[charDefinitionIndex + charPageIndex * charWidth + charColumnIndex];
+
+                if ((pixelPattern >> (pixelRaw % 8 + extraShift)) & 0x01)
+                {
+                    // the pixel is foreground
+                    pixels.push_back(foregroundColor);
+                }
+                else
+                {
+                    // the pixel is background
+                    pixels.push_back(backgroundColor);
+                }
+            }
+
+        }
+
+        // insert right padding pixels
+        pixels.insert(pixels.end(), rightSpace, backgroundColor);
+
+        // send raw of pixels to display
+        writeDataRequest(pixelRaw == 0 ? Ili9341Registers::RAMWR : Ili9341Registers::WRCONT, pixels);
+    }
 }

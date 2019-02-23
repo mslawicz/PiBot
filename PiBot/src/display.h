@@ -11,6 +11,13 @@
 #include "spi.h"
 #include "ili9341.h"
 
+enum TextAlignment
+{
+    CENTER = 0,
+    LEFT,
+    RIGHT
+};
+
 class Display : public Ili9341
 {
 public:
@@ -24,8 +31,13 @@ public:
     void setFont(const uint8_t* pNewFont);
 private:
     uint16_t getTextWidth(std::string text);
+    void renderText(uint16_t positionX, uint16_t positionY, std::string text);
     const uint8_t* pFont;     // pointer to current font definition array
     uint8_t characterSpace;     // character-to-character space in pixels
+    uint16_t textFieldWidth;    // total width of text field
+    TextAlignment textAlignment;    // alignment of printed text
+    uint16_t backgroundColor;       // pixel current background color
+    uint16_t foregroundColor;       // pixel current foreground color
 };
 
 #endif /* SRC_DISPLAY_H_ */
