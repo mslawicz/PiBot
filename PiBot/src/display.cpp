@@ -6,11 +6,16 @@
  */
 
 #include "display.h"
+#include "logger.h"
+#include "program.h"
+#include "tahoma11b.h"
 
 Display::Display()
     : Ili9341(SerialBusId::SPI_MAIN, SerialPriority::DISPLAY_PR)
 {
     initialize();
+    pFont = nullptr;
+    characterSpace = 0;
 }
 
 Display::~Display()
@@ -76,4 +81,32 @@ void Display::test2()
 void Display::test3()
 {
     drawRectangle(220,30,20,20, rand() & 0xFFFF);
+    setFont(FontTahoma11b);
+    Logger::getInstance().logEvent(INFO, "width of text 'abc'=", getTextWidth("abc"));
+}
+
+/*
+ * returns the rendered text width in pixels
+ */
+uint16_t Display::getTextWidth(std::string text)
+{
+    uint16_t textLength = 0;
+    if(pFont != nullptr)
+    {
+        for (char& ch : text)
+        {
+            textLength += pFont[6 + ch - pFont[4]] + characterSpace;
+        }
+        textLength -= characterSpace;
+    }
+    return textLength;
+}
+
+/*
+ * sets a new font for printing
+ */
+void Display::setFont(const uint8_t* pNewFont)
+{
+    pFont = pNewFont;
+    characterSpace = 1 + pFont[3] / 8;
 }

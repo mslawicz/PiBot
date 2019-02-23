@@ -21,7 +21,11 @@ public:
     void test1(void);
     void test2(void);
     void test3(void);
+    void setFont(const uint8_t* pNewFont);
 private:
+    uint16_t getTextWidth(std::string text);
+    const uint8_t* pFont;     // pointer to current font definition array
+    uint8_t characterSpace;     // character-to-character space in pixels
 };
 
 #endif /* SRC_DISPLAY_H_ */
