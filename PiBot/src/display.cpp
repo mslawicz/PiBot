@@ -20,6 +20,7 @@ Display::Display()
     textAlignment = TextAlignment::CENTER;
     backgroundColor = Ili9341Color::BLACK;
     foregroundColor = Ili9341Color::WHITE;
+    spaceWidth = 0;
 }
 
 Display::~Display()
@@ -81,7 +82,11 @@ void Display::test2()
     //drawRectangle(20,160,150,50, Ili9341Color::BLUE);
 
     setFont(FontTahoma11b);
-    renderText(30, 100, "Hello-world!");
+    renderText(30, 100, "Hello world!");
+    backgroundColor = Ili9341Color::YELLOW;
+    foregroundColor = Ili9341Color::BLACK;
+    textFieldWidth = 100;
+    renderText(20, 130, "It is PiBot!");
 
 }
 
@@ -99,11 +104,29 @@ uint16_t Display::getTextWidth(std::string text)
     uint16_t textWidth = 0;
     if(pFont != nullptr)
     {
-        for (char& ch : text)
+        for (unsigned i = 0; i < text.size(); i++)
         {
-            textWidth += pFont[6 + ch - pFont[4]] + characterSpace;
+            if((text[i] >= pFont[4]) && (text[i] < pFont[4]+pFont[5]))
+            {
+                // character is in allowed range
+                if(text[i] == 0x20)
+                {
+                    // it is space
+                    textWidth += spaceWidth;
+                }
+                else
+                {
+                    // not a space
+                    textWidth += pFont[6 + text[i] - pFont[4]];
+                }
+            }
+
+            if(i > 0)
+            {
+                // add character-to-character space for every next character
+                textWidth += characterSpace;
+            }
         }
-        textWidth -= characterSpace;
     }
     return textWidth;
 }
@@ -116,6 +139,7 @@ void Display::setFont(const uint8_t* pNewFont)
     pFont = pNewFont;
     // character space id calculated from the font height
     characterSpace = 1 + pFont[3] / 8;
+    spaceWidth = 1 + pFont[3] / 3;
 }
 
 /*
@@ -180,6 +204,14 @@ uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string
 
             // character in the text
             char character = text[charIndex];
+
+            // check if character is in the allowed range
+            if((character < pFont[4]) || (character >= pFont[4]+pFont[5]))
+            {
+                // character not in the coded range
+                continue;
+            }
+
             // index of this character in the font definitions
             uint8_t charTabIndex = character - pFont[4];
             // width of this character in pixels
@@ -201,11 +233,22 @@ uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string
                 extraShift = 0;
             }
 
+            // if it is space - ignore the its coded width
+            if(character == 0x20)
+            {
+                charWidth = spaceWidth;
+            }
+
             // for every column of pixels in the char
             for (uint8_t charColumnIndex = 0; charColumnIndex < charWidth; charColumnIndex++)
             {
                 // get the byte of pixels
                 uint8_t pixelPattern = pFont[charDefinitionIndex + charPageIndex * charWidth + charColumnIndex];
+                // if character is space - all bits are background
+                if(character == 0x20)
+                {
+                    pixelPattern = 0;
+                }
 
                 if ((pixelPattern >> (pixelRaw % 8 + extraShift)) & 0x01)
                 {

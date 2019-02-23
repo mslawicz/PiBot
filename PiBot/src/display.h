@@ -38,6 +38,7 @@ private:
     TextAlignment textAlignment;    // alignment of printed text
     uint16_t backgroundColor;       // pixel current background color
     uint16_t foregroundColor;       // pixel current foreground color
+    uint8_t spaceWidth;     // space (character 0x20) width in pixels
 };
 
 #endif /* SRC_DISPLAY_H_ */
