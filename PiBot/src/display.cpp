@@ -77,16 +77,18 @@ void Display::test2()
     writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{20, 280, 20});    // 20 pixels in the top and bottom fixed
 
     drawRectangle(10,30,100,50, Ili9341Color::RED);
-    drawRectangle(40,100,100,50, Ili9341Color::GREEN);
-    drawRectangle(20,160,150,50, Ili9341Color::BLUE);
+    //drawRectangle(40,100,100,50, Ili9341Color::GREEN);
+    //drawRectangle(20,160,150,50, Ili9341Color::BLUE);
+
+    setFont(FontTahoma11b);
+    renderText(30, 100, "Hello-world!");
 
 }
 
 void Display::test3()
 {
     drawRectangle(220,30,20,20, rand() & 0xFFFF);
-    setFont(FontTahoma11b);
-    Logger::getInstance().logEvent(INFO, "width of text 'abc'=", getTextWidth("abc"));
+
 }
 
 /*
@@ -119,8 +121,12 @@ void Display::setFont(const uint8_t* pNewFont)
 /*
  * render the given text to display
  */
-void Display::renderText(uint16_t positionX, uint16_t positionY, std::string text)
+uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string text)
 {
+    if(pFont == nullptr)
+    {
+        return 0;
+    }
     uint16_t textWidth = getTextWidth(text);
     uint16_t leftSpace = 0;
     uint16_t rightSpace = 0;
@@ -149,7 +155,7 @@ void Display::renderText(uint16_t positionX, uint16_t positionY, std::string tex
     uint8_t height = pFont[3];
 
     // set the display area for this rendered text
-    setActiveArea(positionX, positionY, textWidth + leftSpace + rightSpace - 1, height -1);
+    setActiveArea(positionX, positionY, positionX + textWidth + leftSpace + rightSpace - 1, positionY + height -1);
 
     // for every raw of pixels
     for (uint8_t pixelRaw = 0; pixelRaw < height; pixelRaw++)
@@ -221,4 +227,7 @@ void Display::renderText(uint16_t positionX, uint16_t positionY, std::string tex
         // send raw of pixels to display
         writeDataRequest(pixelRaw == 0 ? Ili9341Registers::RAMWR : Ili9341Registers::WRCONT, pixels);
     }
+
+    // return the width of rendered text
+    return textWidth + leftSpace + rightSpace;
 }

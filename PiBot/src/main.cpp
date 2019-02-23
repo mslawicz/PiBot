@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
         display.test2();
         while(!exitButton.hasBeenPressed())
         {
-            display.test1();
+            //display.test1();
             if(testPB.hasBeenPressed())
             {
                 Logger::getInstance().logEvent(INFO, "SW1 has been pressed");

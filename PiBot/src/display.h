@@ -31,7 +31,7 @@ public:
     void setFont(const uint8_t* pNewFont);
 private:
     uint16_t getTextWidth(std::string text);
-    void renderText(uint16_t positionX, uint16_t positionY, std::string text);
+    uint16_t renderText(uint16_t positionX, uint16_t positionY, std::string text);
     const uint8_t* pFont;     // pointer to current font definition array
     uint8_t characterSpace;     // character-to-character space in pixels
     uint16_t textFieldWidth;    // total width of text field
