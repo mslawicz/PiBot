@@ -8,6 +8,7 @@
 #include "display.h"
 #include "logger.h"
 #include "program.h"
+#include "tahoma11.h"
 #include "tahoma11b.h"
 
 Display::Display()
@@ -81,11 +82,12 @@ void Display::test2()
     //drawRectangle(40,100,100,50, Ili9341Color::GREEN);
     //drawRectangle(20,160,150,50, Ili9341Color::BLUE);
 
-    setFont(FontTahoma11b);
+    setFont(FontTahoma11);
     renderText(30, 100, "Hello world!");
     backgroundColor = Ili9341Color::YELLOW;
     foregroundColor = Ili9341Color::BLACK;
     textFieldWidth = 100;
+    setFont(FontTahoma11b);
     renderText(20, 130, "It is PiBot!");
 
 }
