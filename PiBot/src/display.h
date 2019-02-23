@@ -17,6 +17,10 @@ public:
     Display();
     ~Display();
     void setBackLight(float level);
+    void drawRectangle(uint16_t positionX, uint16_t positionY, uint16_t width, uint16_t height, uint16_t color);
+    void test1(void);
+    void test2(void);
+    void test3(void);
 private:
 };
 
