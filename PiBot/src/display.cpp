@@ -44,11 +44,11 @@ void Display::drawRectangle(uint16_t positionX, uint16_t positionY, uint16_t wid
 
 void Display::test1()
 {
-    static uint16_t scroll = 0;
-    writeDataRequest(Ili9341Registers::VSCRSADD, std::vector<uint16_t>{scroll++});
-    if(scroll > 300)
+    static uint16_t scroll = 20;    // it is the top index if scroll area
+    writeDataRequest(Ili9341Registers::VSCRSADD, std::vector<uint16_t>{scroll++});  // scroll is incremented here
+    if(scroll > 300)    // if index exceeds lower scroll index - initialize it again
     {
-        scroll = 0;
+        scroll = 20;
     }
 }
 
@@ -63,11 +63,13 @@ void Display::test2()
     drawRectangle(120,300,60,20, Ili9341Color::YELLOW);
     drawRectangle(180,300,60,20, Ili9341Color::CYAN);
 
-    writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{0, 300, 20});
+    drawRectangle(0,0,240,20, Ili9341Color::MAROON);
 
-    drawRectangle(10,10,100,50, Ili9341Color::RED);
-    drawRectangle(40,60,100,50, Ili9341Color::GREEN);
-    drawRectangle(20,110,150,50, Ili9341Color::BLUE);
+    writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{20, 280, 20});    // 20 pixels in the top and bottom fixed
+
+    drawRectangle(10,30,100,50, Ili9341Color::RED);
+    drawRectangle(40,100,100,50, Ili9341Color::GREEN);
+    drawRectangle(20,160,150,50, Ili9341Color::BLUE);
 
 }
 
