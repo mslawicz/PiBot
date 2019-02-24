@@ -10,8 +10,6 @@
 #include "program.h"
 #include "tahoma11.h"
 #include "tahoma11b.h"
-#include "calibri15.h"
-#include "arial16b.h"
 
 Display::Display()
     : Ili9341(SerialBusId::SPI_MAIN, SerialPriority::DISPLAY_PR)
@@ -93,14 +91,14 @@ void Display::test2()
     textAlignment = TextAlignment::RIGHT;
     renderText(40, 70, "Text aligned right");
     textAlignment = TextAlignment::CENTER;
-    setFont(FontCalibri15);
-    textFieldWidth = 0;
-    renderText(5, 85, "This is Calibri 15");
-    backgroundColor = Ili9341Color::BLACK;
-    foregroundColor = Ili9341Color::WHITE;
-    renderText(5, 105, "Calibri 15 again");
-    setFont(FontArial16b);
-    renderText(5, 130, "This is Arial 16 bold");
+//    setFont(FontCalibri15);
+//    textFieldWidth = 0;
+//    renderText(5, 85, "This is Calibri 15");
+//    backgroundColor = Ili9341Color::BLACK;
+//    foregroundColor = Ili9341Color::WHITE;
+//    renderText(5, 105, "Calibri 15 again");
+//    setFont(FontArial16b);
+//    renderText(5, 130, "This is Arial 16 bold");
 }
 
 void Display::test3()
