@@ -10,6 +10,8 @@
 #include "program.h"
 #include "tahoma11.h"
 #include "tahoma11b.h"
+#include "calibri15.h"
+#include "arial16b.h"
 
 Display::Display()
     : Ili9341(SerialBusId::SPI_MAIN, SerialPriority::DISPLAY_PR)
@@ -78,18 +80,27 @@ void Display::test2()
 
     writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{20, 280, 20});    // 20 pixels in the top and bottom fixed
 
-    drawRectangle(10,30,100,50, Ili9341Color::RED);
-    //drawRectangle(40,100,100,50, Ili9341Color::GREEN);
-    //drawRectangle(20,160,150,50, Ili9341Color::BLUE);
-
     setFont(FontTahoma11);
-    renderText(30, 100, "Hello world!");
+    renderText(30, 25, "Hello world!  This is Tahoma 11");
     backgroundColor = Ili9341Color::YELLOW;
     foregroundColor = Ili9341Color::BLACK;
-    textFieldWidth = 100;
+    textFieldWidth = 150;
     setFont(FontTahoma11b);
-    renderText(20, 130, "It is PiBot!");
-
+    renderText(20, 40, "It is PiBot! ...and Tahoma 11 bold");
+    textAlignment = TextAlignment::LEFT;
+    renderText(40, 55, "Text aligned left");
+    backgroundColor = Ili9341Color::PINK;
+    textAlignment = TextAlignment::RIGHT;
+    renderText(40, 70, "Text aligned right");
+    textAlignment = TextAlignment::CENTER;
+    setFont(FontCalibri15);
+    textFieldWidth = 0;
+    renderText(5, 85, "This is Calibri 15");
+    backgroundColor = Ili9341Color::BLACK;
+    foregroundColor = Ili9341Color::WHITE;
+    renderText(5, 105, "Calibri 15 again");
+    setFont(FontArial16b);
+    renderText(5, 130, "This is Arial 16 bold");
 }
 
 void Display::test3()
