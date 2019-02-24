@@ -91,8 +91,9 @@ void Display::test2()
     textAlignment = TextAlignment::RIGHT;
     renderText(40, 70, "Text aligned right");
     textAlignment = TextAlignment::CENTER;
+    textFieldWidth = 0;
+    print(10, 90, "print() method with x=", 10, " and y=", 90);
 //    setFont(FontCalibri15);
-//    textFieldWidth = 0;
 //    renderText(5, 85, "This is Calibri 15");
 //    backgroundColor = Ili9341Color::BLACK;
 //    foregroundColor = Ili9341Color::WHITE;
@@ -284,4 +285,23 @@ uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string
 
     // return the width of rendered text
     return textWidth + leftSpace + rightSpace;
+}
+
+/*
+ * prints text formatted with variable arguments
+ */
+template<typename... Args> void Display::print(uint16_t positionX, uint16_t positionY, Args... args)
+    {
+        std::stringstream textStream;
+        takeNextArgument(textStream, args...);
+        renderText(positionX, positionY, textStream.str());
+    }
+
+/*
+ * adds next argument to the text stream
+ */
+template<typename First, typename... Rest> void Display::takeNextArgument(std::stringstream& textStream, First arg0, Rest... args)
+{
+    textStream << arg0;
+    takeNextArgument(textStream, args...);
 }
