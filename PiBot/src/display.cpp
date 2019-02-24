@@ -15,9 +15,6 @@
 #include "tahoma11b.h"
 #include "tahoma14b.h"
 #include "tahoma16b.h"
-#include "arial14b.h"
-#include "arial16b.h"
-#include "calibri11.h"
 
 Display::Display()
     : Ili9341(SerialBusId::SPI_MAIN, SerialPriority::DISPLAY_PR)
@@ -104,9 +101,9 @@ void Display::test2()
     foregroundColor = Ili9341Color::WHITE;
     std::string chars("24<578#$&aefgijx*ACFIOQRX");
 
-    setFont(FontCalibri11);
-    print(0, 90, "font Calibri11");
-    print(0, 103, chars.c_str());
+//    setFont(FontCalibri11);
+//    print(0, 90, "font Calibri11");
+//    print(0, 103, chars.c_str());
 
     setFont(FontTahoma11);
     print(0, 116, "font Tahoma11");
@@ -120,19 +117,19 @@ void Display::test2()
     print(0, 170, "font Tahoma14b");
     print(0, 185, chars.c_str());
 
-    setFont(FontArial14b);
-    print(0, 200, "font Arial14b");
-    print(0, 215, chars.c_str());
+//    setFont(FontArial14b);
+//    print(0, 200, "font Arial14b");
+//    print(0, 215, chars.c_str());
 
     chars = "24<57#$&aefgi*ACFIQR";
     setFont(FontTahoma16b);
     print(0, 230, "font Tahoma16b");
     print(0, 247, chars.c_str());
 
-    chars = "24<57#$&aegi*ACFIQR";
-    setFont(FontArial16b);
-    print(0, 265, "font Arial16b");
-    print(0, 283, chars.c_str());
+//    chars = "24<57#$&aegi*ACFIQR";
+//    setFont(FontArial16b);
+//    print(0, 265, "font Arial16b");
+//    print(0, 283, chars.c_str());
 }
 
 void Display::test3()
