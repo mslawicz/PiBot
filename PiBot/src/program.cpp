@@ -23,6 +23,7 @@ Program& Program::getInstance(void)
 Program::Program()
 {
     pDevicePCA9685 = nullptr;
+    pDisplay = nullptr;
 }
 
 Program::~Program()
@@ -104,6 +105,10 @@ void Program::initialize(void)
 
 	// create object which configures PCA9685 chip
 	pDevicePCA9685 = new PCA9685(SerialBusId::I2C1, SerialPriority::PCA9685_PR, I2cDeviceAddress::PCA9685_ADDR);
+
+	// create display object
+	pDisplay = new Display();
+	pDisplay->setBackLight(0.2);
 }
 
 /*
@@ -146,6 +151,8 @@ void Program::terminate(ExitCode exitCode)
 	}
 
 	delete pDevicePCA9685;
+	pDisplay->setBackLight(0.0);
+	delete pDisplay;
 
     //terminate serial handlers and delete serial bus objects
     for(auto bus : SerialBus::buses)

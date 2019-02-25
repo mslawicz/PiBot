@@ -27,26 +27,24 @@ int main(int argc, char* argv[])
         PushButton scroll(GpioPin::SW2);
         PushButton exitButton(GpioPin::SW4);
 
-        Display display;   //XXX test
-        display.setBackLight(0.2);
+
 
 
         Drive myDrive;  //XXX test
         myDrive.start();
 
-        display.test2();
+        Program::getInstance().getDisplay()->test2();
         while(!exitButton.hasBeenPressed())
         {
             if(scroll.isPressed())
             {
-                display.test1();
+                Program::getInstance().getDisplay()->test1();
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
         myDrive.stop();
-        display.setBackLight(0.0);
 	}
 
 	Program::getInstance().terminate();

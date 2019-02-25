@@ -11,6 +11,7 @@
 #include "logger.h"
 #include "i2c.h"
 #include "PCA9685.h"
+#include "display.h"
 #include <vector>
 #include <map>
 
@@ -28,14 +29,16 @@ public:
 	Program& operator=(Program const&) = delete;
 	void parseArguments(int argc, char* argv[]);
 	// checks if this option is provided in program arguments
-	bool isOptionProvided(std::string option) {return options.find(option) != options.end();}
-	// gets pointer to i2c bus object
+	bool isOptionProvided(std::string option) const {return options.find(option) != options.end();}
+	// gets pointer to display object
+	Display* getDisplay(void) const { return pDisplay; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
 	void displayHelp(void);
 	std::map<std::string, std::vector<std::string>> options;
 	PCA9685* pDevicePCA9685;
+	Display* pDisplay;
 };
 
 #endif /* SRC_PROGRAM_H_ */
