@@ -102,3 +102,12 @@ bool PushButton::hasBeenPressed(void)
     keyHasBeenPressed = false;
     return result;
 }
+
+/*
+ * returns true if the button is pressed now
+ */
+bool PushButton::isPressed(void)
+{
+    stateMachine();
+    return keyIsPressed;
+}

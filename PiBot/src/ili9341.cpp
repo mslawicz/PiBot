@@ -32,13 +32,6 @@ void Ili9341::initialize(void)
     writeDataRequest(Ili9341Registers::MADCTL, std::vector<uint8_t>{0x98});
     writeDataRequest(Ili9341Registers::PIXSET, std::vector<uint8_t>{0x55});
     writeDataRequest(Ili9341Registers::IFCTL, std::vector<uint8_t>{0x00, 0x00, 0x00});
-//    writeDataRequest(0xEF, std::vector<uint8_t>{0x03, 0x80, 0x02});
-//    writeDataRequest(0xCF, std::vector<uint8_t>{0x00, 0XC1, 0X30});
-//    writeDataRequest(0xED, std::vector<uint8_t>{0x64, 0x03, 0X12, 0X81});
-//    writeDataRequest(0xE8, std::vector<uint8_t>{0x85, 0x00, 0x78});
-//    writeDataRequest(0xCB, std::vector<uint8_t>{0x39, 0x2C, 0x00, 0x34, 0x02});
-//    writeDataRequest(0xF7, std::vector<uint8_t>{0x20});
-//    writeDataRequest(0xEA, std::vector<uint8_t>{0x00, 0x00});
     writeDataRequest(Ili9341Registers::PWCTR1, std::vector<uint8_t>{0x23}); //VRH[5:0]
     writeDataRequest(Ili9341Registers::PWCTR2, std::vector<uint8_t>{0x10}); //SAP[2:0];BT[3:0]
     writeDataRequest(Ili9341Registers::VMCTR1, std::vector<uint8_t>{0x3e, 0x28});

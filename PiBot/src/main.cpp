@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 
 	{
 	    // scope of test objects
-        PushButton testPB(GpioPin::SW1);
+        PushButton scroll(GpioPin::SW2);
         PushButton exitButton(GpioPin::SW4);
 
         Display display;   //XXX test
@@ -37,11 +37,9 @@ int main(int argc, char* argv[])
         display.test2();
         while(!exitButton.hasBeenPressed())
         {
-            //display.test1();
-            if(testPB.hasBeenPressed())
+            if(scroll.isPressed())
             {
-                Logger::getInstance().logEvent(INFO, "SW1 has been pressed");
-                display.test3();
+                display.test1();
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }

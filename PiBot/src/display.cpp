@@ -14,6 +14,7 @@
 #include "tahoma11.h"
 #include "tahoma11b.h"
 #include "tahoma14b.h"
+#include "tahoma15.h"
 #include "tahoma16b.h"
 
 Display::Display()
@@ -60,11 +61,11 @@ void Display::drawRectangle(uint16_t positionX, uint16_t positionY, uint16_t wid
 
 void Display::test1()
 {
-    static uint16_t scroll = 20;    // it is the top index if scroll area
+    static uint16_t scroll = 15;    // it is the top index if scroll area
     writeDataRequest(Ili9341Registers::VSCRSADD, std::vector<uint16_t>{scroll++});  // scroll is incremented here
-    if(scroll > 300)    // if index exceeds lower scroll index - initialize it again
+    if(scroll > 305)    // if index exceeds lower scroll index - initialize it again
     {
-        scroll = 20;
+        scroll = 15;
     }
 }
 
@@ -74,62 +75,43 @@ void Display::test2()
     setActiveArea(0,0,maxX,maxY);
     fillActiveArea(Ili9341Color::BLACK);
 
-    drawRectangle(0,300,60,20, Ili9341Color::ORANGE);
-    drawRectangle(60,300,60,20, Ili9341Color::MAGENTA);
-    drawRectangle(120,300,60,20, Ili9341Color::YELLOW);
-    drawRectangle(180,300,60,20, Ili9341Color::CYAN);
-
-    drawRectangle(0,0,240,20, Ili9341Color::MAROON);
-
-    writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{20, 280, 20});    // 20 pixels in the top and bottom fixed
-
-    setFont(FontTahoma11);
-    renderText(30, 25, "Hello world!  This is Tahoma 11");
-    backgroundColor = Ili9341Color::YELLOW;
+    setFont(FontTahoma15);
+    textFieldWidth = 60;
     foregroundColor = Ili9341Color::BLACK;
-    textFieldWidth = 150;
-    setFont(FontTahoma11b);
-    renderText(20, 40, "It is PiBot! ...and Tahoma 11 bold");
-    textAlignment = TextAlignment::LEFT;
-    renderText(40, 55, "Text aligned left");
-    backgroundColor = Ili9341Color::PINK;
-    textAlignment = TextAlignment::RIGHT;
-    renderText(40, 70, "Text aligned right");
-    textAlignment = TextAlignment::CENTER;
-    textFieldWidth = 0;
+
+    backgroundColor = Ili9341Color::ORANGE;
+    print(0, maxY-15, "exit");
+
+    backgroundColor = Ili9341Color::CYAN;
+    print(60, maxY-15, "surprise");
+
+    backgroundColor = Ili9341Color::YELLOW;
+    print(120, maxY-15, "scroll");
+
+    backgroundColor = Ili9341Color::GREEN;
+    print(180, maxY-15, "invert");
+
+    drawRectangle(0,0,240,15, Ili9341Color::MAROON);
+
+    writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{15, 290, 15});    // 20 pixels in the top and bottom fixed
+
     backgroundColor = Ili9341Color::BLACK;
     foregroundColor = Ili9341Color::WHITE;
-    std::string chars("24<578#$&aefgijx*ACFIOQRX");
-
-//    setFont(FontCalibri11);
-//    print(0, 90, "font Calibri11");
-//    print(0, 103, chars.c_str());
 
     setFont(FontTahoma11);
-    print(0, 116, "font Tahoma11");
-    print(0, 130, chars.c_str());
+    print(0, 30, "FontTahoma11 2345#78*");
 
     setFont(FontTahoma11b);
-    print(0, 143, "font Tahoma11b");
-    print(0, 156, chars.c_str());
+    print(0, 45, "FontTahoma11b 2345#78*");
 
     setFont(FontTahoma14b);
-    print(0, 170, "font Tahoma14b");
-    print(0, 185, chars.c_str());
+    print(0, 60, "FontTahoma14b 2345#78*");
 
-//    setFont(FontArial14b);
-//    print(0, 200, "font Arial14b");
-//    print(0, 215, chars.c_str());
+    setFont(FontTahoma15);
+    print(0, 80, "FontTahoma15 2345#78*");
 
-    chars = "24<57#$&aefgi*ACFIQR";
     setFont(FontTahoma16b);
-    print(0, 230, "font Tahoma16b");
-    print(0, 247, chars.c_str());
-
-//    chars = "24<57#$&aegi*ACFIQR";
-//    setFont(FontArial16b);
-//    print(0, 265, "font Arial16b");
-//    print(0, 283, chars.c_str());
+    print(0, 100, "FontTahoma16b 2345");
 }
 
 void Display::test3()
