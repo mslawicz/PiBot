@@ -6,11 +6,9 @@
  */
 
 #include "display.h"
-
-#include <tahoma14b.h>
-
 #include "logger.h"
 #include "program.h"
+
 #include "tahoma11.h"
 #include "tahoma11b.h"
 #include "tahoma14b.h"
