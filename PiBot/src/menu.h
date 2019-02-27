@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include "gpio.h"
+#include "fonts.h"
+#include "display.h"
 
 class MenuItem
 {
@@ -17,7 +19,12 @@ public:
     MenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin);
     ~MenuItem();
     void activateItem(std::string text);
+    void deActivateItem(void);
 private:
+    const uint8_t* const pFont = FontTahoma15;
+    const uint16_t Width = 60;
+    const uint16_t Height = 15;
+    const uint16_t InactivateColor = Ili9341Color::GRAY;
     uint16_t positionX;
     uint16_t positionY;
     uint16_t activeForegroundColor;

@@ -30,6 +30,8 @@ public:
     void test2(void);
     void test3(void);
     void setFont(const uint8_t* pNewFont);
+    void setColor(uint16_t foregroundColor, uint16_t backgroundColor);
+    void setTextFieldWidth(uint16_t width) { textFieldWidth = width; }
     template<typename... Args> void print(uint16_t positionX, uint16_t positionY, Args... args);
 private:
     uint16_t getTextWidth(std::string text);
@@ -40,8 +42,8 @@ private:
     uint8_t characterSpace;     // character-to-character space in pixels
     uint16_t textFieldWidth;    // total width of text field
     TextAlignment textAlignment;    // alignment of printed text
-    uint16_t backgroundColor;       // pixel current background color
-    uint16_t foregroundColor;       // pixel current foreground color
+    uint16_t currentBackgroundColor;       // pixel current background color
+    uint16_t currentForegroundColor;       // pixel current foreground color
     uint8_t spaceWidth;     // space (character 0x20) width in pixels
 };
 

@@ -23,8 +23,8 @@ Display::Display()
     characterSpace = 0;
     textFieldWidth = 0;
     textAlignment = TextAlignment::CENTER;
-    backgroundColor = Ili9341Color::BLACK;
-    foregroundColor = Ili9341Color::WHITE;
+    currentBackgroundColor = Ili9341Color::BLACK;
+    currentForegroundColor = Ili9341Color::WHITE;
     spaceWidth = 0;
 }
 
@@ -75,26 +75,26 @@ void Display::test2()
 
     setFont(FontTahoma15);
     textFieldWidth = 60;
-    foregroundColor = Ili9341Color::BLACK;
+    currentForegroundColor = Ili9341Color::BLACK;
 
-    backgroundColor = Ili9341Color::ORANGE;
+    currentBackgroundColor = Ili9341Color::ORANGE;
     print(0, maxY-15, "exit");
 
-    backgroundColor = Ili9341Color::CYAN;
+    currentBackgroundColor = Ili9341Color::CYAN;
     print(60, maxY-15, "surprise");
 
-    backgroundColor = Ili9341Color::YELLOW;
+    currentBackgroundColor = Ili9341Color::YELLOW;
     print(120, maxY-15, "scroll");
 
-    backgroundColor = Ili9341Color::GREEN;
+    currentBackgroundColor = Ili9341Color::GREEN;
     print(180, maxY-15, "invert");
 
     drawRectangle(0,0,240,15, Ili9341Color::MAROON);
 
     writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{15, 290, 15});    // 20 pixels in the top and bottom fixed
 
-    backgroundColor = Ili9341Color::BLACK;
-    foregroundColor = Ili9341Color::WHITE;
+    currentBackgroundColor = Ili9341Color::BLACK;
+    currentForegroundColor = Ili9341Color::WHITE;
 
     setFont(FontTahoma11);
     print(0, 30, "FontTahoma11 2345#78*");
@@ -165,6 +165,15 @@ void Display::setFont(const uint8_t* pNewFont)
 }
 
 /*
+ * sets current colors for drawing and printing
+ */
+void Display::setColor(uint16_t foregroundColor, uint16_t backgroundColor)
+{
+    currentForegroundColor = foregroundColor;
+    currentBackgroundColor = backgroundColor;
+}
+
+/*
  * render the given text to display
  */
 uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string text)
@@ -210,7 +219,7 @@ uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string
         std::vector<uint16_t> pixels;
 
         // insert left padding pixels
-        pixels.insert(pixels.end(), leftSpace, backgroundColor);
+        pixels.insert(pixels.end(), leftSpace, currentBackgroundColor);
 
         // for every character in the text
         for (unsigned charIndex = 0; charIndex < text.size(); charIndex++)
@@ -220,7 +229,7 @@ uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string
             {
                 for (uint8_t i = 0; i < characterSpace; i++)
                 {
-                    pixels.push_back(backgroundColor);
+                    pixels.push_back(currentBackgroundColor);
                 }
             }
 
@@ -275,19 +284,19 @@ uint16_t Display::renderText(uint16_t positionX, uint16_t positionY, std::string
                 if ((pixelPattern >> (pixelRaw % 8 + extraShift)) & 0x01)
                 {
                     // the pixel is foreground
-                    pixels.push_back(foregroundColor);
+                    pixels.push_back(currentForegroundColor);
                 }
                 else
                 {
                     // the pixel is background
-                    pixels.push_back(backgroundColor);
+                    pixels.push_back(currentBackgroundColor);
                 }
             }
 
         }
 
         // insert right padding pixels
-        pixels.insert(pixels.end(), rightSpace, backgroundColor);
+        pixels.insert(pixels.end(), rightSpace, currentBackgroundColor);
 
         // send raw of pixels to display
         writeDataRequest(pixelRaw == 0 ? Ili9341Registers::RAMWR : Ili9341Registers::WRCONT, pixels);
