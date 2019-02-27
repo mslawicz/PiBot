@@ -16,7 +16,6 @@ enum GpioPin
     SW5 = 4,
     SW1 = 5,
     SW6 = 17,
-    TMP_EXIT = 21,
     SW3 = 22,
     SW4 = 23,
     SW2 = 24,

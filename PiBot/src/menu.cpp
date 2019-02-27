@@ -7,17 +7,26 @@
 
 #include "menu.h"
 
-MenuItem::MenuItem(uint16_t itemPositionX, uint16_t ItemPositionY, unsigned itemKeyPin)
+MenuItem::MenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin)
     : positionX(itemPositionX)
-    , positionY(ItemPositionY)
+    , positionY(itemPositionY)
+    , activeForegroundColor(foregroundColor)
+    , activeBackgroundColor(backgroundColor)
     , keyPin(itemKeyPin)
 {
-
+    pKey = new PushButton(keyPin);
 
 }
 
 MenuItem::~MenuItem()
 {
-    // TODO Auto-generated destructor stub
+    delete pKey;
 }
 
+/*
+ * activates menu item and displays the menu text
+ */
+void MenuItem::activateItem(std::string text)
+{
+
+}
