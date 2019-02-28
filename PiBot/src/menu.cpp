@@ -8,6 +8,10 @@
 #include "menu.h"
 #include "program.h"
 
+const uint8_t* const MenuItem::pFont = FontTahoma15;
+const uint16_t MenuItem::Width = 60;
+const uint16_t MenuItem::Height = 15;
+
 MenuItem::MenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin)
     : positionX(itemPositionX)
     , positionY(itemPositionY)
@@ -16,7 +20,7 @@ MenuItem::MenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t fore
     , keyPin(itemKeyPin)
 {
     pKey = new PushButton(keyPin);
-
+    deActivateItem();
 }
 
 MenuItem::~MenuItem()

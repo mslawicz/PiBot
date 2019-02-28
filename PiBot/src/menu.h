@@ -20,10 +20,10 @@ public:
     ~MenuItem();
     void activateItem(std::string text);
     void deActivateItem(void);
+    static const uint16_t Width;
+    static const uint16_t Height;
+    static const uint8_t* const pFont;
 private:
-    const uint8_t* const pFont = FontTahoma15;
-    const uint16_t Width = 60;
-    const uint16_t Height = 15;
     const uint16_t InactivateColor = Ili9341Color::GRAY;
     uint16_t positionX;
     uint16_t positionY;

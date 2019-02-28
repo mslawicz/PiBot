@@ -39,7 +39,7 @@
 #ifndef TAHOma15_H
 #define TAHOma15_H
 
-uint8_t FontTahoma15[] = {
+const uint8_t FontTahoma15[] = {
     0x54, 0x56, // size
     0x09, // width
     0x0F, // height

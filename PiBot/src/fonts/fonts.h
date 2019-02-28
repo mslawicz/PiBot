@@ -8,10 +8,10 @@
 #ifndef SRC_FONTS_FONTS_H_
 #define SRC_FONTS_FONTS_H_
 
-extern uint8_t FontTahoma11[];
-extern uint8_t FontTahoma11b[];
-extern uint8_t FontTahoma14b[];
-extern uint8_t FontTahoma15[];
-extern uint8_t FontTahoma16b[];
+extern const uint8_t FontTahoma11[];
+extern const uint8_t FontTahoma11b[];
+extern const uint8_t FontTahoma14b[];
+extern const uint8_t FontTahoma15[];
+extern const uint8_t FontTahoma16b[];
 
 #endif /* SRC_FONTS_FONTS_H_ */

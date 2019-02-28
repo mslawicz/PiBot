@@ -95,6 +95,8 @@ class Ili9341 : public SpiDevice
 public:
     Ili9341(SerialBusId spiBusId, SerialPriority priority);
     ~Ili9341();
+    uint16_t getSizeX(void) const { return maxX; }
+    uint16_t getSizeY(void) const { return maxY; }
 protected:
     void initialize(void);
     void setActiveArea(uint16_t leftX, uint16_t topY, uint16_t rightX, uint16_t bottomY);

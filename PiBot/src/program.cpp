@@ -109,6 +109,17 @@ void Program::initialize(void)
 	// create display object
 	pDisplay = new Display();
 	pDisplay->setBackLight(0.2);
+
+	// create bottom menu items
+	uint16_t bottomMenuPositionY = pDisplay->getSizeY() - MenuItem::Height;
+	uint16_t menuRasterX = pDisplay->getSizeX() >> 2;
+	menu.emplace_back(MenuItem(0, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::RED, GpioPin::SW4));
+	menu.emplace_back(MenuItem(menuRasterX, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::GREEN, GpioPin::SW3));
+	menu.emplace_back(MenuItem(menuRasterX * 2, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::BLUE, GpioPin::SW2));
+	menu.emplace_back(MenuItem(menuRasterX * 3, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::VIOLET, GpioPin::SW1));
+	// create top menu items
+	menu.emplace_back(MenuItem(0, 0, Ili9341Color::WHITE, Ili9341Color::PURPLE, GpioPin::SW6));
+	menu.emplace_back(MenuItem(menuRasterX * 3, 0, Ili9341Color::WHITE, Ili9341Color::MAGENTA, GpioPin::SW5));
 }
 
 /*
