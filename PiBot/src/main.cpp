@@ -32,14 +32,11 @@ int main(int argc, char* argv[])
 
         Drive myDrive;  //XXX test
         myDrive.start();
+        //Program::getInstance().getMenu(0).activateItem("exit");
 
-        Program::getInstance().getDisplay()->test2();
         while(!exitButton.hasBeenPressed())
         {
-            if(scroll.isPressed())
-            {
-                Program::getInstance().getDisplay()->test1();
-            }
+
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 

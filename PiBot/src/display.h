@@ -10,6 +10,7 @@
 
 #include "spi.h"
 #include "ili9341.h"
+#include "menu.h"
 #include <sstream>
 
 enum TextAlignment
@@ -26,6 +27,8 @@ public:
     ~Display();
     void setBackLight(float level);
     void drawRectangle(uint16_t positionX, uint16_t positionY, uint16_t width, uint16_t height, uint16_t color);
+    void clearScreen(uint16_t positionY, uint16_t height);
+    void clearScreen(void);
     void test1(void);
     void test2(void);
     void test3(void);

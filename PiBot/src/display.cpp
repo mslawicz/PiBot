@@ -324,3 +324,19 @@ template<typename First, typename... Rest> void Display::takeNextArgument(std::s
     textStream << arg0;
     takeNextArgument(textStream, args...);
 }
+
+/*
+ * clears screen - height raws from positionY
+ */
+void Display::clearScreen(uint16_t positionY, uint16_t height)
+{
+    drawRectangle(0, positionY, maxX, height, Ili9341Color::BLACK);
+}
+
+/*
+ * clears the whole screen
+ */
+void Display::clearScreen(void)
+{
+    clearScreen(0, maxY);
+}

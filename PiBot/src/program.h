@@ -33,6 +33,7 @@ public:
 	bool isOptionProvided(std::string option) const {return options.find(option) != options.end();}
 	// gets pointer to display object
 	Display* getDisplay(void) const { return pDisplay; }
+	MenuItem& getMenu(unsigned item) { return menu[item]; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
