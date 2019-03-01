@@ -52,7 +52,7 @@ void ButtonMenuItem::deActivateItem(void)
 /*
  * return true if pushbutton has been pressed and menu is active
  */
-bool ButtonMenuItem::hasBeenPressed(void)
+bool ButtonMenuItem::keyHasBeenPressed(void)
 {
     return pButton->hasBeenPressed() && isActive;
 }

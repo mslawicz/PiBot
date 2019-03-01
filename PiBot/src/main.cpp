@@ -5,7 +5,6 @@
  *      Author: Marcin
  */
 
-#include "gpio.h"
 #include "program.h"
 #include "logger.h"
 #include "drive.h"	//XXX for test
@@ -24,17 +23,13 @@ int main(int argc, char* argv[])
 
 	{
 	    // scope of test objects
-        PushButton scroll(GpioPin::SW2);
-        PushButton exitButton(GpioPin::SW4);
-
-
-
 
         Drive myDrive;  //XXX test
         myDrive.start();
         Program::getInstance().getButtonMenu(0).activateItem("exit");
+        Program::getInstance().getButtonMenu(3).activateItem("menu");
 
-        while(!exitButton.hasBeenPressed())
+        while(!Program::getInstance().getButtonMenu(0).keyHasBeenPressed())
         {
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));

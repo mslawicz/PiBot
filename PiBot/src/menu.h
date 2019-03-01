@@ -20,7 +20,7 @@ public:
     ~ButtonMenuItem();
     void activateItem(std::string text);
     void deActivateItem(void);
-    bool hasBeenPressed(void);
+    bool keyHasBeenPressed(void);
     static const uint16_t Width;
     static const uint16_t Height;
     static const uint8_t* const pFont;
