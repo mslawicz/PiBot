@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
         Drive myDrive;  //XXX test
         myDrive.start();
-        Program::getInstance().getMenu(0).activateItem("exit");
+        Program::getInstance().getButtonMenu(0).activateItem("exit");
 
         while(!exitButton.hasBeenPressed())
         {

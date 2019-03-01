@@ -114,14 +114,14 @@ void Program::initialize(void)
 	// create bottom menu items
 	uint16_t bottomMenuPositionY = pDisplay->getSizeY() - ButtonMenuItem::Height;
 	uint16_t menuRasterX = pDisplay->getSizeX() >> 2;
-	menu.reserve(6);
-	menu.emplace_back(0, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::RED, GpioPin::SW4);
-	menu.emplace_back(menuRasterX, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::GREEN, GpioPin::SW3);
-	menu.emplace_back(menuRasterX * 2, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::BLUE, GpioPin::SW2);
-	menu.emplace_back(menuRasterX * 3, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::VIOLET, GpioPin::SW1);
+	buttonMenu.reserve(6);
+	buttonMenu.emplace_back(0, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::RED, GpioPin::SW4);
+	buttonMenu.emplace_back(menuRasterX, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::GREEN, GpioPin::SW3);
+	buttonMenu.emplace_back(menuRasterX * 2, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::BLUE, GpioPin::SW2);
+	buttonMenu.emplace_back(menuRasterX * 3, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::VIOLET, GpioPin::SW1);
 	// create top menu items
-	menu.emplace_back(0, 0, Ili9341Color::WHITE, Ili9341Color::PURPLE, GpioPin::SW6);
-	menu.emplace_back(menuRasterX * 3, 0, Ili9341Color::WHITE, Ili9341Color::MAGENTA, GpioPin::SW5);
+	buttonMenu.emplace_back(0, 0, Ili9341Color::WHITE, Ili9341Color::PURPLE, GpioPin::SW6);
+	buttonMenu.emplace_back(menuRasterX * 3, 0, Ili9341Color::WHITE, Ili9341Color::MAGENTA, GpioPin::SW5);
 }
 
 /*
