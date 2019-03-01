@@ -165,7 +165,7 @@ void SerialBus::unregisterDevice(SerialDevice* pDevice)
         if(std::get<1>(*iDevice) == pDevice)
         {
             devices.erase(iDevice);
-            Logger::getInstance().logEvent(INFO, "unregistering serial device: bus=", names.find(busId)->second, ", address=0x", std::hex, pDevice->address, ", priority=0x", pDevice->priority );
+            Logger::getInstance().logEvent(INFO, "unregistering serial device: bus=", names.find(busId)->second, ", address=0x", std::hex, (unsigned)pDevice->address, ", priority=0x", pDevice->priority );
             break;
         }
     }
