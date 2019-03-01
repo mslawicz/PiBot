@@ -19,13 +19,13 @@ ButtonMenuItem::ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, u
     , activeBackgroundColor(backgroundColor)
     , keyPin(itemKeyPin)
 {
-    pKey = new PushButton(keyPin);
+    pButton = new PushButton(keyPin);
     deActivateItem();
 }
 
 ButtonMenuItem::~ButtonMenuItem()
 {
-    delete pKey;
+    delete pButton;
 }
 
 /*
@@ -37,6 +37,7 @@ void ButtonMenuItem::activateItem(std::string text)
     Program::getInstance().getDisplay()->setColor(activeForegroundColor, activeBackgroundColor);
     Program::getInstance().getDisplay()->setFont(pFont);
     Program::getInstance().getDisplay()->print(positionX, positionY, text.c_str());
+    isActive = true;
 }
 
 /*
@@ -45,4 +46,13 @@ void ButtonMenuItem::activateItem(std::string text)
 void ButtonMenuItem::deActivateItem(void)
 {
     Program::getInstance().getDisplay()->drawRectangle(positionX, positionY, Width, Height, InactivateColor);
+    isActive = false;
+}
+
+/*
+ * return true if pushbutton has been pressed and menu is active
+ */
+bool ButtonMenuItem::hasBeenPressed(void)
+{
+    return pButton->hasBeenPressed() && isActive;
 }

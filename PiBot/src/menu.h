@@ -20,6 +20,7 @@ public:
     ~ButtonMenuItem();
     void activateItem(std::string text);
     void deActivateItem(void);
+    bool hasBeenPressed(void);
     static const uint16_t Width;
     static const uint16_t Height;
     static const uint8_t* const pFont;
@@ -30,7 +31,8 @@ private:
     uint16_t activeForegroundColor;
     uint16_t activeBackgroundColor;
     GpioPin keyPin;
-    PushButton* pKey;
+    PushButton* pButton;
+    bool isActive;
 };
 
 #endif /* SRC_MENU_H_ */
