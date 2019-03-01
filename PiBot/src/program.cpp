@@ -112,7 +112,7 @@ void Program::initialize(void)
 	pDisplay->setBackLight(0.2);
 
 	// create bottom menu items
-	uint16_t bottomMenuPositionY = pDisplay->getSizeY() - MenuItem::Height;
+	uint16_t bottomMenuPositionY = pDisplay->getSizeY() - ButtonMenuItem::Height;
 	uint16_t menuRasterX = pDisplay->getSizeX() >> 2;
 	menu.reserve(6);
 	menu.emplace_back(0, bottomMenuPositionY, Ili9341Color::WHITE, Ili9341Color::RED, GpioPin::SW4);

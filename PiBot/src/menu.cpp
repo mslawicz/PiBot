@@ -8,11 +8,11 @@
 #include "menu.h"
 #include "program.h"
 
-const uint8_t* const MenuItem::pFont = FontTahoma15;
-const uint16_t MenuItem::Width = 60;
-const uint16_t MenuItem::Height = 15;
+const uint8_t* const ButtonMenuItem::pFont = FontTahoma15;
+const uint16_t ButtonMenuItem::Width = 60;
+const uint16_t ButtonMenuItem::Height = 15;
 
-MenuItem::MenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin)
+ButtonMenuItem::ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin)
     : positionX(itemPositionX)
     , positionY(itemPositionY)
     , activeForegroundColor(foregroundColor)
@@ -23,7 +23,7 @@ MenuItem::MenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t fore
     deActivateItem();
 }
 
-MenuItem::~MenuItem()
+ButtonMenuItem::~ButtonMenuItem()
 {
     delete pKey;
 }
@@ -31,7 +31,7 @@ MenuItem::~MenuItem()
 /*
  * activates menu item and displays the menu text
  */
-void MenuItem::activateItem(std::string text)
+void ButtonMenuItem::activateItem(std::string text)
 {
     Program::getInstance().getDisplay()->setTextFieldWidth(Width);
     Program::getInstance().getDisplay()->setColor(activeForegroundColor, activeBackgroundColor);
@@ -42,7 +42,7 @@ void MenuItem::activateItem(std::string text)
 /*
  * deactivates menu item and displays inactivate-state rectangle
  */
-void MenuItem::deActivateItem(void)
+void ButtonMenuItem::deActivateItem(void)
 {
     Program::getInstance().getDisplay()->drawRectangle(positionX, positionY, Width, Height, InactivateColor);
 }

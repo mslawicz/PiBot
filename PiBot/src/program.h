@@ -33,7 +33,7 @@ public:
 	bool isOptionProvided(std::string option) const {return options.find(option) != options.end();}
 	// gets pointer to display object
 	Display* getDisplay(void) const { return pDisplay; }
-	MenuItem& getMenu(unsigned item) { return menu[item]; }
+	ButtonMenuItem& getMenu(unsigned item) { return menu[item]; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
@@ -41,7 +41,7 @@ private:
 	std::map<std::string, std::vector<std::string>> options;
 	PCA9685* pDevicePCA9685;
 	Display* pDisplay;
-	std::vector<MenuItem> menu;
+	std::vector<ButtonMenuItem> menu;
 };
 
 #endif /* SRC_PROGRAM_H_ */

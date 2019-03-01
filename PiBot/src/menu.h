@@ -13,11 +13,11 @@
 #include "fonts.h"
 #include "display.h"
 
-class MenuItem
+class ButtonMenuItem
 {
 public:
-    MenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin);
-    ~MenuItem();
+    ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin);
+    ~ButtonMenuItem();
     void activateItem(std::string text);
     void deActivateItem(void);
     static const uint16_t Width;
