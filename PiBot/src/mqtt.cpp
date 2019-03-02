@@ -10,12 +10,12 @@
 MQTT::MQTT(std::string id)
     : mosquittopp(id.c_str())
 {
-    // TODO Auto-generated constructor stub
+    mosqpp::lib_init();
 
 }
 
 MQTT::~MQTT()
 {
-    // TODO Auto-generated destructor stub
+    mosqpp::lib_cleanup();
 }
 
