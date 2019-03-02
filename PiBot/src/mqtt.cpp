@@ -7,7 +7,8 @@
 
 #include "mqtt.h"
 
-MQTT::MQTT()
+MQTT::MQTT(std::string id)
+    : mosquittopp(id.c_str())
 {
     // TODO Auto-generated constructor stub
 

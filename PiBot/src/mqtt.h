@@ -9,11 +9,12 @@
 #define SRC_MQTT_H_
 
 #include <mosquittopp.h>
+#include <iostream>
 
-class MQTT
+class MQTT : public mosqpp::mosquittopp
 {
 public:
-    MQTT();
+    MQTT(std::string id);
     ~MQTT();
 };
 
