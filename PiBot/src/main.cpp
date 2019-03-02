@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 	{
 	    // scope of test objects
 
-	    MQTT testMqttClient("PiBot");
+	    MQTT testMqttClient("PiBot", "192.168.1.9");
         Drive myDrive;  //XXX test
         myDrive.start();
         Program::getInstance().getButtonMenu(0).activateItem("exit");
