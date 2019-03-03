@@ -22,6 +22,7 @@ private:
     void on_disconnect(int rc) override;
     void on_subscribe(int mid, int qos_count, const int *granted_qos) override;
     void on_publish(int mid) override;
+    void on_message(const struct mosquitto_message *message) override;
     void subscribe(int *mid, std::string topic);
     std::string address;
     int port;

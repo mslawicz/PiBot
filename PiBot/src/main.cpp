@@ -31,16 +31,17 @@ int main(int argc, char* argv[])
         Program::getInstance().getButtonMenu(0).activateItem("exit");
         Program::getInstance().getButtonMenu(3).activateItem("menu");
 
-        while(Program::getInstance().getButtonMenu(0).keyHasBeenPressed())
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::string msg = "hello Pi";
+        testMqttClient.publish(nullptr, "PiBot", msg.length(), msg.c_str());
+        while(!Program::getInstance().getButtonMenu(0).keyHasBeenPressed())
         {
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::string msg = "hello Pi";
-        testMqttClient.publish(nullptr, "PiBot/test", msg.length(), msg.c_str());
-        std::this_thread::sleep_for(std::chrono::milliseconds(900));
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         myDrive.stop();
 	}
 

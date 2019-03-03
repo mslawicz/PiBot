@@ -86,7 +86,7 @@ void MQTT::on_connect(int rc)
     else
     {
         Logger::getInstance().logEvent(INFO, "MQTT: connected to ", address.c_str(), ":", port);
-        subscribe(nullptr, "PiBot/#");
+        subscribe(nullptr, "PiBot");
     }
 }
 
@@ -119,6 +119,14 @@ void MQTT::on_subscribe(int mid, int qos_count, const int *granted_qos)
 void MQTT::on_publish(int mid)
 {
     Logger::getInstance().logEvent(INFO, "MQTT: published message id=", mid);
+}
+
+/*
+ * handles incoming MQTT message
+ */
+void MQTT::on_message(const struct mosquitto_message *message)
+{
+    Logger::getInstance().logEvent(INFO, "MQTT: received message id=", message->mid, ": ", reinterpret_cast<char*>(message->payload));
 }
 
 /*
