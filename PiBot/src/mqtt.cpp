@@ -12,13 +12,30 @@ MQTT::MQTT(std::string id, std::string hostAddress)
     : mosquittopp(id.c_str())
     , address(hostAddress)
 {
+    port = 1883;
     mosqpp::lib_init();
     int libVersion = mosqpp::lib_version(nullptr, nullptr, nullptr);
     Logger::getInstance().logEvent(INFO, "Mosquitto library version ", libVersion / 1000000, ".", (libVersion / 1000) % 1000, ".", libVersion % 1000, " initialized");
     // non-blocking connection to broker
-    connect_async(address.c_str());
-    // start thread managing connection
-    loop_start();
+    int error = connect_async(address.c_str(), port);
+    if(error)
+    {
+        Logger::getInstance().logEvent(ERROR, "MQTT: connection request to ", address.c_str(), ":", port, " returned error code=", error);
+    }
+    else
+    {
+        Logger::getInstance().logEvent(INFO, "MQTT: request connection to ", address.c_str(), ":", port);
+        // connection request OK, start thread to process network traffic
+        error = loop_start();
+        if(error)
+        {
+            Logger::getInstance().logEvent(ERROR, "MQTT: loop not started (error code=", error, ")");
+        }
+        else
+        {
+            Logger::getInstance().logEvent(INFO, "MQTT: loop started");
+        }
+    }
 }
 
 MQTT::~MQTT()
@@ -37,11 +54,11 @@ void MQTT::on_connect(int rc)
 {
     if(rc)
     {
-        Logger::getInstance().logEvent(ERROR, "MQTT: failed to connect to ", address.c_str(), ":1883 (code=", rc, ")");
+        Logger::getInstance().logEvent(ERROR, "MQTT: failed to connect to ", address.c_str(), ":", port, " (code=", rc, ")");
     }
     else
     {
-        Logger::getInstance().logEvent(INFO, "MQTT: connected to ", address.c_str(), ":1883");
+        Logger::getInstance().logEvent(INFO, "MQTT: connected to ", address.c_str(), ":", port);
     }
     //TODO: made subscriptions here
 }

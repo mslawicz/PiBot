@@ -21,6 +21,7 @@ private:
     void on_disconnect(int rc) override;
     void on_subscribe(int mid, int qos_count, const int *granted_qos) override;
     std::string address;
+    int port;
 };
 
 #endif /* SRC_MQTT_H_ */
