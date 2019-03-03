@@ -86,8 +86,8 @@ void MQTT::on_connect(int rc)
     else
     {
         Logger::getInstance().logEvent(INFO, "MQTT: connected to ", address.c_str(), ":", port);
+        subscribe(nullptr, "PiBot/#");
     }
-    //TODO: made subscriptions here
 }
 
 /*
@@ -111,4 +111,40 @@ void MQTT::on_disconnect(int rc)
 void MQTT::on_subscribe(int mid, int qos_count, const int *granted_qos)
 {
     Logger::getInstance().logEvent(INFO, "MQTT: subscribed with id=", mid);
+}
+
+/*
+ * callback after publishing a message
+ */
+void MQTT::on_publish(int mid)
+{
+    Logger::getInstance().logEvent(INFO, "MQTT: published message id=", mid);
+}
+
+/*
+ * subscribes to a topic
+ */
+void MQTT::subscribe(int *mid, std::string topic)
+{
+    int error = mosqpp::mosquittopp::subscribe(mid, topic.c_str());
+    switch(error)
+    {
+    case MOSQ_ERR_SUCCESS:
+        Logger::getInstance().logEvent(INFO, "MQTT: subscribed to topic '", topic.c_str(), "'");
+        break;
+    case MOSQ_ERR_NO_CONN:
+        Logger::getInstance().logEvent(ERROR, "MQTT: subscription request without connection");
+        break;
+    default:
+        Logger::getInstance().logEvent(ERROR, "MQTT: subscription error");
+        break;
+    }
+}
+
+/*
+ * publish a message
+ */
+void MQTT::publish(int *mid, std::string topic, int payloadlen, const void* payload)
+{
+    mosqpp::mosquittopp::publish(mid, topic.c_str(), payloadlen, payload);
 }
