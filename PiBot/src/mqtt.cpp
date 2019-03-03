@@ -40,9 +40,36 @@ MQTT::MQTT(std::string id, std::string hostAddress)
 
 MQTT::~MQTT()
 {
-    disconnect();
+    int error = disconnect();
+    switch(error)
+    {
+    case MOSQ_ERR_SUCCESS:
+        Logger::getInstance().logEvent(INFO, "MQTT: disconnection request");
+        break;
+    case MOSQ_ERR_NO_CONN:
+        Logger::getInstance().logEvent(WARNING, "MQTT: disconnection request without connection to a broker");
+        break;
+    default:
+        Logger::getInstance().logEvent(ERROR, "MQTT: disconnection request error");
+        break;
+    }
+
     // end the connection thread
-    loop_stop();
+    Logger::getInstance().logEvent(INFO, "MQTT: loop stop request");
+    error = loop_stop();
+    switch(error)
+    {
+    case MOSQ_ERR_SUCCESS:
+        Logger::getInstance().logEvent(INFO, "MQTT: loop stopped");
+        break;
+    case MOSQ_ERR_NO_CONN:
+        Logger::getInstance().logEvent(WARNING, "MQTT: loop thread was not found");
+        break;
+    default:
+        Logger::getInstance().logEvent(ERROR, "MQTT: loop stop request error");
+        break;
+    }
+
     // cleanup mosquitto
     mosqpp::lib_cleanup();
 }
@@ -83,5 +110,5 @@ void MQTT::on_disconnect(int rc)
  */
 void MQTT::on_subscribe(int mid, int qos_count, const int *granted_qos)
 {
-    Logger::getInstance().logEvent(INFO, "MQTT: subscribed");
+    Logger::getInstance().logEvent(INFO, "MQTT: subscribed with id=", mid);
 }
