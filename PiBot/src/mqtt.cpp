@@ -7,6 +7,7 @@
 
 #include "mqtt.h"
 #include "logger.h"
+#include "program.h"
 
 MQTT::MQTT(std::string id, std::string hostAddress)
     : mosquittopp(id.c_str())
@@ -127,6 +128,9 @@ void MQTT::on_publish(int mid)
 void MQTT::on_message(const struct mosquitto_message *message)
 {
     Logger::getInstance().logEvent(INFO, "MQTT: received message id=", message->mid, ": ", reinterpret_cast<char*>(message->payload));
+    //test
+    std::string msg(reinterpret_cast<char*>(message->payload));
+    Program::getInstance().getDisplay()->drawRectangle(80, 100, 80, 80, msg == "1" ? Ili9341Color::GREEN : Ili9341Color::RED);
 }
 
 /*
