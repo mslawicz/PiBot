@@ -56,3 +56,22 @@ bool ButtonMenuItem::keyHasBeenPressed(void)
 {
     return pButton->hasBeenPressed() && isActive;
 }
+
+/*
+ * screen menu item constructor
+ */
+ScreenMenuItem::ScreenMenuItem(std::string itemText)
+    : text(itemText)
+{
+
+}
+
+/*
+ * screen menu constructor
+ */
+ScreenMenu::ScreenMenu(std::string menuTitle, std::vector<ScreenMenuItem> menuItems)
+    : title(menuTitle)
+    , items(menuItems)
+{
+    cursorPosition = 0;
+}

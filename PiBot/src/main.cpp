@@ -11,6 +11,7 @@
 #include "display.h" //XXX test
 #include "ili9341.h"
 #include "mqtt.h"
+#include "menu.h" // XXX test
 #include <iostream>
 #include <chrono>
 #include <cmath> //XXX for test
@@ -25,15 +26,17 @@ int main(int argc, char* argv[])
 	{
 	    // scope of test objects
 
-	    MQTT testMqttClient("PiBot", "192.168.1.9");
-        Drive myDrive;  //XXX test
-        myDrive.start();
         Program::getInstance().getButtonMenu(0).activateItem("exit");
         Program::getInstance().getButtonMenu(3).activateItem("menu");
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        std::string msg = "hello Pi";
-        testMqttClient.publish(nullptr, "PiBot", msg.length(), msg.c_str());
+        std::vector<ScreenMenuItem> items =
+        {
+                ScreenMenuItem("menu item 1"),
+                ScreenMenuItem("menu item 2"),
+                ScreenMenuItem("menu item 3")
+        };
+        ScreenMenu testMenu("Test Menu", items);
+
         while(!Program::getInstance().getButtonMenu(0).keyHasBeenPressed())
         {
 
@@ -42,7 +45,6 @@ int main(int argc, char* argv[])
 
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        myDrive.stop();
 	}
 
 	Program::getInstance().terminate();

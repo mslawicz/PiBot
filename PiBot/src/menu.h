@@ -35,4 +35,22 @@ private:
     bool isActive;
 };
 
+class ScreenMenuItem
+{
+public:
+    ScreenMenuItem(std::string itemText);
+private:
+    std::string text;
+};
+
+class ScreenMenu
+{
+public:
+    ScreenMenu(std::string menuTitle, std::vector<ScreenMenuItem> menuItems);
+private:
+    std::string title;
+    std::vector<ScreenMenuItem> items;
+    uint8_t cursorPosition;
+};
+
 #endif /* SRC_MENU_H_ */
