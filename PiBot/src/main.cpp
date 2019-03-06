@@ -10,7 +10,7 @@
 #include "drive.h"	//XXX for test
 #include "display.h" //XXX test
 #include "ili9341.h"
-#include "mqtt.h"
+#include "gpio.h"
 #include <iostream>
 #include <chrono>
 #include <cmath> //XXX for test
@@ -24,9 +24,13 @@ int main(int argc, char* argv[])
 
 	{
 	    // scope of test objects
+	    PushButton exitButton(GpioPin::SW4);
 
+	    while(!exitButton.hasBeenPressed())
+	    {
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	    }
+
 	}
 
 	Program::getInstance().terminate();

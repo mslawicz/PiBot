@@ -12,7 +12,7 @@
 #include "i2c.h"
 #include "PCA9685.h"
 #include "display.h"
-#include "menu.h"
+#include "gui.h"
 #include <vector>
 #include <map>
 
@@ -40,6 +40,7 @@ private:
 	std::map<std::string, std::vector<std::string>> options;
 	PCA9685* pDevicePCA9685;
 	Display* pDisplay;
+	GUI* pGui;
 };
 
 #endif /* SRC_PROGRAM_H_ */

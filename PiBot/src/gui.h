@@ -11,6 +11,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
+#include <thread>
 
 class GUI
 {
@@ -23,6 +24,7 @@ private:
     std::condition_variable guiEvent;
     std::chrono::milliseconds timeout;
     bool exitHandler;
+    std::thread* pGuiHandlerThread;
 };
 
 #endif /* SRC_GUI_H_ */
