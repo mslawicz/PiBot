@@ -25,18 +25,8 @@ int main(int argc, char* argv[])
 	{
 	    // scope of test objects
 
-        Program::getInstance().getButtonMenu(0).activateItem("exit");
-        Program::getInstance().getButtonMenu(3).activateItem("menu");
 
-
-        while(!Program::getInstance().getButtonMenu(0).keyHasBeenPressed())
-        {
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 
 	Program::getInstance().terminate();
