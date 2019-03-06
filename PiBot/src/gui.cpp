@@ -12,7 +12,7 @@
 
 GUI::GUI()
 {
-    timeout = std::chrono::milliseconds(200);
+    timeout = std::chrono::milliseconds(1000);
     exitHandler = false;
     pGuiHandlerThread = new std::thread(&GUI::handler, this);
 }
@@ -40,7 +40,6 @@ void GUI::handler(void)
         lock.unlock();
         Logger::getInstance().logEvent(INFO, "GUI loop continue");
 
-        exitHandler = true; //test
 
     } while (!exitHandler);
     Logger::getInstance().logEvent(INFO, "GUI handler exit");
