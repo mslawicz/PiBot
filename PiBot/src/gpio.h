@@ -12,10 +12,11 @@
 
 enum GpioPin
 {
-    GYRO_INT = 4,   //TODO change to another one
+       //TODO change to another one
     SW5 = 4,
     SW1 = 5,
     SW6 = 17,
+    GYRO_INT = 18,
     POWER_OFF = 21,
     SW3 = 22,
     SW4 = 23,
