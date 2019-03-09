@@ -69,6 +69,7 @@ enum Ili9341Color
     WHITE = 0xFFFF,
     GRAY = 0x7BEF,
     LIGHT_GRAY = 0xC618,
+    DARK_GRAY = 0x39E7,
     GREEN = 0x07E0,
     LIME = 0x87E0,
     BLUE = 0x001F,

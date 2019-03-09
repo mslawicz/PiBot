@@ -13,8 +13,10 @@
 #include "PCA9685.h"
 #include "display.h"
 #include "gui.h"
+#include "menu.h"
 #include <vector>
 #include <map>
+#include <unordered_map>
 
 // singleton class of this program
 // it provides necessary initializations
@@ -41,6 +43,7 @@ private:
 	PCA9685* pDevicePCA9685;
 	Display* pDisplay;
 	GUI* pGui;
+	std::unordered_map<GpioPin, ButtonMenuItem> pushbuttonMenu;
 };
 
 #endif /* SRC_PROGRAM_H_ */

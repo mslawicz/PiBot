@@ -112,6 +112,15 @@ void Program::initialize(void)
 	pDisplay->clearScreen();
 	pDisplay->setBackLight(0.2);
 
+	// create pushbutton menu items
+	uint16_t bottomPositionY = pDisplay->getSizeY() - ButtonMenuItem::Height;
+	pushbuttonMenu.emplace(GpioPin::SW4, ButtonMenuItem(0, bottomPositionY, GpioPin::SW4));
+	pushbuttonMenu.emplace(GpioPin::SW3, ButtonMenuItem(ButtonMenuItem::Width, bottomPositionY, GpioPin::SW3));
+	pushbuttonMenu.emplace(GpioPin::SW2, ButtonMenuItem(ButtonMenuItem::Width * 2, bottomPositionY, GpioPin::SW2));
+	pushbuttonMenu.emplace(GpioPin::SW1, ButtonMenuItem(ButtonMenuItem::Width * 3, bottomPositionY, GpioPin::SW1));
+	pushbuttonMenu.emplace(GpioPin::SW6, ButtonMenuItem(0, 0, GpioPin::SW6));
+	pushbuttonMenu.emplace(GpioPin::SW5, ButtonMenuItem(ButtonMenuItem::Width * 3, 0, GpioPin::SW6));
+
 	// create graphic user interface object
 	pGui = new GUI();
 }
