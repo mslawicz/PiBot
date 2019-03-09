@@ -78,7 +78,7 @@ void ButtonMenuItem::pushbuttonAlertCallback(int gpio, int level, uint32_t tick,
 */
 void ButtonMenuItem::pushbuttonService(int gpio, int level, uint32_t tick)
 {
-    Logger::getInstance().logEvent(INFO, "pushbutton pressed: ", gpio, ", level=", level);
+    Logger::getInstance().logEvent(INFO, "pushbutton state change: ", gpio, ", level=", level);
 }
 
 /*
