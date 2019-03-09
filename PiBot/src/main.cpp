@@ -24,9 +24,8 @@ int main(int argc, char* argv[])
 
 	{
 	    // scope of test objects
-	    PushButton exitButton(GpioPin::SW4);
 
-	    while(!exitButton.hasBeenPressed())
+	    while(0)
 	    {
 
 	    }

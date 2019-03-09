@@ -16,7 +16,7 @@
 class ButtonMenuItem
 {
 public:
-    ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor, GpioPin itemKeyPin);
+    ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor);
     ~ButtonMenuItem();
     void activateItem(std::string text);
     void deActivateItem(void);
@@ -31,7 +31,6 @@ private:
     uint16_t activeForegroundColor;
     uint16_t activeBackgroundColor;
     GpioPin keyPin;
-    PushButton* pButton;
     bool isActive;
 };
 
