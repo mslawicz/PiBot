@@ -24,6 +24,7 @@ Program::Program()
 {
     pDevicePCA9685 = nullptr;
     pDisplay = nullptr;
+    pGui = nullptr;
 }
 
 Program::~Program()
@@ -91,7 +92,7 @@ void Program::initialize(void)
 	Logger::getInstance().start(definedLevel);
 
 	GPIO::initialize();
-	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", gpioHardwareRevision());
+	Logger::getInstance().logEvent(INFO, "GPIO hardware revision: ", std::hex, gpioHardwareRevision());
 
     // create serial buses
     new SerialBus(SerialBusId::I2C1);
