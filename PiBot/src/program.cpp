@@ -119,7 +119,7 @@ void Program::initialize(void)
 	pushbuttonMenu.emplace(GpioPin::SW2, ButtonMenuItem(ButtonMenuItem::Width * 2, bottomPositionY, GpioPin::SW2));
 	pushbuttonMenu.emplace(GpioPin::SW1, ButtonMenuItem(ButtonMenuItem::Width * 3, bottomPositionY, GpioPin::SW1));
 	pushbuttonMenu.emplace(GpioPin::SW6, ButtonMenuItem(0, 0, GpioPin::SW6));
-	pushbuttonMenu.emplace(GpioPin::SW5, ButtonMenuItem(ButtonMenuItem::Width * 3, 0, GpioPin::SW6));
+	pushbuttonMenu.emplace(GpioPin::SW5, ButtonMenuItem(ButtonMenuItem::Width * 3, 0, GpioPin::SW5));
 
 	// create graphic user interface object
 	pGui = new GUI();

@@ -17,7 +17,10 @@ ButtonMenuItem::ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, G
     , positionY(itemPositionY)
     , keyPin(itemKeyPin)
 {
-    deActivateItem();
+    // set the pushbutton pin as input with pullup
+    GPIO(itemKeyPin, PI_INPUT, PI_PUD_UP);
+    deActivate();
+    buttonPressed = false;
 }
 
 ButtonMenuItem::~ButtonMenuItem()
@@ -27,7 +30,7 @@ ButtonMenuItem::~ButtonMenuItem()
 /*
  * activates menu item and displays the menu text
  */
-void ButtonMenuItem::activateItem(std::string text, uint16_t foregroundColor, uint16_t backgroundColor)
+void ButtonMenuItem::activate(std::string text, uint16_t foregroundColor, uint16_t backgroundColor)
 {
     Program::getInstance().getDisplay()->setTextFieldWidth(Width);
     Program::getInstance().getDisplay()->setColor(foregroundColor, backgroundColor);
@@ -42,11 +45,11 @@ void ButtonMenuItem::activateItem(std::string text, uint16_t foregroundColor, ui
 /*
  * deactivates menu item and displays inactivate-state rectangle
  */
-void ButtonMenuItem::deActivateItem(void)
+void ButtonMenuItem::deActivate(void)
 {
     isActive = false;
     //disable pushbutton interrupts
-    gpioSetAlertFuncEx(GpioPin::SW1, nullptr, this);
+    gpioSetAlertFuncEx(keyPin, nullptr, this);
     Program::getInstance().getDisplay()->drawRectangle(positionX, positionY, Width, Height, InactivateColor);
 }
 
@@ -79,6 +82,21 @@ void ButtonMenuItem::pushbuttonAlertCallback(int gpio, int level, uint32_t tick,
 void ButtonMenuItem::pushbuttonService(int gpio, int level, uint32_t tick)
 {
     Logger::getInstance().logEvent(INFO, "pushbutton state change: ", gpio, ", level=", level);
+    if (level == 0)
+    {
+        // the button is pressed at this moment
+        buttonPressed = true;
+    }
+}
+
+/*
+ * test on pressing the button since the last check
+ */
+bool ButtonMenuItem::hasBeenPressed(void)
+{
+    bool stateSinceLastCheck = buttonPressed;
+    buttonPressed = false;
+    return stateSinceLastCheck;
 }
 
 /*

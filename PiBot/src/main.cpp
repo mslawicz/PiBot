@@ -21,15 +21,20 @@ int main(int argc, char* argv[])
     Logger::getInstance().logEvent(INFO, "PiBot started");
 	Program::getInstance().parseArguments(argc, argv);
 	Program::getInstance().initialize();
+	Program::getInstance().getPushbutton(GpioPin::SW5).activate("exit", Ili9341Color::WHITE, Ili9341Color::MAGENTA);
 
 	{
 	    // scope of test objects
+	    Program::getInstance().getPushbutton(GpioPin::SW4).activate("return", Ili9341Color::WHITE, Ili9341Color::RED);
+	    Program::getInstance().getPushbutton(GpioPin::SW2).activate("test", Ili9341Color::WHITE, Ili9341Color::BLUE);
 
-	    while(0)
+	    while(!Program::getInstance().getPushbutton(GpioPin::SW5).hasBeenPressed())
 	    {
 
 	    }
-	    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+	    Program::getInstance().getPushbutton(GpioPin::SW4).deActivate();
 	}
 
 	Program::getInstance().terminate();

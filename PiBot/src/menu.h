@@ -18,8 +18,9 @@ class ButtonMenuItem
 public:
     ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, GpioPin itemKeyPin);
     ~ButtonMenuItem();
-    void activateItem(std::string text, uint16_t foregroundColor, uint16_t backgroundColor);
-    void deActivateItem(void);
+    void activate(std::string text, uint16_t foregroundColor, uint16_t backgroundColor);
+    void deActivate(void);
+    bool hasBeenPressed(void);
     static const uint16_t Width;
     static const uint16_t Height;
     static const uint8_t* const pFont;
@@ -33,6 +34,7 @@ private:
     uint16_t positionY;
     GpioPin keyPin;
     bool isActive;
+    volatile bool buttonPressed;
 };
 
 class ScreenMenuItem
