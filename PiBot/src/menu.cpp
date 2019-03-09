@@ -33,6 +33,9 @@ void ButtonMenuItem::activateItem(std::string text, uint16_t foregroundColor, ui
     Program::getInstance().getDisplay()->setColor(foregroundColor, backgroundColor);
     Program::getInstance().getDisplay()->setFont(pFont);
     Program::getInstance().getDisplay()->print(positionX, positionY, text.c_str());
+    // enable pushbutton interrupts
+    gpioGlitchFilter(keyPin, 20000);
+    gpioSetAlertFuncEx(keyPin, ButtonMenuItem::pushbuttonAlertCallback, this);
     isActive = true;
 }
 
@@ -41,10 +44,42 @@ void ButtonMenuItem::activateItem(std::string text, uint16_t foregroundColor, ui
  */
 void ButtonMenuItem::deActivateItem(void)
 {
-    Program::getInstance().getDisplay()->drawRectangle(positionX, positionY, Width, Height, InactivateColor);
     isActive = false;
+    //disable pushbutton interrupts
+    gpioSetAlertFuncEx(GpioPin::SW1, nullptr, this);
+    Program::getInstance().getDisplay()->drawRectangle(positionX, positionY, Width, Height, InactivateColor);
 }
 
+/*
+ * callback function for pushbutton generated interrupts
+ * it must be a static method, but the pointer to drive object is passed as an argument
+ * Parameter   Value    Meaning
+ *
+ * gpio        0-53     The GPIO which has changed state
+ *
+ * level       0-2      0 = change to low (a falling edge)
+ *                      1 = change to high (a rising edge)
+ *                      2 = no level change (interrupt timeout)
+ *
+ * tick        32 bit   The number of microseconds since boot
+ *                      WARNING: this wraps around from
+ *                      4294967295 to 0 roughly every 72 minutes
+ *
+ * pDriveObject pointer Pointer to an arbitrary object
+ *
+ */
+void ButtonMenuItem::pushbuttonAlertCallback(int gpio, int level, uint32_t tick, void* pObject)
+{
+    static_cast<ButtonMenuItem*>(pObject)->pushbuttonService(gpio, level, tick);
+}
+
+/*
+ * pushbutton service
+*/
+void ButtonMenuItem::pushbuttonService(int gpio, int level, uint32_t tick)
+{
+    Logger::getInstance().logEvent(INFO, "pushbutton pressed: ", gpio, ", level=", level);
+}
 
 /*
  * screen menu item constructor

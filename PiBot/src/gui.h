@@ -20,10 +20,6 @@ public:
     ~GUI();
 private:
     void handler(void);
-    // callback function for pushbutton generated interrupts
-    static void pushbuttonInterruptCallback(int gpio, int level, uint32_t tick, void* pGuiObject);
-    // pushbutton service
-    void pushbuttonService(int gpio, int level, uint32_t tick);
     std::mutex guiHandlerMutex;
     std::condition_variable guiEvent;
     std::chrono::milliseconds timeout;

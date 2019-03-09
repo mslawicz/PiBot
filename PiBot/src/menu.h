@@ -25,6 +25,10 @@ public:
     static const uint16_t Height;
     static const uint8_t* const pFont;
 private:
+    // callback function for pushbutton generated alerts
+    static void pushbuttonAlertCallback(int gpio, int level, uint32_t tick, void* pObject);
+    // pushbutton service
+    void pushbuttonService(int gpio, int level, uint32_t tick);
     const uint16_t InactivateColor = Ili9341Color::GRAY;
     uint16_t positionX;
     uint16_t positionY;
