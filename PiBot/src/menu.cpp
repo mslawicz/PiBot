@@ -12,11 +12,10 @@ const uint8_t* const ButtonMenuItem::pFont = FontTahoma15;
 const uint16_t ButtonMenuItem::Width = 60;
 const uint16_t ButtonMenuItem::Height = 15;
 
-ButtonMenuItem::ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, uint16_t foregroundColor, uint16_t backgroundColor)
+ButtonMenuItem::ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, GpioPin itemKeyPin)
     : positionX(itemPositionX)
     , positionY(itemPositionY)
-    , activeForegroundColor(foregroundColor)
-    , activeBackgroundColor(backgroundColor)
+    , keyPin(itemKeyPin)
 {
     deActivateItem();
 }
@@ -28,10 +27,10 @@ ButtonMenuItem::~ButtonMenuItem()
 /*
  * activates menu item and displays the menu text
  */
-void ButtonMenuItem::activateItem(std::string text)
+void ButtonMenuItem::activateItem(std::string text, uint16_t foregroundColor, uint16_t backgroundColor)
 {
     Program::getInstance().getDisplay()->setTextFieldWidth(Width);
-    Program::getInstance().getDisplay()->setColor(activeForegroundColor, activeBackgroundColor);
+    Program::getInstance().getDisplay()->setColor(foregroundColor, backgroundColor);
     Program::getInstance().getDisplay()->setFont(pFont);
     Program::getInstance().getDisplay()->print(positionX, positionY, text.c_str());
     isActive = true;
@@ -45,6 +44,7 @@ void ButtonMenuItem::deActivateItem(void)
     Program::getInstance().getDisplay()->drawRectangle(positionX, positionY, Width, Height, InactivateColor);
     isActive = false;
 }
+
 
 /*
  * screen menu item constructor
