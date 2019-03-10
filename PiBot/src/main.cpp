@@ -11,6 +11,7 @@
 #include "display.h" //XXX test
 #include "ili9341.h"
 #include "gpio.h"
+#include "menu.h"   //XXX test
 #include <iostream>
 #include <chrono>
 #include <cmath> //XXX for test
@@ -27,6 +28,11 @@ int main(int argc, char* argv[])
 	    // scope of test objects
 	    Program::getInstance().getPushbutton(GpioPin::SW4).activate("return", Ili9341Color::WHITE, Ili9341Color::RED);
 	    Program::getInstance().getPushbutton(GpioPin::SW2).activate("test", Ili9341Color::WHITE, Ili9341Color::BLUE);
+
+	    // create a test object on which an action should be executed
+	    TestClass myTest;
+	    // bind the test object method as the action of the pushbutton
+	    Program::getInstance().getPushbutton(GpioPin::SW2).action = std::bind(&TestClass::testMethod, myTest);
 
 	    while(!Program::getInstance().getPushbutton(GpioPin::SW5).hasBeenPressed())
 	    {

@@ -21,6 +21,7 @@ ButtonMenuItem::ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, G
     GPIO(itemKeyPin, PI_INPUT, PI_PUD_UP);
     deActivate();
     buttonPressed = false;
+    action = nullptr;
 }
 
 ButtonMenuItem::~ButtonMenuItem()
@@ -84,8 +85,13 @@ void ButtonMenuItem::pushbuttonService(int gpio, int level, uint32_t tick)
     Logger::getInstance().logEvent(INFO, "pushbutton state change: ", gpio, ", level=", level);
     if (level == 0)
     {
-        // the button is pressed at this moment
+        // the pushbutton has been just pressed
         buttonPressed = true;
+        if (action != nullptr)
+        {
+            // there is an action to do upon pressing the key
+            action();
+        }
     }
 }
 
@@ -116,4 +122,9 @@ ScreenMenu::ScreenMenu(std::string menuTitle, std::vector<ScreenMenuItem> menuIt
     , items(menuItems)
 {
     cursorPosition = 0;
+}
+
+void TestClass::testMethod()
+{
+    Logger::getInstance().logEvent(INFO, "test method executed!");
 }

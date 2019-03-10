@@ -8,10 +8,17 @@
 #ifndef SRC_MENU_H_
 #define SRC_MENU_H_
 
-#include <iostream>
 #include "gpio.h"
 #include "fonts.h"
 #include "display.h"
+#include <iostream>
+#include <functional>
+
+class TestClass
+{
+public:
+    void testMethod(void);
+};
 
 class ButtonMenuItem
 {
@@ -24,6 +31,7 @@ public:
     static const uint16_t Width;
     static const uint16_t Height;
     static const uint8_t* const pFont;
+    std::function<void(void)> action;
 private:
     // callback function for pushbutton generated alerts
     static void pushbuttonAlertCallback(int gpio, int level, uint32_t tick, void* pObject);
