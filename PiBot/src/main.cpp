@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 	    // create a test object on which an action should be executed
 	    TestClass myTest;
 	    // bind the test object method as the action of the pushbutton
-	    Program::getInstance().getPushbutton(GpioPin::SW2).action = std::bind(&TestClass::testMethod, myTest);
+	    Program::getInstance().getPushbutton(GpioPin::SW2).bindAction(std::bind(&TestClass::testMethod, myTest));
 
 	    while(!Program::getInstance().isExitRequest())
 	    {

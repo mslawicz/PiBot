@@ -123,7 +123,7 @@ void Program::initialize(void)
 	pushbuttonMenu.emplace(GpioPin::SW5, ButtonMenuItem(ButtonMenuItem::Width * 3, 0, GpioPin::SW5));
 
 	// bind exit request function to top-right pushbutton
-	getPushbutton(GpioPin::SW5).action = [=](){ this->exitRequest = true; };
+	getPushbutton(GpioPin::SW5).bindAction([=](){ this->exitRequest = true; });
 	getPushbutton(GpioPin::SW5).activate("exit", Ili9341Color::WHITE, Ili9341Color::MAGENTA);
 
 	// create graphic user interface object

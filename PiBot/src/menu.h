@@ -28,10 +28,10 @@ public:
     void activate(std::string text, uint16_t foregroundColor, uint16_t backgroundColor);
     void deActivate(void);
     bool hasBeenPressed(void);
+    void bindAction(std::function<void(void)> callbackFunction) { action = callbackFunction; }
     static const uint16_t Width;
     static const uint16_t Height;
     static const uint8_t* const pFont;
-    std::function<void(void)> action;
 private:
     // callback function for pushbutton generated alerts
     static void pushbuttonAlertCallback(int gpio, int level, uint32_t tick, void* pObject);
@@ -43,6 +43,7 @@ private:
     GpioPin keyPin;
     bool isActive;
     volatile bool buttonPressed;
+    std::function<void(void)> action;
 };
 
 class ScreenMenuItem
