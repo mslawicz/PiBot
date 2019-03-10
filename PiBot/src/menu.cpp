@@ -21,7 +21,6 @@ ButtonMenuItem::ButtonMenuItem(uint16_t itemPositionX, uint16_t itemPositionY, G
     GPIO(itemKeyPin, PI_INPUT, PI_PUD_UP);
     deActivate();
     buttonPressed = false;
-    action = nullptr;
 }
 
 ButtonMenuItem::~ButtonMenuItem()
@@ -48,6 +47,7 @@ void ButtonMenuItem::activate(std::string text, uint16_t foregroundColor, uint16
  */
 void ButtonMenuItem::deActivate(void)
 {
+    action = nullptr;
     isActive = false;
     //disable pushbutton interrupts
     gpioSetAlertFuncEx(keyPin, nullptr, this);
