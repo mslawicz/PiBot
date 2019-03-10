@@ -25,6 +25,7 @@ Program::Program()
     pDevicePCA9685 = nullptr;
     pDisplay = nullptr;
     pGui = nullptr;
+    exitRequest = false;
 }
 
 Program::~Program()
@@ -120,6 +121,10 @@ void Program::initialize(void)
 	pushbuttonMenu.emplace(GpioPin::SW1, ButtonMenuItem(ButtonMenuItem::Width * 3, bottomPositionY, GpioPin::SW1));
 	pushbuttonMenu.emplace(GpioPin::SW6, ButtonMenuItem(0, 0, GpioPin::SW6));
 	pushbuttonMenu.emplace(GpioPin::SW5, ButtonMenuItem(ButtonMenuItem::Width * 3, 0, GpioPin::SW5));
+
+	// bind exit request function to top-right pushbutton
+	getPushbutton(GpioPin::SW5).action = [=](){ this->exitRequest = true; };
+	getPushbutton(GpioPin::SW5).activate("exit", Ili9341Color::WHITE, Ili9341Color::MAGENTA);
 
 	// create graphic user interface object
 	pGui = new GUI();

@@ -36,6 +36,7 @@ public:
 	// gets pointer to display object
 	Display* getDisplay(void) const { return pDisplay; }
 	ButtonMenuItem& getPushbutton(GpioPin pushbuttonPin) { return pushbuttonMenu.find(pushbuttonPin)->second; }
+	bool isExitRequest(void) const { return exitRequest; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
@@ -45,6 +46,7 @@ private:
 	Display* pDisplay;
 	GUI* pGui;
 	std::unordered_map<GpioPin, ButtonMenuItem> pushbuttonMenu;
+	volatile bool exitRequest;
 };
 
 #endif /* SRC_PROGRAM_H_ */
