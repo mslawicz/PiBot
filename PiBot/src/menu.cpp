@@ -125,11 +125,6 @@ ScreenMenu::ScreenMenu(std::string menuTitle, std::vector<ScreenMenuItem> menuIt
     cursorPosition = 0;
 }
 
-void TestClass::testMethod()
-{
-    Logger::getInstance().logEvent(INFO, "test method executed!");
-}
-
 /*
  * display items of the screen menu object
  */

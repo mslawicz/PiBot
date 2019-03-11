@@ -14,12 +14,6 @@
 #include <iostream>
 #include <functional>
 
-class TestClass
-{
-public:
-    void testMethod(void);
-};
-
 class ButtonMenuItem
 {
 public:
