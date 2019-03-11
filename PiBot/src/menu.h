@@ -50,6 +50,7 @@ class ScreenMenuItem
 {
 public:
     ScreenMenuItem(std::string itemText);
+    std::string getItemText(void) const { return text; }
 private:
     std::string text;
 };
@@ -58,6 +59,7 @@ class ScreenMenu
 {
 public:
     ScreenMenu(std::string menuTitle, std::vector<ScreenMenuItem> menuItems);
+    void displayItems(void);
 private:
     std::string title;
     std::vector<ScreenMenuItem> items;

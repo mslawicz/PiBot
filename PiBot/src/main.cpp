@@ -25,13 +25,13 @@ int main(int argc, char* argv[])
 
 	{
 	    // scope of test objects
-	    Program::getInstance().getPushbutton(GpioPin::SW4).activate("return", Ili9341Color::WHITE, Ili9341Color::RED);
-	    Program::getInstance().getPushbutton(GpioPin::SW2).activate("test", Ili9341Color::WHITE, Ili9341Color::BLUE);
-
-	    // create a test object on which an action should be executed
-	    TestClass myTest;
-	    // bind the test object method as the action of the pushbutton
-	    Program::getInstance().getPushbutton(GpioPin::SW2).bindAction(std::bind(&TestClass::testMethod, myTest));
+//	    Program::getInstance().getPushbutton(GpioPin::SW4).activate("return", Ili9341Color::WHITE, Ili9341Color::RED);
+//	    Program::getInstance().getPushbutton(GpioPin::SW2).activate("test", Ili9341Color::WHITE, Ili9341Color::BLUE);
+//
+//	    // create a test object on which an action should be executed
+//	    TestClass myTest;
+//	    // bind the test object method as the action of the pushbutton
+//	    Program::getInstance().getPushbutton(GpioPin::SW2).bindAction(std::bind(&TestClass::testMethod, myTest));
 
 	    while(!Program::getInstance().isExitRequest())
 	    {

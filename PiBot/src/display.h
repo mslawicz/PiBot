@@ -33,9 +33,12 @@ public:
     void test2(void);
     void test3(void);
     void setFont(const uint8_t* pNewFont);
-    void setColor(uint16_t foregroundColor, uint16_t backgroundColor);
+    void setColor(uint16_t foregroundColor = Ili9341Color::WHITE, uint16_t backgroundColor = Ili9341Color::BLACK);
     void setTextFieldWidth(uint16_t width) { textFieldWidth = width; }
+    void setTextAlignment(TextAlignment alignment) { textAlignment = alignment; }
     template<typename... Args> void print(uint16_t positionX, uint16_t positionY, Args... args);
+    uint8_t getCurrentFontHeight(void) const { return pFont != nullptr ? pFont[3] : 0; }
+    const Ili9341Color DefaultBackgroundColor = Ili9341Color::BLACK;
 private:
     uint16_t getTextWidth(std::string text);
     uint16_t renderText(uint16_t positionX, uint16_t positionY, std::string text);

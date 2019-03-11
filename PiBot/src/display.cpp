@@ -23,7 +23,7 @@ Display::Display()
     characterSpace = 0;
     textFieldWidth = 0;
     textAlignment = TextAlignment::CENTER;
-    currentBackgroundColor = Ili9341Color::BLACK;
+    currentBackgroundColor = DefaultBackgroundColor;
     currentForegroundColor = Ili9341Color::WHITE;
     spaceWidth = 0;
 }
@@ -71,7 +71,7 @@ void Display::test2()
 {
 
     setActiveArea(0,0,maxX,maxY);
-    fillActiveArea(Ili9341Color::BLACK);
+    fillActiveArea(DefaultBackgroundColor);
 
     setFont(FontTahoma15);
     textFieldWidth = 60;
@@ -93,8 +93,7 @@ void Display::test2()
 
     writeDataRequest(Ili9341Registers::VSCRDEF, std::vector<uint16_t>{15, 290, 15});    // 20 pixels in the top and bottom fixed
 
-    currentBackgroundColor = Ili9341Color::BLACK;
-    currentForegroundColor = Ili9341Color::WHITE;
+    setColor();
 
     setFont(FontTahoma11);
     print(0, 30, "FontTahoma11 2345#78*");
@@ -330,7 +329,7 @@ template<typename First, typename... Rest> void Display::takeNextArgument(std::s
  */
 void Display::clearScreen(uint16_t positionY, uint16_t height)
 {
-    drawRectangle(0, positionY, maxX, height, Ili9341Color::BLACK);
+    drawRectangle(0, positionY, maxX, height, DefaultBackgroundColor);
 }
 
 /*

@@ -7,6 +7,7 @@
 
 #include "menu.h"
 #include "program.h"
+#include "display.h"
 
 const uint8_t* const ButtonMenuItem::pFont = FontTahoma15;
 const uint16_t ButtonMenuItem::Width = 60;
@@ -127,4 +128,24 @@ ScreenMenu::ScreenMenu(std::string menuTitle, std::vector<ScreenMenuItem> menuIt
 void TestClass::testMethod()
 {
     Logger::getInstance().logEvent(INFO, "test method executed!");
+}
+
+/*
+ * display items of the screen menu object
+ */
+void ScreenMenu::displayItems(void)
+{
+    Program::getInstance().getDisplay()->setTextFieldWidth(ButtonMenuItem::Width * 2);
+    Program::getInstance().getDisplay()->setTextAlignment(TextAlignment::CENTER);
+    Program::getInstance().getDisplay()->setColor(Ili9341Color::YELLOW);
+    Program::getInstance().getDisplay()->setFont(FontTahoma15);
+    Program::getInstance().getDisplay()->print(ButtonMenuItem::Width, 0, title.c_str());
+
+    Program::getInstance().getDisplay()->setTextFieldWidth(0);
+    Program::getInstance().getDisplay()->setTextAlignment(TextAlignment::LEFT);
+    Program::getInstance().getDisplay()->setColor(Ili9341Color::WHITE);
+    for(uint8_t row=0; row < items.size(); row++)
+    {
+        Program::getInstance().getDisplay()->print(20, ButtonMenuItem::Height + 10 + (Program::getInstance().getDisplay()->getCurrentFontHeight() + 2) * row, items[row].getItemText().c_str());
+    }
 }
