@@ -34,15 +34,6 @@ void GUI::handler(void)
     Logger::getInstance().logEvent(INFO, "GUI handler started");
     do
     {
-        //test menu
-        std::vector<ScreenMenuItem> testMenuItems =
-        {
-                ScreenMenuItem("the line #1"),
-                ScreenMenuItem("random number " + std::to_string(rand())),
-                ScreenMenuItem("the 3rd and the last line")
-        };
-        ScreenMenu testMenu = ScreenMenu("Test Menu", testMenuItems);
-        testMenu.displayItems();
 
         Logger::getInstance().logEvent(INFO, "GUI loop entry");
         std::this_thread::yield();
