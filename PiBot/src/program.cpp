@@ -128,6 +128,9 @@ void Program::initialize(void)
 
 	// create graphic user interface object
 	pGui = new GUI();
+
+	// create console object
+	pConsole = new Console();
 }
 
 /*
@@ -169,6 +172,7 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
+	delete pConsole;
 	delete pGui;
 	delete pDevicePCA9685;
 	pDisplay->setBackLight(0.0);

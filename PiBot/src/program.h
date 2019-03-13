@@ -14,6 +14,7 @@
 #include "display.h"
 #include "gui.h"
 #include "menu.h"
+#include "console.h"
 #include <vector>
 #include <map>
 #include <unordered_map>
@@ -47,6 +48,7 @@ private:
 	GUI* pGui;
 	std::unordered_map<GpioPin, ButtonMenuItem> pushbuttonMenu;
 	volatile bool exitRequest;
+	Console* pConsole;
 };
 
 #endif /* SRC_PROGRAM_H_ */
