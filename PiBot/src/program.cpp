@@ -26,6 +26,7 @@ Program::Program()
     pDisplay = nullptr;
     pGui = nullptr;
     exitRequest = false;
+    pConsole = nullptr;
 }
 
 Program::~Program()

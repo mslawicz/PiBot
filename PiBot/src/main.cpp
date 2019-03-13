@@ -7,9 +7,6 @@
 
 #include "program.h"
 #include "logger.h"
-//#include "display.h" //XXX test
-//#include "ili9341.h"
-//#include "gpio.h"
 #include <iostream>
 #include <chrono>
 
