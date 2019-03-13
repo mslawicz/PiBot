@@ -7,7 +7,9 @@
 
 #include "console.h"
 #include "logger.h"
+#include "program.h"
 #include <string>
+#include <chrono>
 
 Console::Console()
 {
@@ -27,11 +29,15 @@ void Console::handler(void)
 {
     std::string line;
     Logger::getInstance().logEvent(INFO, "Console handler started");
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
     do
     {
         std::cout << '>';
-        //std::this_thread::yield();
+        std::this_thread::yield();
         std::getline(std::cin, line);
     } while (line != "exit");
+
+    Program::getInstance().requestExit();
     Logger::getInstance().logEvent(INFO, "Console handler exit");
 }

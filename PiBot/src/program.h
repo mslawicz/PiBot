@@ -38,6 +38,7 @@ public:
 	Display* getDisplay(void) const { return pDisplay; }
 	ButtonMenuItem& getPushbutton(GpioPin pushbuttonPin) { return pushbuttonMenu.find(pushbuttonPin)->second; }
 	bool isExitRequest(void) const { return exitRequest; }
+	void requestExit(void) { exitRequest = true; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
