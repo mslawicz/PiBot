@@ -9,10 +9,12 @@
 #define SRC_CONSOLE_H_
 
 #include <thread>
-#include <map>
+#include <vector>
+#include <set>
 #include <tuple>
 
-typedef std::tuple<std::string, std::function<void(void)>> CommandContainer;
+typedef std::set<std::string> CommandStrings;
+typedef std::tuple<CommandStrings, std::string, std::function<void(void)>> CommandContainer;
 
 class Console
 {
@@ -24,7 +26,7 @@ private:
     void setCommands(void);
     void displayHelp(void);
     std::thread* pConsoleHandlerThread;
-    std::map<std::string, CommandContainer> commands;
+    std::vector<CommandContainer> commands;
 };
 
 #endif /* SRC_CONSOLE_H_ */

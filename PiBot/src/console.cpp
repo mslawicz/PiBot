@@ -37,15 +37,25 @@ void Console::handler(void)
         std::cout << '>';
         std::this_thread::yield();
         std::cin >> command;
-        auto iCommand = commands.find(command);
-        if (iCommand != commands.end())
+        bool isValid = false;
+
+        for (auto commandItem : commands)
         {
-            std::get<1>(iCommand->second)();
+            if (std::get<0>(commandItem).find(command) != std::get<0>(commandItem).end())
+            {
+                isValid = true;
+                std::get<2>(commandItem)();
+                break;
+            }
         }
-        else
+
+        if (!isValid)
         {
-            std::cout << "unknown command " << command << std::endl;
+            std::cout << "unknown command\n";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.clear();
         }
+
     } while (!Program::getInstance().isExitRequest());
 
     Logger::getInstance().logEvent(INFO, "Console handler exit");
@@ -56,9 +66,8 @@ void Console::handler(void)
  */
 void Console::setCommands(void)
 {
-    commands.emplace("help", CommandContainer{ "display the list of commands", std::bind(&Console::displayHelp, this) });
-    commands.emplace("hello", CommandContainer{ "just a hello", []() {std::cout << "hi" << std::endl; } });
-    commands.emplace("exit", CommandContainer{ "exit from program", []() { Program::getInstance().requestExit(); } });
+    commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&Console::displayHelp, this));
+    commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
 }
 
 /*
@@ -66,8 +75,17 @@ void Console::setCommands(void)
  */
 void Console::displayHelp(void)
 {
-    for(auto element : commands)
+    for(auto commandItem : commands)
     {
-        std::cout << element.first.c_str() << " : " << std::get<0>(element.second).c_str() << std::endl;
+        bool notFirst = false;
+        for (auto command : std::get<0>(commandItem))
+        {
+            if(notFirst)
+            {
+                std::cout << " | ";
+            }
+            std::cout << command.c_str();
+        }
+        std::cout << " : " << std::get<1>(commandItem).c_str() << std::endl;
     }
 }
