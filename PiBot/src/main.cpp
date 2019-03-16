@@ -7,6 +7,7 @@
 
 #include "program.h"
 #include "logger.h"
+#include "config.h" //XXX test
 #include <iostream>
 #include <chrono>
 
@@ -18,6 +19,12 @@ int main(int argc, char* argv[])
 
 	{
 	    // scope of test objects
+	    Config config;
+	    auto lanIfs = config.getIpAddresses();
+	    for(auto lanIf : lanIfs)
+	    {
+	        std::cout << lanIf.first.c_str() << " : " << lanIf.second.first.c_str() << " / " << lanIf.second.second.c_str() << std::endl;
+	    }
 
 	    while(!Program::getInstance().isExitRequest())
 	    {
