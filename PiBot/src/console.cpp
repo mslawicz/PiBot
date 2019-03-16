@@ -84,6 +84,10 @@ void Console::displayHelp(void)
             {
                 std::cout << " | ";
             }
+            else
+            {
+                notFirst = true;
+            }
             std::cout << command.c_str();
         }
         std::cout << " : " << std::get<1>(commandItem).c_str() << std::endl;
