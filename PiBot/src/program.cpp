@@ -27,6 +27,7 @@ Program::Program()
     pGui = nullptr;
     exitRequest = false;
     pConsole = nullptr;
+    pDrive = nullptr;
 }
 
 Program::~Program()
@@ -132,6 +133,9 @@ void Program::initialize(void)
 
 	// create console object
 	pConsole = new Console();
+
+	// create drive object
+	pDrive = new Drive;
 }
 
 /*
@@ -173,6 +177,7 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
+	delete pDrive;
 	delete pConsole;
 	delete pGui;
 	delete pDevicePCA9685;

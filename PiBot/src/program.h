@@ -15,6 +15,7 @@
 #include "gui.h"
 #include "menu.h"
 #include "console.h"
+#include "drive.h"
 #include <vector>
 #include <map>
 #include <unordered_map>
@@ -50,6 +51,7 @@ private:
 	std::unordered_map<GpioPin, ButtonMenuItem> pushbuttonMenu;
 	volatile bool exitRequest;
 	Console* pConsole;
+	Drive* pDrive;
 };
 
 #endif /* SRC_PROGRAM_H_ */
