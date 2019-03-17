@@ -34,8 +34,8 @@ private:
 	float pitchAngularRate;
 	// pointer to pitch control loop PID
 	PID* pPitchPID;
-	Motor* pTestMotor;   //XXX test
 	float calculatedSpeed; //XXX test
+	std::vector<Motor*> pMotors;
 };
 
 #endif /* SRC_DRIVE_H_ */

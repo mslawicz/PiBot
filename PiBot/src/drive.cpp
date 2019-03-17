@@ -13,15 +13,22 @@ Drive::Drive()
     pGyroscope = new Gyroscope(SerialBusId::I2C1, SerialPriority::GYROSCOPE_PR, I2cDeviceAddress::GYROSCOPE_ADDR);
     pitchAngularRate = 0.0;
     pPitchPID = new PID(0.2, 0.05, 0.05);
-    pTestMotor = new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 0); // XXX motor test object
+    // left motor
+    pMotors.push_back(new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 0));
+    // right motor
+    pMotors.push_back(new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 2));
     calculatedSpeed = 0.0;
 }
 
 Drive::~Drive()
 {
+    for(auto pMotor : pMotors)
+    {
+        delete pMotor;
+        pMotor = nullptr;
+    }
 	delete pGyroscope;
 	delete pPitchPID;
-	delete pTestMotor; //XXX test
 }
 
 /*
@@ -82,7 +89,9 @@ void Drive::pitchControl(int level, uint32_t tick)
             //valid data received
             pitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
             calculatedSpeed = pPitchPID->calculate(0.0, pitchAngularRate);
-            pTestMotor->setSpeed(calculatedSpeed);
+            //pTestMotor->setSpeed(calculatedSpeed);
+            //motors[0].setSpeed(calculatedSpeed);
+            //motors[1].setSpeed(calculatedSpeed);
         }
     }
 
