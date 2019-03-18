@@ -40,6 +40,7 @@ public:
 	ButtonMenuItem& getPushbutton(GpioPin pushbuttonPin) { return pushbuttonMenu.find(pushbuttonPin)->second; }
 	bool isExitRequest(void) const { return exitRequest; }
 	void requestExit(void) { exitRequest = true; }
+	Drive* getDrive(void) const { return pDrive; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
