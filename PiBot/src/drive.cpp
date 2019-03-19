@@ -11,13 +11,14 @@
 Drive::Drive()
 {
     pGyroscope = new Gyroscope(SerialBusId::I2C1, SerialPriority::GYROSCOPE_PR, I2cDeviceAddress::GYROSCOPE_ADDR);
-    pitchAngularRate = 0.0;
-    pPitchPID = new PID(0.6, 0.05, 0.2);
+    sensorPitchAngularRate = 0.0;
+    targetPitchAngularRate = 0.0;
+    pPitchPID = new PID(0.5, 0.05, 0.05);
     // left motor
     pMotors.push_back(new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 0));
     // right motor
     pMotors.push_back(new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 2));
-    calculatedSpeed = 0.0;
+    pitchControlSpeed = 0.0;
 }
 
 Drive::~Drive()
@@ -89,10 +90,12 @@ void Drive::pitchControl(int level, uint32_t tick)
         if((std::get<0>(data) == ImuRegisters::OUT_X_L_G) && (std::get<1>(data) == dataLength))
         {
             //valid data received
-            pitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
-            calculatedSpeed = pPitchPID->calculate(0.0, pitchAngularRate);
-            pMotors[0]->setSpeed(calculatedSpeed);
-            pMotors[1]->setSpeed(calculatedSpeed);
+            sensorPitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
+            pitchControlSpeed = pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
+            motorSpeed[0] = pitchControlSpeed;
+            motorSpeed[1] = pitchControlSpeed;
+            pMotors[0]->setSpeed(motorSpeed[0]);
+            pMotors[1]->setSpeed(motorSpeed[1]);
         }
     }
 
