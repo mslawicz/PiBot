@@ -8,14 +8,22 @@
 #ifndef SRC_UDP_H_
 #define SRC_UDP_H_
 
+#include <netdb.h>
+#include <iostream>
+
 namespace UDP
 {
 
 class Client
 {
 public:
-    Client();
+    Client(std::string clientAddress, int clientPort);
     ~Client();
+    int Connect(void);
+private:
+    std::string address;
+    int port;
+    int socketDescriptor;
 };
 
 } /* namespace UDP */
