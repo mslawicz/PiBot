@@ -20,6 +20,7 @@ public:
     Client(std::string clientAddress, int clientPort);
     ~Client();
     int Connect(void);
+    void Disconnect(void);
 private:
     std::string address;
     int port;
