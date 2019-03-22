@@ -14,21 +14,25 @@
 namespace UDP
 {
 
-Client::Client(std::string clientAddress, int clientPort)
-    : address(clientAddress)
-    , port(clientPort)
+Client::Client()
 {
+    port = 0;
     socketDescriptor = -1;
-
 }
 
 Client::~Client()
 {
-    // TODO Auto-generated destructor stub
+    if(socketDescriptor != -1)
+    {
+        close(socketDescriptor);
+        Logger::getInstance().logEvent(INFO, "Disconnected from server ", address.c_str(), ":", std::to_string(port).c_str());
+    }
 }
 
-int Client::Connect(void)
+int Client::Connect(std::string clientAddress, int clientPort)
 {
+    address = clientAddress;
+    port = clientPort;
     struct addrinfo hints;
     struct addrinfo* pAddrInfo;
     memset(&hints, 0, sizeof(hints));
@@ -72,15 +76,6 @@ int Client::Connect(void)
     freeaddrinfo(pAddrInfo);
 
     return 0;
-}
-
-void Client::Disconnect(void)
-{
-    if(socketDescriptor != -1)
-    {
-        close(socketDescriptor);
-        Logger::getInstance().logEvent(INFO, "Disconnected from server ", address.c_str(), ":", std::to_string(port).c_str());
-    }
 }
 
 

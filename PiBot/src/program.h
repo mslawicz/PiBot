@@ -16,6 +16,7 @@
 #include "menu.h"
 #include "console.h"
 #include "drive.h"
+#include "udp.h"
 #include <vector>
 #include <map>
 #include <unordered_map>
@@ -41,6 +42,7 @@ public:
 	bool isExitRequest(void) const { return exitRequest; }
 	void requestExit(void) { exitRequest = true; }
 	Drive* getDrive(void) const { return pDrive; }
+	UDP::Client* getUdpClient(void) const { return pUdpClient; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
@@ -53,6 +55,7 @@ private:
 	volatile bool exitRequest;
 	Console* pConsole;
 	Drive* pDrive;
+	UDP::Client* pUdpClient;
 };
 
 #endif /* SRC_PROGRAM_H_ */

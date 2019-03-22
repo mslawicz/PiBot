@@ -27,8 +27,7 @@ int main(int argc, char* argv[])
 	        std::cout << lanIf.first.c_str() << " : " << lanIf.second.first.c_str() << " / " << lanIf.second.second.c_str() << std::endl;
 	    }
 
-	    UDP::Client udpClient("192.168.1.59", 8080);
-	    udpClient.Connect();
+	    Program::getInstance().getUdpClient()->Connect("192.168.1.59", 8080);
 
 	    while(!Program::getInstance().isExitRequest())
 	    {

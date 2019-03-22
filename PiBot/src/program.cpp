@@ -28,6 +28,7 @@ Program::Program()
     exitRequest = false;
     pConsole = nullptr;
     pDrive = nullptr;
+    pUdpClient = nullptr;
 }
 
 Program::~Program()
@@ -136,6 +137,9 @@ void Program::initialize(void)
 
 	// create drive object
 	pDrive = new Drive;
+
+	// create UDP client
+	pUdpClient = new UDP::Client;
 }
 
 /*
@@ -177,6 +181,7 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
+	delete pUdpClient;
 	delete pDrive;
 	delete pConsole;
 	delete pGui;

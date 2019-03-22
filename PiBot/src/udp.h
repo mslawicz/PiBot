@@ -17,9 +17,9 @@ namespace UDP
 class Client
 {
 public:
-    Client(std::string clientAddress, int clientPort);
+    Client();
     ~Client();
-    int Connect(void);
+    int Connect(std::string clientAddress, int clientPort);
     void Disconnect(void);
 private:
     std::string address;
