@@ -25,7 +25,7 @@ Client::~Client()
     if(socketDescriptor != -1)
     {
         close(socketDescriptor);
-        Logger::getInstance().logEvent(INFO, "Disconnected from server ", address.c_str(), ":", std::to_string(port).c_str());
+        Logger::getInstance().logEvent(INFO, "Disconnected from UDP server ", address.c_str(), ":", std::to_string(port).c_str());
     }
 }
 
@@ -59,7 +59,7 @@ int Client::Connect(std::string clientAddress, int clientPort)
         if(connect(socketDescriptor, pItem->ai_addr, pItem->ai_addrlen) == 0)
         {
             // connected to server
-            Logger::getInstance().logEvent(INFO, "Connected to server ", address.c_str(), ":", std::to_string(port).c_str());
+            Logger::getInstance().logEvent(INFO, "Connected to UDP server ", address.c_str(), ":", std::to_string(port).c_str());
             break;
         }
 
@@ -69,7 +69,7 @@ int Client::Connect(std::string clientAddress, int clientPort)
     if(pItem == nullptr)
     {
         // no connection
-        Logger::getInstance().logEvent(ERROR, "Failed to connect to server ", address.c_str(), ":", std::to_string(port).c_str());
+        Logger::getInstance().logEvent(ERROR, "Failed to connect to UDP server ", address.c_str(), ":", std::to_string(port).c_str());
         return -1;
     }
 
