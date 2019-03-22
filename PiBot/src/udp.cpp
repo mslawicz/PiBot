@@ -8,7 +8,6 @@
 #include "udp.h"
 #include "logger.h"
 #include <sys/socket.h>
-#include <unistd.h>
 #include <cstring>
 
 namespace UDP
@@ -29,7 +28,10 @@ Client::~Client()
     }
 }
 
-int Client::Connect(std::string clientAddress, int clientPort)
+/*
+ * set connection to UDP server
+ */
+int Client::setConnection(std::string clientAddress, int clientPort)
 {
     address = clientAddress;
     port = clientPort;

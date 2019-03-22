@@ -27,11 +27,12 @@ int main(int argc, char* argv[])
 	        std::cout << lanIf.first.c_str() << " : " << lanIf.second.first.c_str() << " / " << lanIf.second.second.c_str() << std::endl;
 	    }
 
-	    Program::getInstance().getUdpClient()->Connect("192.168.1.61", 8080);
+	    Program::getInstance().getUdpClient()->setConnection("192.168.1.59", 8080);
 
 	    while(!Program::getInstance().isExitRequest())
 	    {
-	        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	        Program::getInstance().getUdpClient()->sendData(rand() % 100);
+	        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	    }
 	    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
