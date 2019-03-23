@@ -21,8 +21,11 @@ public:
     void start(void);
     // stops the control of robot
     void stop(void);
+    void telemetryHandler(void);
+    void telemetryEnable(bool state) { telemetryEnabled = state; }
 private:
     Drive* pDrive;
+    bool telemetryEnabled;
 };
 
 #endif /* SRC_ROBOT_H_ */

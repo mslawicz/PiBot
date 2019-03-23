@@ -7,6 +7,7 @@
 
 #include "LSM9DS1.h"
 #include "drive.h"
+#include "program.h"
 
 Drive::Drive()
 {
@@ -104,7 +105,7 @@ void Drive::pitchControl(int level, uint32_t tick)
     pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, dataLength);
 
     // call telemetry handler
-
+    Program::getInstance().getRobot()->telemetryHandler();
 }
 
 

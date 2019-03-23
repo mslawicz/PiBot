@@ -10,8 +10,7 @@
 
 #include <netdb.h>
 #include <unistd.h>
-#include <iostream>
-#include <sstream>
+#include <string>
 
 namespace UDP
 {
@@ -26,22 +25,11 @@ public:
     /*
      * send user data to UDP server
      */
-    template<typename... Args> void sendData(Args... args)
+    void sendData(std::string data) const
     {
-        std::stringstream textStream;
-        takeNextArgument(textStream, args...);
-        write(socketDescriptor, textStream.str().c_str(), textStream.str().length());
+        write(socketDescriptor, data.c_str(), data.length());
     }
 private:
-    /*
-     * takes next argument of user data and put it to the string stream
-     */
-    template<typename First, typename... Rest> void takeNextArgument(std::stringstream& textStream, First arg0, Rest... args)
-    {
-        textStream << arg0;
-        takeNextArgument(textStream, args...);
-    }
-    void takeNextArgument(std::stringstream& textStream) {}
     std::string address;
     int port;
     int socketDescriptor;

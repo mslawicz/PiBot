@@ -134,6 +134,7 @@ void Console::setTelemetry(void)
         if(arguments[0] == "off")
         {
             // turn off telemetry
+            Program::getInstance().getRobot()->telemetryEnable(false);
             Program::getInstance().getUdpClient()->disconnect();
         }
         else
@@ -142,6 +143,7 @@ void Console::setTelemetry(void)
             if(noOfArgumentsNotLessThan(2))
             {
                 Program::getInstance().getUdpClient()->setConnection(arguments[0], std::stoi(arguments[1]));
+                Program::getInstance().getRobot()->telemetryEnable(true);
             }
         }
     }
