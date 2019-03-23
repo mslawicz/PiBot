@@ -12,6 +12,7 @@
 #include <vector>
 #include <set>
 #include <tuple>
+#include <string>
 
 typedef std::set<std::string> CommandStrings;
 typedef std::tuple<CommandStrings, std::string, std::function<void(void)>> CommandContainer;
@@ -25,8 +26,12 @@ private:
     void handler(void);
     void setCommands(void);
     void displayHelp(void);
+    void parseArguments(void);
+    bool noOfArgumentsNotLessThan(unsigned number);
+    void setTelemetry(void);
     std::thread* pConsoleHandlerThread;
     std::vector<CommandContainer> commands;
+    std::vector<std::string> arguments;
 };
 
 #endif /* SRC_CONSOLE_H_ */

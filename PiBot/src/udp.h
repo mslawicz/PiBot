@@ -22,6 +22,7 @@ public:
     Client();
     ~Client();
     int setConnection(std::string clientAddress, int clientPort);
+    void disconnect(void);
     /*
      * send user data to UDP server
      */

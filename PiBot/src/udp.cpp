@@ -21,11 +21,7 @@ Client::Client()
 
 Client::~Client()
 {
-    if(socketDescriptor != -1)
-    {
-        close(socketDescriptor);
-        Logger::getInstance().logEvent(INFO, "Disconnected from UDP server ", address.c_str(), ":", std::to_string(port).c_str());
-    }
+    disconnect();
 }
 
 /*
@@ -81,5 +77,18 @@ int Client::setConnection(std::string clientAddress, int clientPort)
     return 0;
 }
 
+/*
+ * clear connection
+ */
+void Client::disconnect(void)
+{
+    if(socketDescriptor != -1)
+    {
+        close(socketDescriptor);
+        Logger::getInstance().logEvent(INFO, "Disconnected from UDP server ", address.c_str(), ":", std::to_string(port).c_str());
+        socketDescriptor = -1;
+        port = 0;
+    }
+}
 
 } /* namespace UDP */
