@@ -70,7 +70,7 @@ void ButtonMenuItem::deActivate(void)
  *                      WARNING: this wraps around from
  *                      4294967295 to 0 roughly every 72 minutes
  *
- * pDriveObject pointer Pointer to an arbitrary object
+ * pObject pointer Pointer to an arbitrary object
  *
  */
 void ButtonMenuItem::pushbuttonAlertCallback(int gpio, int level, uint32_t tick, void* pObject)

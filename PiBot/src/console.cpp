@@ -68,8 +68,8 @@ void Console::setCommands(void)
 {
     commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&Console::displayHelp, this));
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
-    commands.emplace_back(CommandStrings {"start"}, "start the motors control", []() { Program::getInstance().getDrive()->start(); });
-    commands.emplace_back(CommandStrings {"stop"}, "stops the motors control", []() { Program::getInstance().getDrive()->stop(); });
+    commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
+    commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
 }
 
 /*

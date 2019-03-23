@@ -27,7 +27,7 @@ Program::Program()
     pGui = nullptr;
     exitRequest = false;
     pConsole = nullptr;
-    pDrive = nullptr;
+    pRobot = nullptr;
     pUdpClient = nullptr;
 }
 
@@ -135,8 +135,8 @@ void Program::initialize(void)
 	// create console object
 	pConsole = new Console();
 
-	// create drive object
-	pDrive = new Drive;
+	// create robot object
+	pRobot = new Robot;
 
 	// create UDP client
 	pUdpClient = new UDP::Client;
@@ -182,7 +182,7 @@ void Program::terminate(ExitCode exitCode)
 	}
 
 	delete pUdpClient;
-	delete pDrive;
+	delete pRobot;
 	delete pConsole;
 	delete pGui;
 	delete pDevicePCA9685;

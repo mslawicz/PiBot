@@ -15,7 +15,7 @@
 #include "gui.h"
 #include "menu.h"
 #include "console.h"
-#include "drive.h"
+#include "robot.h"
 #include "udp.h"
 #include <vector>
 #include <map>
@@ -41,7 +41,7 @@ public:
 	ButtonMenuItem& getPushbutton(GpioPin pushbuttonPin) { return pushbuttonMenu.find(pushbuttonPin)->second; }
 	bool isExitRequest(void) const { return exitRequest; }
 	void requestExit(void) { exitRequest = true; }
-	Drive* getDrive(void) const { return pDrive; }
+	Robot* getRobot(void) const { return pRobot; }
 	UDP::Client* getUdpClient(void) const { return pUdpClient; }
 private:
 	// private constructor prevents from creation more objects
@@ -54,7 +54,7 @@ private:
 	std::unordered_map<GpioPin, ButtonMenuItem> pushbuttonMenu;
 	volatile bool exitRequest;
 	Console* pConsole;
-	Drive* pDrive;
+	Robot* pRobot;
 	UDP::Client* pUdpClient;
 };
 

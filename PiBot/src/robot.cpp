@@ -9,12 +9,27 @@
 
 Robot::Robot()
 {
-    // TODO Auto-generated constructor stub
+    pDrive = new Drive;
 
 }
 
 Robot::~Robot()
 {
-    // TODO Auto-generated destructor stub
+    delete pDrive;
 }
 
+/*
+ * starts the control of robot
+ */
+void Robot::start(void)
+{
+    pDrive->start();
+}
+
+/*
+ * stops the control of robot
+ */
+void Robot::stop(void)
+{
+    pDrive->stop();
+}
