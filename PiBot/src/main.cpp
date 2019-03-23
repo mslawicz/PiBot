@@ -29,10 +29,14 @@ int main(int argc, char* argv[])
 
 	    Program::getInstance().getUdpClient()->setConnection("192.168.1.59", 8080);
 
+	    int val = 0;
 	    while(!Program::getInstance().isExitRequest())
 	    {
-	        Program::getInstance().getUdpClient()->sendData(rand() % 100);
-	        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	        val += (rand() % 20 - 10);
+	        if(val > 100) val = 100;
+	        if(val<-100) val = -100;
+	        Program::getInstance().getUdpClient()->sendData(val, "\n");
+	        std::this_thread::sleep_for(std::chrono::milliseconds(12));
 	    }
 	    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 

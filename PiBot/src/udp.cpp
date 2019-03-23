@@ -45,6 +45,7 @@ int Client::setConnection(std::string clientAddress, int clientPort)
     int error = getaddrinfo(address.c_str(), std::to_string(port).c_str(), &hints, &pAddrInfo);
     if(error)
     {
+        Logger::getInstance().logEvent(ERROR, "Cannot get address info of host ", address.c_str(), ":", std::to_string(port).c_str());
         return error;
     }
 
