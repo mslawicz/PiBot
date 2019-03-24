@@ -104,8 +104,8 @@ void Drive::pitchControl(int level, uint32_t tick)
     // send read data request; this data is to be used in the next function call
     pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, dataLength);
 
-    // call telemetry handler
-    Program::getInstance().getRobot()->telemetryHandler();
+    // notify telemetry handler thread
+    Program::getInstance().getRobot()->telemetryNotify();
 }
 
 
