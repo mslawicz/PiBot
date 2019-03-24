@@ -14,6 +14,7 @@
 #include <thread>
 #include <condition_variable>
 #include <mutex>
+#include <unordered_map>
 
 class Robot
 {
@@ -28,6 +29,7 @@ public:
     void telemetryHandler(void);
     void telemetryEnable(bool state) { telemetryEnabled = state; }
     void telemetryNotify(void) { telemetryEvent.notify_one(); }
+    std::unordered_map<std::string, float> telemetryParameters;
 private:
     Drive* pDrive;
     bool telemetryEnabled;

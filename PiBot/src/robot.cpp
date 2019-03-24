@@ -62,7 +62,7 @@ void Robot::telemetryHandler(void)
 
 
         std::stringstream textStream;
-        textStream << pDrive->getSensorPitchAngularRate();
+        textStream << telemetryParameters["pitchControlSpeed"];
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
     } while (!exitHandler);

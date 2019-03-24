@@ -93,6 +93,7 @@ void Drive::pitchControl(int level, uint32_t tick)
             //valid data received
             sensorPitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
             pitchControlSpeed = pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
+            Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
             motorSpeed[0] = pitchControlSpeed;
             motorSpeed[1] = pitchControlSpeed;
             pMotors[0]->setSpeed(motorSpeed[0]);

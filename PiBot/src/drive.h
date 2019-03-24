@@ -24,7 +24,6 @@ public:
 	void start(void);
 	// stops the control of motors
 	void stop(void);
-	float getSensorPitchAngularRate(void) const {return sensorPitchAngularRate;}
 private:
 	// callback function for gyroscope generated interrupts
 	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
