@@ -17,6 +17,7 @@ Robot::Robot()
     telemetryEnabled = false;
     exitHandler = true;
     pTelemetryHandlerThread = nullptr;
+    telemetryTriggered = false;
 }
 
 Robot::~Robot()
@@ -53,18 +54,21 @@ void Robot::stop(void)
  */
 void Robot::telemetryHandler(void)
 {
+    std::stringstream textStream;
     Logger::getInstance().logEvent(INFO, "telemetry handler started");
     do
     {
         std::this_thread::yield();
         std::unique_lock<std::mutex> lock(telemetryHandlerMutex);
-        telemetryEvent.wait(lock, [this]() {return (telemetryEnabled || exitHandler); });
-
-
-        std::stringstream textStream;
-        textStream << telemetryParameters["pitchControlSpeed"];
+        telemetryEvent.wait(lock, [this]() {return (telemetryTriggered || exitHandler); });
+        telemetryTriggered = false;
+        // create parameter csv string
+        textStream.str(std::string());
+        textStream << telemetryParameters["sensorPitchAngularRate"];
+        textStream << "," << telemetryParameters["pitchControlSpeed"];
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
+        lock.unlock();
     } while (!exitHandler);
     Logger::getInstance().logEvent(INFO, "telemetry handler terminated");
 }

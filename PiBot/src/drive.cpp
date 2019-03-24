@@ -93,20 +93,27 @@ void Drive::pitchControl(int level, uint32_t tick)
             //valid data received
             sensorPitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
             pitchControlSpeed = pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
-            Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
             motorSpeed[0] = pitchControlSpeed;
             motorSpeed[1] = pitchControlSpeed;
             pMotors[0]->setSpeed(motorSpeed[0]);
             pMotors[1]->setSpeed(motorSpeed[1]);
+            {
+                std::lock_guard<std::mutex> lock(Program::getInstance().getRobot()->telemetryHandlerMutex);
+                Program::getInstance().getRobot()->telemetryParameters["sensorPitchAngularRate"] = sensorPitchAngularRate;
+                Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
+            }
+        }
+
+        if(Program::getInstance().getRobot()->isTelemetryEnabled())
+        {
+            // notify telemetry handler thread
+            Program::getInstance().getRobot()->telemetryNotify();
         }
     }
 
 
     // send read data request; this data is to be used in the next function call
     pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, dataLength);
-
-    // notify telemetry handler thread
-    Program::getInstance().getRobot()->telemetryNotify();
 }
 
 

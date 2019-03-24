@@ -27,16 +27,18 @@ public:
     void stop(void);
     // this handler is to be run in a new thread
     void telemetryHandler(void);
-    void telemetryEnable(bool state) { telemetryEnabled = state; }
-    void telemetryNotify(void) { telemetryEvent.notify_one(); }
+    void setTelemetry(bool state) { telemetryEnabled = state; }
+    void telemetryNotify(void) { telemetryTriggered = true; telemetryEvent.notify_one(); }
+    bool isTelemetryEnabled(void) const { return telemetryEnabled; }
     std::unordered_map<std::string, float> telemetryParameters;
+    std::mutex telemetryHandlerMutex;
 private:
     Drive* pDrive;
     bool telemetryEnabled;
     std::thread* pTelemetryHandlerThread;
     bool exitHandler;
     std::condition_variable telemetryEvent;
-    std::mutex telemetryHandlerMutex;
+    bool telemetryTriggered;
 };
 
 #endif /* SRC_ROBOT_H_ */
