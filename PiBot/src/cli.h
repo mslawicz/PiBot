@@ -1,6 +1,8 @@
 /*
  * command.h
  *
+ * Command Line Interpreter
+ *
  *  Created on: 26 mar 2019
  *      Author: Marcin
  */

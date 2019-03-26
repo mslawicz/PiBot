@@ -8,6 +8,7 @@
 #ifndef SRC_CONSOLE_H_
 #define SRC_CONSOLE_H_
 
+#include "cli.h"
 #include <thread>
 #include <vector>
 #include <set>
@@ -25,13 +26,11 @@ public:
     void displayHelp(void);
 private:
     void handler(void);
-    void setCommands(void);
-    void parseArguments(void);
-    bool noOfArgumentsNotLessThan(unsigned number);
     void setTelemetry(void);
     std::thread* pConsoleHandlerThread;
     std::vector<CommandContainer> commands;
     std::vector<std::string> arguments;
+    CLI* pCli;
 };
 
 #endif /* SRC_CONSOLE_H_ */
