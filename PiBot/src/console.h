@@ -23,13 +23,10 @@ class Console
 public:
     Console();
     ~Console();
-    void displayHelp(void);
 private:
     void handler(void);
     void setTelemetry(void);
     std::thread* pConsoleHandlerThread;
-    std::vector<CommandContainer> commands;
-    std::vector<std::string> arguments;
     CLI* pCli;
 };
 

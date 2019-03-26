@@ -17,19 +17,26 @@
 #include <functional>
 #include <sstream>
 
+enum HostProcess
+{
+    CONSOLE
+};
+
 typedef std::set<std::string> CommandStrings;
 typedef std::tuple<CommandStrings, std::string, std::function<void(void)>> CommandContainer;
 
 class CLI
 {
 public:
-    CLI();
+    CLI(HostProcess hostProcess);
     void process(std::string input);
 private:
     template <typename T> T getArgument(T min, T max, T def);
     std::string getArgument(void);
+    void displayHelp(void);
     std::vector<CommandContainer> commands;
     std::stringstream commandLine;
+    HostProcess host;
 };
 
 #endif /* SRC_CLI_H_ */

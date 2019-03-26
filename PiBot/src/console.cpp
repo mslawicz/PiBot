@@ -13,7 +13,7 @@
 
 Console::Console()
 {
-    pCli = new CLI;
+    pCli = new CLI(HostProcess::CONSOLE);
     pConsoleHandlerThread = new std::thread(&Console::handler, this);
 }
 
@@ -42,30 +42,6 @@ void Console::handler(void)
     } while (!Program::getInstance().isExitRequest());
 
     Logger::getInstance().logEvent(INFO, "Console handler exit");
-}
-
-/*
- * displays help - list of commands
- */
-void Console::displayHelp(void)
-{
-    for(auto commandItem : commands)
-    {
-        bool notFirst = false;
-        for (auto command : std::get<0>(commandItem))
-        {
-            if(notFirst)
-            {
-                std::cout << " | ";
-            }
-            else
-            {
-                notFirst = true;
-            }
-            std::cout << command.c_str();
-        }
-        std::cout << " : " << std::get<1>(commandItem).c_str() << std::endl;
-    }
 }
 
 /*

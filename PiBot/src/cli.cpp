@@ -9,9 +9,13 @@
 
 #include "program.h"
 
-CLI::CLI()
+CLI::CLI(HostProcess hostProcess)
+    : host(hostProcess)
 {
-    commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", []() { Program::getInstance().getConsole()->displayHelp(); });
+    if(host == HostProcess::CONSOLE)
+    {
+        commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&CLI::displayHelp, this));
+    }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
@@ -20,6 +24,8 @@ CLI::CLI()
 
 void CLI::process(std::string input)
 {
+    commandLine.ignore();
+    commandLine.clear();
     commandLine.str(input);
     std::string command;
     commandLine >> command;
@@ -33,12 +39,10 @@ void CLI::process(std::string input)
             break;
         }
     }
-    if (!isValid)
+    if (!isValid && (host == HostProcess::CONSOLE))
     {
         std::cout << "unknown command\n";
     }
-    commandLine.ignore();
-    commandLine.clear();
 }
 
 template <typename T> T CLI::getArgument(T min, T max, T def)
@@ -80,3 +84,26 @@ std::string CLI::getArgument(void)
     return argument;
 }
 
+/*
+ * displays help - list of commands
+ */
+void CLI::displayHelp(void)
+{
+    for(auto commandItem : commands)
+    {
+        bool notFirst = false;
+        for (auto command : std::get<0>(commandItem))
+        {
+            if(notFirst)
+            {
+                std::cout << " | ";
+            }
+            else
+            {
+                notFirst = true;
+            }
+            std::cout << command.c_str();
+        }
+        std::cout << " : " << std::get<1>(commandItem).c_str() << std::endl;
+    }
+}
