@@ -5,10 +5,11 @@
  *      Author: Marcin
  */
 
-#include "command.h"
+#include "cli.h"
+
 #include "program.h"
 
-Command::Command()
+CLI::CLI()
 {
     commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", []() { Program::getInstance().getConsole()->displayHelp(); });
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
@@ -17,7 +18,7 @@ Command::Command()
     //commands.emplace_back(CommandStrings {"telemetry"}, "set the data telemetry: <IP> <port> | off", std::bind(&Console::setTelemetry, this));
 }
 
-void Command::interpreter(std::string input)
+void CLI::process(std::string input)
 {
     commandLine.str(input);
     std::string command;
@@ -40,7 +41,7 @@ void Command::interpreter(std::string input)
     commandLine.clear();
 }
 
-template <typename T> T Command::getArgument(T min, T max, T def)
+template <typename T> T CLI::getArgument(T min, T max, T def)
 {
     if (commandLine.eof())
     {
@@ -65,7 +66,7 @@ template <typename T> T Command::getArgument(T min, T max, T def)
     }
 }
 
-std::string Command::getArgument(void)
+std::string CLI::getArgument(void)
 {
     std::string argument;
     if (commandLine.eof())

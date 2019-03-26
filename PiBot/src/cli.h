@@ -5,8 +5,8 @@
  *      Author: Marcin
  */
 
-#ifndef SRC_COMMAND_H_
-#define SRC_COMMAND_H_
+#ifndef SRC_CLI_H_
+#define SRC_CLI_H_
 
 #include <string>
 #include <set>
@@ -18,11 +18,11 @@
 typedef std::set<std::string> CommandStrings;
 typedef std::tuple<CommandStrings, std::string, std::function<void(void)>> CommandContainer;
 
-class Command
+class CLI
 {
 public:
-    Command();
-    void interpreter(std::string input);
+    CLI();
+    void process(std::string input);
 private:
     template <typename T> T getArgument(T min, T max, T def);
     std::string getArgument(void);
@@ -30,4 +30,4 @@ private:
     std::stringstream commandLine;
 };
 
-#endif /* SRC_COMMAND_H_ */
+#endif /* SRC_CLI_H_ */
