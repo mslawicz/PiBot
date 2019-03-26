@@ -35,6 +35,8 @@ void Console::handler(void)
 
     do
     {
+        std::cin.ignore();
+        std::cin.clear();
         std::cout << '>';
         std::this_thread::yield();
         std::getline(std::cin, commandLine);
