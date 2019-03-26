@@ -22,10 +22,10 @@ class Console
 public:
     Console();
     ~Console();
+    void displayHelp(void);
 private:
     void handler(void);
     void setCommands(void);
-    void displayHelp(void);
     void parseArguments(void);
     bool noOfArgumentsNotLessThan(unsigned number);
     void setTelemetry(void);

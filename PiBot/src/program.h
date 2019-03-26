@@ -43,6 +43,7 @@ public:
 	void requestExit(void) { exitRequest = true; }
 	Robot* getRobot(void) const { return pRobot; }
 	UDP::Client* getUdpClient(void) const { return pUdpClient; }
+	Console* getConsole(void) const { return pConsole; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
