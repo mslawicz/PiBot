@@ -35,6 +35,7 @@ private:
     std::string getArgument(std::string def);
     void displayHelp(void);
     void setTelemetry(void);
+    void displayLanAddresses(void);
     std::vector<CommandContainer> commands;
     std::stringstream commandLine;
     HostProcess host;

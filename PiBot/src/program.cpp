@@ -29,6 +29,7 @@ Program::Program()
     pConsole = nullptr;
     pRobot = nullptr;
     pUdpClient = nullptr;
+    pConfig = nullptr;
 }
 
 Program::~Program()
@@ -140,6 +141,9 @@ void Program::initialize(void)
 
 	// create UDP client
 	pUdpClient = new UDP::Client;
+
+	// robot configuration object
+	pConfig = new Config;
 }
 
 /*

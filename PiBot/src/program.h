@@ -17,6 +17,7 @@
 #include "console.h"
 #include "robot.h"
 #include "udp.h"
+#include "config.h"
 #include <vector>
 #include <map>
 #include <unordered_map>
@@ -44,6 +45,7 @@ public:
 	Robot* getRobot(void) const { return pRobot; }
 	UDP::Client* getUdpClient(void) const { return pUdpClient; }
 	Console* getConsole(void) const { return pConsole; }
+	Config* getConfig(void) const { return pConfig; }
 private:
 	// private constructor prevents from creation more objects
 	Program();
@@ -57,6 +59,7 @@ private:
 	Console* pConsole;
 	Robot* pRobot;
 	UDP::Client* pUdpClient;
+	Config* pConfig;
 };
 
 #endif /* SRC_PROGRAM_H_ */

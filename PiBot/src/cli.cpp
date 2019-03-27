@@ -15,11 +15,12 @@ CLI::CLI(HostProcess hostProcess)
     if(host == HostProcess::CONSOLE)
     {
         commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&CLI::displayHelp, this));
+        commands.emplace_back(CommandStrings {"ip"}, "display lan interface addresses", std::bind(&CLI::displayLanAddresses, this));
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
-    commands.emplace_back(CommandStrings {"telemetry"}, "set the data telemetry: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
+    commands.emplace_back(CommandStrings {"telemetry"}, "connect to telemetry server: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
 }
 
 void CLI::process(std::string input)
@@ -126,5 +127,17 @@ void CLI::setTelemetry(void)
         // turn on telemetry
         Program::getInstance().getUdpClient()->setConnection(ipAddress, getArgument<int>(0, 65535, 8080));
         Program::getInstance().getRobot()->setTelemetry(true);
+    }
+}
+
+/*
+ * get and display lan addresses
+ */
+void CLI::displayLanAddresses(void)
+{
+    auto lanIfs = Program::getInstance().getConfig()->getIpAddresses();
+    for(auto lanIf : lanIfs)
+    {
+        std::cout << lanIf.first.c_str() << " : " << lanIf.second.first.c_str() << " / " << lanIf.second.second.c_str() << std::endl;
     }
 }
