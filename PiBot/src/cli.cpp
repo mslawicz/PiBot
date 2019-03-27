@@ -19,7 +19,7 @@ CLI::CLI(HostProcess hostProcess)
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
-    //commands.emplace_back(CommandStrings {"telemetry"}, "set the data telemetry: <IP> <port> | off", std::bind(&Console::setTelemetry, this));
+    commands.emplace_back(CommandStrings {"telemetry"}, "set the data telemetry: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
 }
 
 void CLI::process(std::string input)
@@ -70,12 +70,13 @@ template <typename T> T CLI::getArgument(T min, T max, T def)
     }
 }
 
-std::string CLI::getArgument(void)
+std::string CLI::getArgument(std::string def)
 {
     std::string argument;
     if (commandLine.eof())
     {
         std::cout << "no more args, default used\n";
+        argument = def;
     }
     else
     {
@@ -105,5 +106,25 @@ void CLI::displayHelp(void)
             std::cout << command.c_str();
         }
         std::cout << " : " << std::get<1>(commandItem).c_str() << std::endl;
+    }
+}
+
+/*
+ * switch telemetry on/off
+ */
+void CLI::setTelemetry(void)
+{
+    std::string ipAddress(getArgument("off"));
+    if(ipAddress == "off")
+    {
+        // turn off telemetry
+        Program::getInstance().getRobot()->setTelemetry(false);
+        Program::getInstance().getUdpClient()->disconnect();
+    }
+    else
+    {
+        // turn on telemetry
+        Program::getInstance().getUdpClient()->setConnection(ipAddress, getArgument<int>(0, 65535, 8080));
+        Program::getInstance().getRobot()->setTelemetry(true);
     }
 }

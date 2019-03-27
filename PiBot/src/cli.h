@@ -32,8 +32,9 @@ public:
     void process(std::string input);
 private:
     template <typename T> T getArgument(T min, T max, T def);
-    std::string getArgument(void);
+    std::string getArgument(std::string def);
     void displayHelp(void);
+    void setTelemetry(void);
     std::vector<CommandContainer> commands;
     std::stringstream commandLine;
     HostProcess host;

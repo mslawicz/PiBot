@@ -25,7 +25,6 @@ public:
     ~Console();
 private:
     void handler(void);
-    void setTelemetry(void);
     std::thread* pConsoleHandlerThread;
     CLI* pCli;
 };

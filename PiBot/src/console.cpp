@@ -46,27 +46,3 @@ void Console::handler(void)
     Logger::getInstance().logEvent(INFO, "Console handler exit");
 }
 
-/*
- * switch telemetry on/off
- */
-//void Console::setTelemetry(void)
-//{
-//    if(noOfArgumentsNotLessThan(1))
-//    {
-//        if(arguments[0] == "off")
-//        {
-//            // turn off telemetry
-//            Program::getInstance().getRobot()->setTelemetry(false);
-//            Program::getInstance().getUdpClient()->disconnect();
-//        }
-//        else
-//        {
-//            // turn on telemetry
-//            if(noOfArgumentsNotLessThan(2))
-//            {
-//                Program::getInstance().getUdpClient()->setConnection(arguments[0], std::stoi(arguments[1]));
-//                Program::getInstance().getRobot()->setTelemetry(true);
-//            }
-//        }
-//    }
-//}
