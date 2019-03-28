@@ -35,6 +35,18 @@ private:
     int socketDescriptor;
 };
 
+class Server
+{
+public:
+    Server();
+    ~Server();
+    int serverBind(void);
+private:
+//    std::string address;
+//    int port;
+//    int socketDescriptor;
+};
+
 } /* namespace UDP */
 
 #endif /* SRC_UDP_H_ */

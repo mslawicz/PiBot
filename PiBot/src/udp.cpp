@@ -91,4 +91,19 @@ void Client::disconnect(void)
     }
 }
 
+Server::Server()
+{
+
+}
+
+Server::~Server()
+{
+
+}
+
+int Server::serverBind(void)
+{
+    return 0;
+}
+
 } /* namespace UDP */
