@@ -40,11 +40,11 @@ class Server
 public:
     Server();
     ~Server();
-    int serverBind(void);
+    int serverBind(int clientPort);
+    void serverUnbind(void);
 private:
-//    std::string address;
-//    int port;
-//    int socketDescriptor;
+    int port;
+    int socketDescriptor;
 };
 
 } /* namespace UDP */

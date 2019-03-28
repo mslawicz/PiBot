@@ -93,7 +93,8 @@ void Client::disconnect(void)
 
 Server::Server()
 {
-
+    port = 0;
+    socketDescriptor = -1;
 }
 
 Server::~Server()
@@ -101,9 +102,67 @@ Server::~Server()
 
 }
 
-int Server::serverBind(void)
+int Server::serverBind(int clientPort)
 {
+    port = clientPort;
+    struct addrinfo hints;
+    struct addrinfo* pAddrInfo;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;    // IP4 or IP6
+    hints.ai_socktype = SOCK_DGRAM; // datagram (UDP)
+    hints.ai_protocol = 0;  // any
+    hints.ai_flags = AI_PASSIVE;    // for wildcard IP address
+    hints.ai_canonname = nullptr;
+    hints.ai_addr = nullptr;
+    hints.ai_next = nullptr;
+    int error = getaddrinfo(nullptr, std::to_string(port).c_str(), &hints, &pAddrInfo);
+    if(error)
+    {
+        Logger::getInstance().logEvent(ERROR, "Cannot get UDP server address info");
+        return error;
+    }
+
+    struct addrinfo* pItem;
+    for(pItem = pAddrInfo; pItem != nullptr; pItem = pItem->ai_next)
+    {
+        socketDescriptor = socket(pItem->ai_family,  pItem->ai_socktype, pItem->ai_protocol);
+
+        if(socketDescriptor == -1)
+        {
+            continue;
+        }
+
+        if(bind(socketDescriptor, pItem->ai_addr, pItem->ai_addrlen) == 0)
+        {
+            // success on bind
+            Logger::getInstance().logEvent(INFO, "Bind UDP server ", pItem->ai_addr->sa_data, ":", std::to_string(port).c_str());
+            break;
+        }
+
+        close(socketDescriptor);
+    }
+
+    if(pItem == nullptr)
+    {
+        // no address succeeded
+        Logger::getInstance().logEvent(ERROR, "Could not bind UDP server");
+        return -1;
+    }
+
+    freeaddrinfo(pAddrInfo);
+
     return 0;
+}
+
+void Server::serverUnbind(void)
+{
+    if(socketDescriptor != -1)
+    {
+        shutdown(socketDescriptor, SHUT_RDWR);
+        Logger::getInstance().logEvent(INFO, "Unbind UDP server");
+        socketDescriptor = -1;
+        port = 0;
+    }
 }
 
 } /* namespace UDP */
