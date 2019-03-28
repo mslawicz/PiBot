@@ -40,8 +40,8 @@ class Server
 public:
     Server();
     ~Server();
-    int serverBind(int clientPort);
-    void serverUnbind(void);
+    int start(int clientPort);
+    void stop(void);
 private:
     int port;
     int socketDescriptor;

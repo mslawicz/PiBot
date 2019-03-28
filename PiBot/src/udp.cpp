@@ -102,7 +102,7 @@ Server::~Server()
 
 }
 
-int Server::serverBind(int clientPort)
+int Server::start(int clientPort)
 {
     port = clientPort;
     struct addrinfo hints;
@@ -135,7 +135,7 @@ int Server::serverBind(int clientPort)
         if(bind(socketDescriptor, pItem->ai_addr, pItem->ai_addrlen) == 0)
         {
             // success on bind
-            Logger::getInstance().logEvent(INFO, "Bind UDP server ", pItem->ai_addr->sa_data, ":", std::to_string(port).c_str());
+            Logger::getInstance().logEvent(INFO, "UDP server socket bound using port ", std::to_string(port).c_str());
             break;
         }
 
@@ -145,7 +145,7 @@ int Server::serverBind(int clientPort)
     if(pItem == nullptr)
     {
         // no address succeeded
-        Logger::getInstance().logEvent(ERROR, "Could not bind UDP server");
+        Logger::getInstance().logEvent(ERROR, "Could not bind UDP server socket");
         return -1;
     }
 
@@ -154,12 +154,12 @@ int Server::serverBind(int clientPort)
     return 0;
 }
 
-void Server::serverUnbind(void)
+void Server::stop(void)
 {
     if(socketDescriptor != -1)
     {
         shutdown(socketDescriptor, SHUT_RDWR);
-        Logger::getInstance().logEvent(INFO, "Unbind UDP server");
+        Logger::getInstance().logEvent(INFO, "UDP server socket unbound");
         socketDescriptor = -1;
         port = 0;
     }

@@ -7,6 +7,7 @@
 
 #include "program.h"
 #include "logger.h"
+#include "udp.h" //XXX test
 #include <iostream>
 #include <chrono>
 
@@ -18,6 +19,8 @@ int main(int argc, char* argv[])
 
 	{
 	    // scope of test objects
+	    UDP::Server server;
+	    server.start(5001);
 
 	    while(!Program::getInstance().isExitRequest())
 	    {
@@ -25,6 +28,7 @@ int main(int argc, char* argv[])
 	    }
 	    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
+	    server.stop();
 	}
 
 	Program::getInstance().terminate();
