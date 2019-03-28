@@ -11,6 +11,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <string>
+#include <thread>
 
 namespace UDP
 {
@@ -43,8 +44,12 @@ public:
     int start(int clientPort);
     void stop(void);
 private:
+    // UDP server handler to be launched in a new thread
+    void handler(void);
+    std::thread* pServerHandlerThread;
     int port;
     int socketDescriptor;
+    bool terminateThread;
 };
 
 } /* namespace UDP */

@@ -95,6 +95,8 @@ Server::Server()
 {
     port = 0;
     socketDescriptor = -1;
+    terminateThread = false;
+    pServerHandlerThread = nullptr;
 }
 
 Server::~Server()
@@ -151,6 +153,9 @@ int Server::start(int clientPort)
 
     freeaddrinfo(pAddrInfo);
 
+    terminateThread = false;
+    pServerHandlerThread =  new std::thread(&Server::handler, this);
+
     return 0;
 }
 
@@ -158,11 +163,34 @@ void Server::stop(void)
 {
     if(socketDescriptor != -1)
     {
+        terminateThread = true;
         shutdown(socketDescriptor, SHUT_RDWR);
         Logger::getInstance().logEvent(INFO, "UDP server socket unbound");
         socketDescriptor = -1;
         port = 0;
+        pServerHandlerThread->join();
+        delete pServerHandlerThread;
     }
+}
+
+/*
+ * Server handler to be launched in a new thread
+ */
+void Server::handler(void)
+{
+    Logger::getInstance().logEvent(INFO, "UDP server handler started");
+    const size_t BufferSize = 200;
+    char buffer[BufferSize];
+    struct sockaddr_in remoteAddress;
+    socklen_t remoteAddressLength = sizeof(struct sockaddr_in);
+
+    do
+    {
+        std::this_thread::yield();
+        recvfrom(socketDescriptor, buffer, BufferSize, 0, (struct sockaddr *)&remoteAddress, &remoteAddressLength);
+    } while (!terminateThread);
+
+    Logger::getInstance().logEvent(INFO, "UDP server handler exit");
 }
 
 } /* namespace UDP */
