@@ -33,6 +33,7 @@ enum SerialPriority
     GYROSCOPE_PR,
     ACCELEROMETER_PR,
     MAGNETOMETER_PR,
+    SERVO_PR,
     DISPLAY_PR
 };
 
