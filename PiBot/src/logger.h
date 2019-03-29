@@ -41,7 +41,8 @@ enum ExitCode
 	WRONG_SPI_DEVICE,
 	WRONG_SPI_BUS,
 	SPI_NOT_OPENED,
-	WRONG_SERIAL_BUS
+	WRONG_SERIAL_BUS,
+	BAD_SERVO_NO
 };
 
 // definition of logged messages severity level

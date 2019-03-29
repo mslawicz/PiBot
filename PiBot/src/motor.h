@@ -10,6 +10,7 @@
 
 
 #include "i2c.h"
+#include <vector>
 
 #define CONST_1 (uint8_t)1
 #define CONST_0 (uint8_t)0
@@ -23,7 +24,6 @@ class Motor : public I2cDevice
 public:
     Motor(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address, uint8_t motorNo);
     ~Motor();
-    void test(void);    //XXX test
     void setSpeed(float speed, bool motorOff = false);
 private:
     std::vector<uint8_t> setChannelData(uint8_t bit);

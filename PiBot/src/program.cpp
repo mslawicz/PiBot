@@ -174,6 +174,7 @@ void Program::terminate(ExitCode exitCode)
         { WRONG_SPI_BUS, "Wrong SPI bus" },
         { SPI_NOT_OPENED, "SPI opening error" },
         { WRONG_SERIAL_BUS, "Wrong serial bus" },
+        { BAD_SERVO_NO, "Bad servo number" },
 	};
 
 	if (exitCode == ExitCode::OK)
