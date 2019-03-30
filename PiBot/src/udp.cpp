@@ -7,6 +7,7 @@
 
 #include "udp.h"
 #include "logger.h"
+#include "cli.h"
 #include <sys/socket.h>
 #include <cstring>
 
@@ -179,6 +180,7 @@ void Server::stop(void)
 void Server::handler(void)
 {
     Logger::getInstance().logEvent(INFO, "UDP server handler started");
+    CLI cli(HostProcess::UDP_SERVER);
     const size_t BufferSize = 200;
     char buffer[BufferSize];
     struct sockaddr_in remoteAddress;
@@ -189,7 +191,7 @@ void Server::handler(void)
         std::this_thread::yield();
         memset(buffer, 0, BufferSize);
         recvfrom(socketDescriptor, buffer, BufferSize, 0, (struct sockaddr *)&remoteAddress, &remoteAddressLength);
-        Logger::getInstance().logEvent(INFO, "UDP message received: ", buffer);
+        cli.process(std::string(buffer));
     } while (!terminateThread);
 
     Logger::getInstance().logEvent(INFO, "UDP server handler exit");

@@ -19,7 +19,8 @@
 
 enum HostProcess
 {
-    CONSOLE
+    CONSOLE,
+    UDP_SERVER
 };
 
 typedef std::set<std::string> CommandStrings;
