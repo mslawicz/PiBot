@@ -29,6 +29,7 @@ Program::Program()
     pConsole = nullptr;
     pRobot = nullptr;
     pUdpClient = nullptr;
+    pUdpServer = nullptr;
     pConfig = nullptr;
 }
 
@@ -142,6 +143,9 @@ void Program::initialize(void)
 	// create UDP client
 	pUdpClient = new UDP::Client;
 
+	// create UDP server
+	pUdpServer = new UDP::Server;
+
 	// robot configuration object
 	pConfig = new Config;
 }
@@ -186,6 +190,8 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
+	pUdpServer->stop();
+	delete pUdpServer;
 	delete pUdpClient;
 	delete pRobot;
 	delete pConsole;

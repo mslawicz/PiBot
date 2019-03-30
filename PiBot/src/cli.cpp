@@ -16,11 +16,13 @@ CLI::CLI(HostProcess hostProcess)
     {
         commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&CLI::displayHelp, this));
         commands.emplace_back(CommandStrings {"ip"}, "display lan interface addresses", std::bind(&CLI::displayLanAddresses, this));
+        commands.emplace_back(CommandStrings {"start_udp"}, "start udp remote control: <port>", [this]() { Program::getInstance().getUdpServer()->start(getArgument<int>(1, 0xFFFF, 5001)); });
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
     commands.emplace_back(CommandStrings {"telemetry"}, "connect to telemetry server: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
+    commands.emplace_back(CommandStrings {"stop_udp"}, "stop udp remote control", []() { Program::getInstance().getUdpServer()->stop(); });
 }
 
 void CLI::process(std::string input)

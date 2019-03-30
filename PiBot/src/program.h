@@ -44,6 +44,7 @@ public:
 	void requestExit(void) { exitRequest = true; }
 	Robot* getRobot(void) const { return pRobot; }
 	UDP::Client* getUdpClient(void) const { return pUdpClient; }
+	UDP::Server* getUdpServer(void) const { return pUdpServer; }
 	Console* getConsole(void) const { return pConsole; }
 	Config* getConfig(void) const { return pConfig; }
 private:
@@ -59,6 +60,7 @@ private:
 	Console* pConsole;
 	Robot* pRobot;
 	UDP::Client* pUdpClient;
+	UDP::Server* pUdpServer;
 	Config* pConfig;
 };
 
