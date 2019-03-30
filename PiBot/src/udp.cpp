@@ -187,7 +187,9 @@ void Server::handler(void)
     do
     {
         std::this_thread::yield();
+        memset(buffer, 0, BufferSize);
         recvfrom(socketDescriptor, buffer, BufferSize, 0, (struct sockaddr *)&remoteAddress, &remoteAddressLength);
+        Logger::getInstance().logEvent(INFO, "UDP message received: ", buffer);
     } while (!terminateThread);
 
     Logger::getInstance().logEvent(INFO, "UDP server handler exit");

@@ -8,7 +8,6 @@
 #ifndef SRC_CONSOLE_H_
 #define SRC_CONSOLE_H_
 
-#include "cli.h"
 #include <thread>
 #include <vector>
 #include <set>
@@ -26,7 +25,6 @@ public:
 private:
     void handler(void);
     std::thread* pConsoleHandlerThread;
-    CLI* pCli;
 };
 
 #endif /* SRC_CONSOLE_H_ */

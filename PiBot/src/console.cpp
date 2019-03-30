@@ -8,12 +8,12 @@
 #include "console.h"
 #include "logger.h"
 #include "program.h"
+#include "cli.h"
 #include <string>
 #include <chrono>
 
 Console::Console()
 {
-    pCli = new CLI(HostProcess::CONSOLE);
     pConsoleHandlerThread = new std::thread(&Console::handler, this);
 }
 
@@ -21,7 +21,6 @@ Console::~Console()
 {
     pConsoleHandlerThread->join();
     delete pConsoleHandlerThread;
-    delete pCli;
 }
 
 /*
@@ -30,6 +29,7 @@ Console::~Console()
 void Console::handler(void)
 {
     std::string commandLine;
+    CLI cli(HostProcess::CONSOLE);
     Logger::getInstance().logEvent(INFO, "Console handler started");
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -40,7 +40,7 @@ void Console::handler(void)
         std::cout << '>';
         std::this_thread::yield();
         std::getline(std::cin, commandLine);
-        pCli->process(commandLine);
+        cli.process(commandLine);
     } while (!Program::getInstance().isExitRequest());
 
     Logger::getInstance().logEvent(INFO, "Console handler exit");
