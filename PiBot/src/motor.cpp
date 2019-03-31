@@ -68,14 +68,19 @@ void Motor::setSpeed(float speed, bool motorOff)
         registers[TB6612In2[motorNo]] = setChannelData(speed > 0 ? CONST_0 : CONST_1);
         registers[TB6612PWM[motorNo]] = setChannelData(speed);
     }
-    std::vector<uint8_t> dataToWrite;
-    for(auto reg : registers)
+
+    if(!registers.empty())
     {
-        dataToWrite.insert(dataToWrite.end(), reg.second.begin(), reg.second.end());
+        // there are some registers to update
+        std::vector<uint8_t> dataToWrite;
+        for(auto reg : registers)
+        {
+            dataToWrite.insert(dataToWrite.end(), reg.second.begin(), reg.second.end());
+        }
+        // write data to PWM channels registers
+        writeDataRequest(PCA9685Registers::LED0_ON_L + 4 * registers.begin()->first, dataToWrite);
     }
 
-    // write data to PWM channels registers
-    writeDataRequest(PCA9685Registers::LED0_ON_L + 4 * registers.begin()->first, dataToWrite);
     // store the current speed
     lastSpeed = speed;
 }

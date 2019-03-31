@@ -79,7 +79,7 @@ void SerialBus::handler(void)
                     int result = std::get<1>(*iDevice)->writeData(std::get<1>(*iDevice)->handle, std::get<0>(dataContainer), std::get<2>(dataContainer));
                     if(result)
                     {
-                        Logger::getInstance().logEvent(ERROR, "Serial device write error: bus=", busId, ", device=", std::hex, std::get<1>(*iDevice)->address, ", error=", result);
+                        Logger::getInstance().logEvent(ERROR, "Serial device write error: bus=", busId, ", device=", std::hex, static_cast<unsigned>(std::get<1>(*iDevice)->address), ", error=", std::dec, result);
                     }
                 }
                 else

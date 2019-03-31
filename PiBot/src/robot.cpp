@@ -43,10 +43,14 @@ void Robot::stop(void)
 {
     Logger::getInstance().logEvent(INFO, "robot stop request");
     pDrive->stop();
-    exitHandler = true;
-    telemetryNotify();
-    pTelemetryHandlerThread->join();
-    delete pTelemetryHandlerThread;
+    if(pTelemetryHandlerThread != nullptr)
+    {
+        exitHandler = true;
+        telemetryNotify();
+        pTelemetryHandlerThread->join();
+        delete pTelemetryHandlerThread;
+        pTelemetryHandlerThread = nullptr;
+    }
 }
 
 /*
