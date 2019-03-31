@@ -172,6 +172,11 @@ void Server::stop(void)
         pServerHandlerThread->join();
         delete pServerHandlerThread;
     }
+    else
+    {
+        // UDP server not running
+        Logger::getInstance().logEvent(INFO, "no UDP server running");
+    }
 }
 
 /*

@@ -16,13 +16,12 @@ CLI::CLI(HostProcess hostProcess)
     {
         commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&CLI::displayHelp, this));
         commands.emplace_back(CommandStrings {"ip"}, "display lan interface addresses", std::bind(&CLI::displayLanAddresses, this));
-        commands.emplace_back(CommandStrings {"start_udp"}, "start udp remote control: <port>", [this]() { Program::getInstance().getUdpServer()->start(getArgument<int>(1, 0xFFFF, 5001)); });
+        commands.emplace_back(CommandStrings {"udp"}, "start/stop udp remote control: <port> | 0", std::bind(&CLI::serverUDP, this));
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
     commands.emplace_back(CommandStrings {"telemetry"}, "connect to telemetry server: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
-    commands.emplace_back(CommandStrings {"stop_udp"}, "stop udp remote control", []() { Program::getInstance().getUdpServer()->stop(); });
 }
 
 void CLI::process(std::string input)
@@ -141,5 +140,23 @@ void CLI::displayLanAddresses(void)
     for(auto lanIf : lanIfs)
     {
         std::cout << lanIf.first.c_str() << " : " << lanIf.second.first.c_str() << " / " << lanIf.second.second.c_str() << std::endl;
+    }
+}
+
+/*
+ * start / stop server UDP
+ */
+void CLI::serverUDP(void)
+{
+    int port = getArgument<int>(0, 0xFFFF, 5001);
+    if(port)
+    {
+        // start server UDP
+        Program::getInstance().getUdpServer()->start(port);
+    }
+    else
+    {
+        // stop server UDP
+        Program::getInstance().getUdpServer()->stop();
     }
 }
