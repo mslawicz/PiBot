@@ -99,6 +99,12 @@ void Drive::pitchControl(int level, uint32_t tick)
             pMotors[1]->setSpeed(motorSpeed[1]);
             {
                 std::lock_guard<std::mutex> lock(Program::getInstance().getRobot()->telemetryHandlerMutex);
+                Program::getInstance().getRobot()->telemetryParameters["PidKp"] =  pPitchPID->getKp();
+                Program::getInstance().getRobot()->telemetryParameters["PidKi"] =  pPitchPID->getKi();
+                Program::getInstance().getRobot()->telemetryParameters["PidKd"] =  pPitchPID->getKd();
+                Program::getInstance().getRobot()->telemetryParameters["PidProportional"] =  pPitchPID->getProportional();
+                Program::getInstance().getRobot()->telemetryParameters["PidIntegral"] =  pPitchPID->getIntegral();
+                Program::getInstance().getRobot()->telemetryParameters["PidDerivative"] =  pPitchPID->getDerivative();
                 Program::getInstance().getRobot()->telemetryParameters["sensorPitchAngularRate"] = sensorPitchAngularRate;
                 Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
             }

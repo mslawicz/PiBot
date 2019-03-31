@@ -64,8 +64,24 @@ void Robot::telemetryHandler(void)
         telemetryTriggered = false;
         // create parameter csv string
         textStream.str(std::string());
-        textStream << telemetryParameters["sensorPitchAngularRate"];
-        textStream << "," << telemetryParameters["pitchControlSpeed"];
+
+        // PID Kp
+        textStream << telemetryParameters["PidKp"] << ",";
+        // PID Ki
+        textStream << telemetryParameters["PidKi"] << ",";
+        // PID Kd
+        textStream << telemetryParameters["PidKd"] << ",";
+        // PID P value
+        textStream << telemetryParameters["PidProportional"] << ",";
+        // PID I value
+        textStream << telemetryParameters["PidIntegral"] << ",";
+        // PID D value
+        textStream << telemetryParameters["PidDerivative"] << ",";
+        // gyroscope angular rate - X axis [rad/s]
+        textStream << telemetryParameters["sensorPitchAngularRate"] << ",";
+        // both motors pitch control speed [1.0 == full forward speed]
+        textStream << telemetryParameters["pitchControlSpeed"] << ",";
+
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
         lock.unlock();

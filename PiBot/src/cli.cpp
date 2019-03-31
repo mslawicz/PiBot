@@ -172,15 +172,15 @@ void CLI::setPID(void)
     std::string term = getArgument("");
     if(term == "p" || term == "P")
     {
-        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setP(getArgument<float>(0.0f, 10.0f, 0.5f));
+        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKp(getArgument<float>(0.0f, 10.0f, 0.5f));
     }
     else     if(term == "i" || term == "I")
     {
-        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setI(getArgument<float>(0.0f, 1.0f, 0.1f));
+        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKi(getArgument<float>(0.0f, 1.0f, 0.1f));
     }
     else     if(term == "d" || term == "D")
     {
-        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setD(getArgument<float>(0.0f, 2.0f, 0.2f));
+        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKd(getArgument<float>(0.0f, 2.0f, 0.2f));
     }
     else
     {

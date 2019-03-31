@@ -13,14 +13,20 @@ PID::PID(float coefficientP, float coefficientI, float coefficientD)
     , kD(coefficientD)
 {
     previousError = 0.0f;
+    integralError = 0.0f;
+    proportional = 0.0f;
     integral = 0.0f;
+    derivative = 0.0f;
 }
 
 float PID::calculate(float setPointValue, float measuredProcessValue)
 {
     float error = setPointValue - measuredProcessValue;
-    integral += error;
-    float output = kP * error + kI * integral + kD * (error - previousError);
+    proportional = kP * error;
+    integralError += error;
+    integral = kI * integralError;
+    derivative = kD * (error - previousError);
+    float output = proportional + integral + derivative;
     previousError = error;
     return output;
 }
