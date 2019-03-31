@@ -30,6 +30,7 @@ public:
     void setTelemetry(bool state) { telemetryEnabled = state; }
     void telemetryNotify(void) { telemetryTriggered = true; telemetryEvent.notify_one(); }
     bool isTelemetryEnabled(void) const { return telemetryEnabled; }
+    Drive* getDrive(void) const {return pDrive;}
     std::unordered_map<std::string, float> telemetryParameters;
     std::mutex telemetryHandlerMutex;
 private:

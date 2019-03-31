@@ -38,6 +38,7 @@ private:
     void setTelemetry(void);
     void displayLanAddresses(void);
     void serverUDP(void);
+    void setPID(void);
     std::vector<CommandContainer> commands;
     std::stringstream commandLine;
     HostProcess host;

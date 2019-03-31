@@ -8,6 +8,8 @@
 #include "cli.h"
 
 #include "program.h"
+#include "logger.h"
+#include <set>
 
 CLI::CLI(HostProcess hostProcess)
     : host(hostProcess)
@@ -22,6 +24,7 @@ CLI::CLI(HostProcess hostProcess)
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
     commands.emplace_back(CommandStrings {"telemetry"}, "connect to telemetry server: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
+    commands.emplace_back(CommandStrings {"pid"}, "set motor PID value: p | i | d <value>", std::bind(&CLI::setPID, this));
 }
 
 void CLI::process(std::string input)
@@ -158,5 +161,30 @@ void CLI::serverUDP(void)
     {
         // stop server UDP
         Program::getInstance().getUdpServer()->stop();
+    }
+}
+
+/*
+ * set PID coefficient value
+ */
+void CLI::setPID(void)
+{
+    std::string term = getArgument("");
+    if(term == "p" || term == "P")
+    {
+        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setP(getArgument<float>(0.0f, 10.0f, 0.5f));
+    }
+    else     if(term == "i" || term == "I")
+    {
+        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setI(getArgument<float>(0.0f, 1.0f, 0.1f));
+    }
+    else     if(term == "d" || term == "D")
+    {
+        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setD(getArgument<float>(0.0f, 2.0f, 0.2f));
+    }
+    else
+    {
+        // unknown PID term
+        Logger::getInstance().logEvent(MessageLevel::WARNING, "Unknown PID term: ", term);
     }
 }
