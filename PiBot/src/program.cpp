@@ -190,6 +190,7 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
+	delete pConfig;
 	pUdpServer->stop();
 	delete pUdpServer;
 	delete pUdpClient;

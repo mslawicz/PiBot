@@ -12,6 +12,41 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+Config::Config()
+{
+    parameters.emplace("motor_pid_p",
+            Actions([this](){Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKp(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getDrive()->getPitchPID()->getKp();}));
+    parameters.emplace("motor_pid_i",
+            Actions([this](){Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKi(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getDrive()->getPitchPID()->getKi();}));
+    parameters.emplace("motor_pid_d",
+            Actions([this](){Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKd(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getDrive()->getPitchPID()->getKd();}));
+}
+
+Config::~Config()
+{
+    cfgFile.open(CfgFileName, std::ios::out);
+    if(cfgFile.is_open())
+    {
+        // save parameters to cfg file
+        for(auto parameter : parameters)
+        {
+            cfgFile << parameter.first << " ";
+            parameter.second.second();
+            cfgFile << "\n";
+        }
+
+        cfgFile.close();
+        Logger::getInstance().logEvent(INFO, "configuration file saved");
+    }
+    else
+    {
+        Logger::getInstance().logEvent(ERROR, "unable to create configuration file");
+    }
+}
+
 /*
  * reads IP addresses from the system
  */
