@@ -31,7 +31,7 @@ private:
     LanIfMap lanInterfaces;
     std::unordered_map<std::string, Actions> parameters;
     std::fstream cfgFile;
-    const std::string CfgFileName = "PiBot.cfg";
+    const std::string CfgFileName = "/home/pi/PiBot/PiBot.cfg";
 };
 
 #endif /* SRC_CONFIG_H_ */

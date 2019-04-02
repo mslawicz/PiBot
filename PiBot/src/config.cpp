@@ -23,6 +23,33 @@ Config::Config()
     parameters.emplace("motor_pid_d",
             Actions([this](){Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKd(getFloatFromFile());},
             [this](){cfgFile << Program::getInstance().getRobot()->getDrive()->getPitchPID()->getKd();}));
+
+    cfgFile.open(CfgFileName, std::ios::in);
+        if(cfgFile.is_open())
+        {
+            // load parameters from cfg file
+            std::string parameterDesignator;
+            while(cfgFile >> parameterDesignator)
+            {
+                if(parameters.find(parameterDesignator) != parameters.end())
+                {
+                    // known parameter
+                    parameters.find(parameterDesignator)->second.first();
+                }
+                else
+                {
+                    Logger::getInstance().logEvent(WARNING, "unknown configuration parameter: ", parameterDesignator);
+                    cfgFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+            }
+
+            cfgFile.close();
+            Logger::getInstance().logEvent(INFO, "configuration file read");
+        }
+        else
+        {
+            Logger::getInstance().logEvent(ERROR, "unable to open configuration file");
+        }
 }
 
 Config::~Config()
