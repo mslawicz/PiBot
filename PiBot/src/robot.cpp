@@ -18,11 +18,14 @@ Robot::Robot()
     exitHandler = true;
     pTelemetryHandlerThread = nullptr;
     telemetryTriggered = false;
+    pKickstand = new ServoGPIO(GpioPin::KICKSTAND_SERVO);
+    pKickstand->setValue(KickstandDown);
 }
 
 Robot::~Robot()
 {
     delete pDrive;
+    delete pKickstand;
 }
 
 /*
@@ -33,6 +36,7 @@ void Robot::start(void)
     Logger::getInstance().logEvent(INFO, "robot start request");
     exitHandler = false;
     pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
+    pKickstand->setValue(KickstandUp);
     pDrive->start();
 }
 
@@ -42,6 +46,7 @@ void Robot::start(void)
 void Robot::stop(void)
 {
     Logger::getInstance().logEvent(INFO, "robot stop request");
+    pKickstand->setValue(KickstandDown);
     pDrive->stop();
     if(pTelemetryHandlerThread != nullptr)
     {

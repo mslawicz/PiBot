@@ -11,6 +11,7 @@
 #define SRC_ROBOT_H_
 
 #include "drive.h"
+#include "servo.h"
 #include <thread>
 #include <condition_variable>
 #include <mutex>
@@ -40,6 +41,9 @@ private:
     bool exitHandler;
     std::condition_variable telemetryEvent;
     bool telemetryTriggered;
+    ServoGPIO* pKickstand;
+    const float KickstandUp = 0.0f;
+    const float KickstandDown = 0.4f;
 };
 
 #endif /* SRC_ROBOT_H_ */

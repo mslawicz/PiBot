@@ -15,6 +15,7 @@ enum GpioPin
        //TODO change to another one
     SW5 = 4,
     SW1 = 5,
+    KICKSTAND_SERVO = 14,
     SW6 = 17,
     GYRO_INT = 18,
     POWER_OFF = 21,

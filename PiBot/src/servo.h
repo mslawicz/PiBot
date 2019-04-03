@@ -9,17 +9,37 @@
 #define SRC_SERVO_H_
 
 #include "i2c.h"
+#include "gpio.h"
+#include <pigpio.h>
 #include <vector>
 
-class Servo : public I2cDevice
+/*
+ * servo based on PCA9685 chip
+ */
+class ServoPCA : public I2cDevice
 {
 public:
-    Servo(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address, uint8_t servoNo);
+    ServoPCA(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address, uint8_t servoNo);
     void setValue(float value);
 private:
     const uint8_t MaxServos = 4;
     uint8_t servoNo;
-    const std::vector<uint8_t> TB6612Servo {0, 1, 14, 15};
+    const std::vector<uint8_t> PCA9685Servo {0, 1, 14, 15};
+};
+
+/*
+ * servo based on piGPIO function
+ */
+class ServoGPIO
+{
+public:
+    ServoGPIO(GpioPin gpioNumber);
+    ~ServoGPIO();
+    void setValue(float value);
+private:
+    GpioPin pin;
+    const unsigned posMin = 600;
+    const unsigned posMax = 2300;
 };
 
 #endif /* SRC_SERVO_H_ */
