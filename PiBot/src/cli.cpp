@@ -16,9 +16,15 @@ CLI::CLI(HostProcess hostProcess)
 {
     if(host == HostProcess::CONSOLE)
     {
+        // console only commands
         commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&CLI::displayHelp, this));
         commands.emplace_back(CommandStrings {"ip"}, "display lan interface addresses", std::bind(&CLI::displayLanAddresses, this));
         commands.emplace_back(CommandStrings {"udp"}, "start/stop udp remote control: <port> | 0", std::bind(&CLI::serverUDP, this));
+    }
+    else
+    {
+        // not-console commands
+        commands.emplace_back(CommandStrings {"yaw"}, "set yaw speed", [this]() { Program::getInstance().getRobot()->getDrive()->setYawSpeed(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
@@ -29,6 +35,11 @@ CLI::CLI(HostProcess hostProcess)
 
 void CLI::process(std::string input)
 {
+//    if(host == HostProcess::UDP_SERVER)
+//    {
+//        std::cout << input.c_str() << std::endl;
+//        return;
+//    }
     commandLine.ignore();
     commandLine.clear();
     commandLine.str(input);

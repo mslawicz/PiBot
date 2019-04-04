@@ -25,6 +25,7 @@ public:
 	// stops the control of motors
 	void stop(void);
 	PID* getPitchPID(void) const {return pPitchPID;}
+	void setYawSpeed(float speed);
 private:
 	// callback function for gyroscope generated interrupts
 	static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pDriveObject);
@@ -39,6 +40,7 @@ private:
 	float pitchControlSpeed;    // calculated motor speed for pitch control (for both motors)
 	std::vector<Motor*> pMotors;    // vector of pointers to motor objects
 	std::vector<float> motorSpeed{0.0, 0.0};  // vector of motor speed values
+	float yawSpeed; // motor differential speed - causes  robot yaw
 };
 
 #endif /* SRC_DRIVE_H_ */

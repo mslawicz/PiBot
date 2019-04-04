@@ -20,6 +20,7 @@ Drive::Drive()
     // right motor
     pMotors.push_back(new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 2));
     pitchControlSpeed = 0.0;
+    yawSpeed = 0.0;
 }
 
 Drive::~Drive()
@@ -93,8 +94,11 @@ void Drive::pitchControl(int level, uint32_t tick)
             //valid data received
             sensorPitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
             pitchControlSpeed = pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
-            motorSpeed[0] = pitchControlSpeed;
-            motorSpeed[1] = pitchControlSpeed;
+            // set the spedd of both motors
+            // TODO: limit the speed to allowed range
+            motorSpeed[0] = pitchControlSpeed - yawSpeed;
+            motorSpeed[1] = pitchControlSpeed + yawSpeed;
+            // send speed value to the motors
             pMotors[0]->setSpeed(motorSpeed[0]);
             pMotors[1]->setSpeed(motorSpeed[1]);
             {
@@ -122,4 +126,18 @@ void Drive::pitchControl(int level, uint32_t tick)
     pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, dataLength);
 }
 
-
+/*
+ * set robot yaw speed
+ */
+void Drive::setYawSpeed(float speed)
+{
+    if(speed > 1.0f)
+    {
+        speed = 1.0f;
+    }
+    else if (speed < -1.0f)
+    {
+        speed = -1.0f;
+    }
+    yawSpeed = speed;
+}
