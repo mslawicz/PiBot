@@ -25,6 +25,7 @@ CLI::CLI(HostProcess hostProcess)
     {
         // not-console commands
         commands.emplace_back(CommandStrings {"yaw"}, "set yaw speed", [this]() { Program::getInstance().getRobot()->getDrive()->setYawSpeed(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
+        commands.emplace_back(CommandStrings {"pitch"}, "set target pitch value", [this]() { Program::getInstance().getRobot()->getDrive()->setTargetPitchAngularRate(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
@@ -35,11 +36,10 @@ CLI::CLI(HostProcess hostProcess)
 
 void CLI::process(std::string input)
 {
-//    if(host == HostProcess::UDP_SERVER)
-//    {
-//        std::cout << input.c_str() << std::endl;
-//        return;
-//    }
+    if(host == HostProcess::UDP_SERVER)
+    {
+        Logger::getInstance().logEvent(MessageLevel::DEBUG, "Remote command: ", input.c_str());
+    }
     commandLine.ignore();
     commandLine.clear();
     commandLine.str(input);

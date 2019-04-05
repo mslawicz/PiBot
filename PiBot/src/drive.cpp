@@ -141,3 +141,19 @@ void Drive::setYawSpeed(float speed)
     }
     yawSpeed = speed;
 }
+
+/*
+ * set target pitch angular rate
+ */
+void Drive::setTargetPitchAngularRate(float rate)
+{
+    if(rate > 1.0f)
+    {
+        rate = 1.0f;
+    }
+    else if (rate < -1.0f)
+    {
+        rate = -1.0f;
+    }
+    targetPitchAngularRate = rate;
+}
