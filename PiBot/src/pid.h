@@ -8,6 +8,8 @@
 #ifndef SRC_PID_H_
 #define SRC_PID_H_
 
+#include <stdint.h>
+
 class PID
 {
 public:
@@ -29,6 +31,7 @@ private:
     float proportional;
     float integral;
     float derivative;
+    uint32_t lastTick;
 };
 
 #endif /* SRC_PID_H_ */
