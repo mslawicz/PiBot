@@ -18,11 +18,14 @@ Gyroscope::Gyroscope(SerialBusId busId, SerialPriority priority, I2cDeviceAddres
 
     // Gyroscope data ready on INT 1_A/G pin
     writeDataRequest(ImuRegisters::INT1_CTRL, std::vector<uint8_t>{0x02});
-    // gyroscope output data rate 238 Hz, 245 dps, LPF=29 Hz
+    // gyroscope output data rate 238 Hz, 245 dps, LPF=63 Hz
     // LPF2 output for interrupts and DataReg
-    // low-power disabled, HPF enabled, HPF 0.1 Hz
+    // low-power disabled, HPF enabled, HPF 0.2 Hz
     // swap X/Y axis, pitch negative sign
-    writeDataRequest(ImuRegisters::CTRL_REG1_G, std::vector<uint8_t>{0x81, 0x0F, 0x47, 0x02});
+    writeDataRequest(ImuRegisters::CTRL_REG1_G, std::vector<uint8_t>{0x82, 0x0F, 0x46, 0x02});
+    // acc decimation 8 samples
+    // 238 Hz, +-2g, BW=auto (105 Hz)
+    writeDataRequest(ImuRegisters::CTRL_REG5_XL, std::vector<uint8_t>{0xF8, 0x82});
 }
 
 Gyroscope::~Gyroscope()
