@@ -12,6 +12,7 @@
 Drive::Drive()
 {
     pGyroscope = new Gyroscope(SerialBusId::I2C1, SerialPriority::GYROSCOPE_PR, I2cDeviceAddress::GYROSCOPE_ADDR);
+    pAccelerometer = new Accelerometer(SerialBusId::I2C1, SerialPriority::ACCELEROMETER_PR, I2cDeviceAddress::ACCELEROMETER_ADDR);
     sensorPitchAngularRate = 0.0;
     targetPitchAngularRate = 0.0;
     pPitchPID = new PID(0.5, 0.05, 0.05);
@@ -30,6 +31,7 @@ Drive::~Drive()
         delete pMotor;
         pMotor = nullptr;
     }
+    delete pAccelerometer;
 	delete pGyroscope;
 	delete pPitchPID;
 }
@@ -124,6 +126,7 @@ void Drive::pitchControl(int level, uint32_t tick)
 
     // send read data request; this data is to be used in the next function call
     pGyroscope->readDataRequest(ImuRegisters::OUT_X_L_G, dataLength);
+    pAccelerometer->readDataRequest(ImuRegisters::OUT_X_L_XL, dataLength);
 }
 
 /*

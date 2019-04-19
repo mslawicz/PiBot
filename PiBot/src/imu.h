@@ -16,9 +16,14 @@ class Gyroscope : public I2cDevice
 {
 public:
     Gyroscope(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address);
-    ~Gyroscope();
     // gyroscope full scale range in radians / second
     const float range = 4.27605666739;
+};
+
+class Accelerometer : public I2cDevice
+{
+public:
+    Accelerometer(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address);
 };
 
 #endif /* SRC_IMU_H_ */

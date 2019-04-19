@@ -34,6 +34,8 @@ private:
 	void pitchControl(int level, uint32_t tick);
 	// pointer to gyroscope device
 	Gyroscope* pGyroscope;
+	// pointer to accelerometer device
+	Accelerometer* pAccelerometer;
 	float sensorPitchAngularRate;
 	float targetPitchAngularRate;
 	// pointer to pitch control loop PID
