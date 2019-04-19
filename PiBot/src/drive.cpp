@@ -96,9 +96,9 @@ void Drive::pitchControl(int level, uint32_t tick)
         if((std::get<0>(data) == ImuRegisters::OUT_X_L_XL) && (std::get<1>(data) == dataLength))
         {
             //valid data received
-            sensorAccelerationX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pAccelerometer->range / 0xFFFF;
-            sensorAccelerationY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pAccelerometer->range / 0xFFFF;
-            sensorAccelerationZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pAccelerometer->range / 0xFFFF;
+            sensorAccelerationX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pAccelerometer->range / 0x7FFF;
+            sensorAccelerationY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pAccelerometer->range / 0x7FFF;
+            sensorAccelerationZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pAccelerometer->range / 0x7FFF;
         }
     }
 
@@ -109,9 +109,9 @@ void Drive::pitchControl(int level, uint32_t tick)
         if((std::get<0>(data) == ImuRegisters::OUT_X_L_G) && (std::get<1>(data) == dataLength))
         {
             //valid data received
-            sensorAngularRateX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
-            sensorAngularRateY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pGyroscope->range / 0xFFFF;
-            sensorAngularRateZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pGyroscope->range / 0xFFFF;
+            sensorAngularRateX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0x7FFF;
+            sensorAngularRateY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pGyroscope->range / 0x7FFF;
+            sensorAngularRateZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pGyroscope->range / 0x7FFF;
 
             //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
             // set the speed of both motors
