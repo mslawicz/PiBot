@@ -74,6 +74,18 @@ void Robot::telemetryHandler(void)
         // create parameter csv string
         textStream.str(std::string());
 
+        // gyroscope angular rate - X axis [rad/s]
+        textStream << telemetryParameters["sensorAngularRateX"] << ",";
+        // gyroscope angular rate - Y axis [rad/s]
+        textStream << telemetryParameters["sensorAngularRateY"] << ",";
+        // gyroscope angular rate - Z axis [rad/s]
+        textStream << telemetryParameters["sensorAngularRateZ"] << ",";
+        // sensor acceleration - X axis [g]
+        textStream << telemetryParameters["sensorAccelerationX"] << ",";
+        // sensor acceleration - Y axis [g]
+        textStream << telemetryParameters["sensorAccelerationY"] << ",";
+        // sensor acceleration - Z axis [g]
+        textStream << telemetryParameters["sensorAccelerationZ"] << ",";
         // PID Kp
         textStream << telemetryParameters["PidKp"] << ",";
         // PID Ki
@@ -86,8 +98,6 @@ void Robot::telemetryHandler(void)
         textStream << telemetryParameters["PidIntegral"] << ",";
         // PID D value
         textStream << telemetryParameters["PidDerivative"] << ",";
-        // gyroscope angular rate - X axis [rad/s]
-        textStream << telemetryParameters["sensorPitchAngularRate"] << ",";
         // both motors pitch control speed [1.0 == full forward speed]
         textStream << telemetryParameters["pitchControlSpeed"] << ",";
 

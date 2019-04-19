@@ -13,7 +13,8 @@ Drive::Drive()
 {
     pGyroscope = new Gyroscope(SerialBusId::I2C1, SerialPriority::GYROSCOPE_PR, I2cDeviceAddress::GYROSCOPE_ADDR);
     pAccelerometer = new Accelerometer(SerialBusId::I2C1, SerialPriority::ACCELEROMETER_PR, I2cDeviceAddress::ACCELEROMETER_ADDR);
-    sensorPitchAngularRate = 0.0;
+    sensorAngularRateX = sensorAngularRateY = sensorAngularRateZ = 0.0;
+    sensorAccelerationX = sensorAccelerationY = sensorAccelerationZ = 0.0;
     targetPitchAngularRate = 0.0;
     pPitchPID = new PID(0.5, 0.05, 0.05);
     // left motor
@@ -87,15 +88,32 @@ void Drive::gyroInterruptCallback(int gpio, int level, uint32_t tick,
 void Drive::pitchControl(int level, uint32_t tick)
 {
     const unsigned dataLength = 6;
+
+    if(!pAccelerometer->receiveQueueEmpty())
+    {
+        // there's data in the accelerometer reception queue
+        auto data = pAccelerometer->getLastData();
+        if((std::get<0>(data) == ImuRegisters::OUT_X_L_XL) && (std::get<1>(data) == dataLength))
+        {
+            //valid data received
+            sensorAccelerationX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pAccelerometer->range / 0xFFFF;
+            sensorAccelerationY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pAccelerometer->range / 0xFFFF;
+            sensorAccelerationZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pAccelerometer->range / 0xFFFF;
+        }
+    }
+
     if(!pGyroscope->receiveQueueEmpty())
     {
-        // there's data in the reception queue
+        // there's data in the gyroscope reception queue
         auto data = pGyroscope->getLastData();
         if((std::get<0>(data) == ImuRegisters::OUT_X_L_G) && (std::get<1>(data) == dataLength))
         {
             //valid data received
-            sensorPitchAngularRate = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
-            pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
+            sensorAngularRateX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0xFFFF;
+            sensorAngularRateY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pGyroscope->range / 0xFFFF;
+            sensorAngularRateZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pGyroscope->range / 0xFFFF;
+
+            //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             motorSpeed[0] = pitchControlSpeed - yawSpeed;
@@ -105,13 +123,18 @@ void Drive::pitchControl(int level, uint32_t tick)
             pMotors[1]->setSpeed(motorSpeed[1]);
             {
                 std::lock_guard<std::mutex> lock(Program::getInstance().getRobot()->telemetryHandlerMutex);
+                Program::getInstance().getRobot()->telemetryParameters["sensorAngularRateX"] = sensorAngularRateX;
+                Program::getInstance().getRobot()->telemetryParameters["sensorAngularRateY"] = sensorAngularRateY;
+                Program::getInstance().getRobot()->telemetryParameters["sensorAngularRateZ"] = sensorAngularRateZ;
+                Program::getInstance().getRobot()->telemetryParameters["sensorAccelerationX"] = sensorAccelerationX;
+                Program::getInstance().getRobot()->telemetryParameters["sensorAccelerationY"] = sensorAccelerationY;
+                Program::getInstance().getRobot()->telemetryParameters["sensorAccelerationZ"] = sensorAccelerationZ;
                 Program::getInstance().getRobot()->telemetryParameters["PidKp"] =  pPitchPID->getKp();
                 Program::getInstance().getRobot()->telemetryParameters["PidKi"] =  pPitchPID->getKi();
                 Program::getInstance().getRobot()->telemetryParameters["PidKd"] =  pPitchPID->getKd();
                 Program::getInstance().getRobot()->telemetryParameters["PidProportional"] =  pPitchPID->getProportional();
                 Program::getInstance().getRobot()->telemetryParameters["PidIntegral"] =  pPitchPID->getIntegral();
                 Program::getInstance().getRobot()->telemetryParameters["PidDerivative"] =  pPitchPID->getDerivative();
-                Program::getInstance().getRobot()->telemetryParameters["sensorPitchAngularRate"] = sensorPitchAngularRate;
                 Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
             }
         }

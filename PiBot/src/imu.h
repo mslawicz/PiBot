@@ -24,6 +24,8 @@ class Accelerometer : public I2cDevice
 {
 public:
     Accelerometer(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address);
+    // accelerometer full scale range in g
+    const float range = 2.0;
 };
 
 #endif /* SRC_IMU_H_ */

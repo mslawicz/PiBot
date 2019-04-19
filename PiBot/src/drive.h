@@ -36,7 +36,14 @@ private:
 	Gyroscope* pGyroscope;
 	// pointer to accelerometer device
 	Accelerometer* pAccelerometer;
-	float sensorPitchAngularRate;
+	// sensor angular rate values [rad/s]
+	float sensorAngularRateX;
+	float sensorAngularRateY;
+	float sensorAngularRateZ;
+	// sensor acceleration values [g]
+	float sensorAccelerationX;
+	float sensorAccelerationY;
+	float sensorAccelerationZ;
 	float targetPitchAngularRate;
 	// pointer to pitch control loop PID
 	PID* pPitchPID;
