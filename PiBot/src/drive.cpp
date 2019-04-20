@@ -26,6 +26,7 @@ Drive::Drive()
     lastTick = 0;
     pitch = roll = yaw = 0.0;
     alpha = 0.02;
+    targetPitch = 0.0;
 }
 
 Drive::~Drive()
@@ -128,7 +129,7 @@ void Drive::pitchControl(int level, uint32_t tick)
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
 
-            //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorAngularRateX, dt);
+            pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitch, pitch, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             motorSpeed[0] = pitchControlSpeed - yawSpeed;
@@ -153,6 +154,7 @@ void Drive::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["pitch"] = pitch;
                 Program::getInstance().getRobot()->telemetryParameters["roll"] = roll;
                 Program::getInstance().getRobot()->telemetryParameters["yaw"] = yaw;
+                Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
             }
 
             lastTick = tick;

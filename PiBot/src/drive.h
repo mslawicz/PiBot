@@ -49,6 +49,7 @@ private:
 	float pitch;
 	float roll;
 	float yaw;
+	float targetPitch;
 	// pointer to pitch control loop PID
 	PID* pPitchPID;
 	float pitchControlSpeed;    // calculated motor speed for pitch control (for both motors)
