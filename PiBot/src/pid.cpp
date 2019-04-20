@@ -17,20 +17,16 @@ PID::PID(float coefficientP, float coefficientI, float coefficientD)
     proportional = 0.0f;
     integral = 0.0f;
     derivative = 0.0f;
-    lastTick = 0;
 }
 
-float PID::calculate(float setPointValue, float measuredProcessValue, uint32_t tick)
+float PID::calculate(float setPointValue, float measuredProcessValue, float dt)
 {
-    const float MsInS = 1e-6;
     float error = setPointValue - measuredProcessValue;
-    float deltaT = ((tick == lastTick) ? 1 : (tick - lastTick)) * MsInS;
     proportional = kP * error;
-    integralError += error * deltaT;
+    integralError += error * dt;
     integral = kI * integralError;
-    derivative = kD * (error - previousError) / deltaT;
+    derivative = kD * (error - previousError) / dt;
     float output = proportional + integral + derivative;
     previousError = error;
-    lastTick = tick;
     return output;
 }

@@ -14,7 +14,7 @@ class PID
 {
 public:
     PID(float coefficientP, float coefficientI, float coefficientD);
-    float calculate(float setPointValue, float measuredProcessValue, uint32_t tick);
+    float calculate(float setPointValue, float measuredProcessValue, float dt);
     void setKp(float value) {kP = value;}
     void setKi(float value) {kI = value;}
     void setKd(float value) {kD = value;}
@@ -31,7 +31,6 @@ private:
     float proportional;
     float integral;
     float derivative;
-    uint32_t lastTick;
 };
 
 #endif /* SRC_PID_H_ */

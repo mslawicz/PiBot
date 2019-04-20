@@ -23,6 +23,7 @@ Drive::Drive()
     pMotors.push_back(new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 2));
     pitchControlSpeed = 0.0;
     yawSpeed = 0.0;
+    lastTick = 0;
 }
 
 Drive::~Drive()
@@ -88,6 +89,7 @@ void Drive::gyroInterruptCallback(int gpio, int level, uint32_t tick,
 void Drive::pitchControl(int level, uint32_t tick)
 {
     const unsigned dataLength = 6;
+    const float TickPeriod = 1e-6;  // 1 Tick = 1 microsecond
 
     if(!pAccelerometer->receiveQueueEmpty())
     {
@@ -106,14 +108,22 @@ void Drive::pitchControl(int level, uint32_t tick)
     {
         // there's data in the gyroscope reception queue
         auto data = pGyroscope->getLastData();
-        if((std::get<0>(data) == ImuRegisters::OUT_X_L_G) && (std::get<1>(data) == dataLength))
+        if((std::get<0>(data) == ImuRegisters::OUT_X_L_G) &&
+                (std::get<1>(data) == dataLength) &&
+                (tick != lastTick))
         {
-            //valid data received
+            //valid gyroscope data received
             sensorAngularRateX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0x7FFF;
             sensorAngularRateY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pGyroscope->range / 0x7FFF;
             sensorAngularRateZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pGyroscope->range / 0x7FFF;
 
-            //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorAngularRateX, tick);
+            //calculate time elapsed from the last calculations
+            float dt = (tick - lastTick) * TickPeriod;
+
+            // calculate pitch
+
+
+            //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorAngularRateX, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             motorSpeed[0] = pitchControlSpeed - yawSpeed;
