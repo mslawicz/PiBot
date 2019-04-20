@@ -51,6 +51,7 @@ private:
 	std::vector<Motor*> pMotors;    // vector of pointers to motor objects
 	std::vector<float> motorSpeed{0.0, 0.0};  // vector of motor speed values
 	float yawSpeed; // motor differential speed - causes  robot yaw
+	uint32_t lastTick;
 };
 
 #endif /* SRC_DRIVE_H_ */

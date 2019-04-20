@@ -14,7 +14,7 @@ class PID
 {
 public:
     PID(float coefficientP, float coefficientI, float coefficientD);
-    float calculate(float setPointValue, float measuredProcessValue);
+    float calculate(float setPointValue, float measuredProcessValue, uint32_t tick);
     void setKp(float value) {kP = value;}
     void setKi(float value) {kI = value;}
     void setKd(float value) {kD = value;}

@@ -113,7 +113,7 @@ void Drive::pitchControl(int level, uint32_t tick)
             sensorAngularRateY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pGyroscope->range / 0x7FFF;
             sensorAngularRateZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pGyroscope->range / 0x7FFF;
 
-            //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorPitchAngularRate);
+            //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorAngularRateX, tick);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             motorSpeed[0] = pitchControlSpeed - yawSpeed;
@@ -137,6 +137,8 @@ void Drive::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["PidDerivative"] =  pPitchPID->getDerivative();
                 Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
             }
+
+            lastTick = tick;
         }
 
         if(Program::getInstance().getRobot()->isTelemetryEnabled())

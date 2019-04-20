@@ -6,7 +6,6 @@
  */
 
 #include "pid.h"
-#include <pigpio.h>
 
 PID::PID(float coefficientP, float coefficientI, float coefficientD)
     : kP(coefficientP)
@@ -21,18 +20,17 @@ PID::PID(float coefficientP, float coefficientI, float coefficientD)
     lastTick = 0;
 }
 
-float PID::calculate(float setPointValue, float measuredProcessValue)
+float PID::calculate(float setPointValue, float measuredProcessValue, uint32_t tick)
 {
     const float MsInS = 1e-6;
     float error = setPointValue - measuredProcessValue;
-    uint32_t currentTick = gpioTick();
-    float deltaT = ((currentTick == lastTick) ? 1 : (currentTick - lastTick)) * MsInS;
+    float deltaT = ((tick == lastTick) ? 1 : (tick - lastTick)) * MsInS;
     proportional = kP * error;
     integralError += error * deltaT;
     integral = kI * integralError;
     derivative = kD * (error - previousError) / deltaT;
     float output = proportional + integral + derivative;
     previousError = error;
-    lastTick = currentTick;
+    lastTick = tick;
     return output;
 }
