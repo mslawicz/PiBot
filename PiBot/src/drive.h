@@ -26,6 +26,7 @@ public:
 	void stop(void);
 	PID* getPitchPID(void) const {return pPitchPID;}
 	void setYawSpeed(float speed);
+	void setAlpha(float value);
 	void setTargetPitchAngularRate(float rate);
 private:
 	// callback function for gyroscope generated interrupts

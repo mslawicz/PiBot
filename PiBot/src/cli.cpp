@@ -32,6 +32,7 @@ CLI::CLI(HostProcess hostProcess)
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
     commands.emplace_back(CommandStrings {"telemetry"}, "connect to telemetry server: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
     commands.emplace_back(CommandStrings {"pid"}, "set motor PID value: p | i | d <value>", std::bind(&CLI::setPID, this));
+    commands.emplace_back(CommandStrings {"alpha"}, "set complementary filter alpha coefficient: <value>", [this]() { Program::getInstance().getRobot()->getDrive()->setAlpha(getArgument<float>(0.0f, 0.2f, 0.02f)); });
 }
 
 void CLI::process(std::string input)

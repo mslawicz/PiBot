@@ -202,3 +202,19 @@ void Drive::setTargetPitchAngularRate(float rate)
     }
     //targetPitchAngularRate = rate;
 }
+
+/*
+ * set complementary filter coefficient alpha
+ */
+void Drive::setAlpha(float value)
+{
+    if(value > 0.2f)
+    {
+        value = 0.2f;
+    }
+    else if (value < 0)
+    {
+        value = 0.0f;
+    }
+    alpha = value;
+}
