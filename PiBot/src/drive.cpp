@@ -155,6 +155,7 @@ void Drive::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["roll"] = roll;
                 Program::getInstance().getRobot()->telemetryParameters["yaw"] = yaw;
                 Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
+                Program::getInstance().getRobot()->telemetryParameters["alpha"] = alpha;
             }
 
             lastTick = tick;

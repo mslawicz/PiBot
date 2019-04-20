@@ -104,6 +104,8 @@ void Robot::telemetryHandler(void)
         textStream << telemetryParameters["PidDerivative"] << ",";
         // both motors pitch control speed [1.0 == full forward speed]
         textStream << telemetryParameters["pitchControlSpeed"] << ",";
+        // complementary filter coefficient alpha
+        textStream << telemetryParameters["alpha"] << ",";
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
         lock.unlock();
