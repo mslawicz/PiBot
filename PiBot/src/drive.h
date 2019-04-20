@@ -44,7 +44,10 @@ private:
 	float sensorAccelerationX;
 	float sensorAccelerationY;
 	float sensorAccelerationZ;
-	float targetPitchAngularRate;
+	// robot tilts [rad]
+	float pitch;
+	float roll;
+	float yaw;
 	// pointer to pitch control loop PID
 	PID* pPitchPID;
 	float pitchControlSpeed;    // calculated motor speed for pitch control (for both motors)
@@ -52,6 +55,7 @@ private:
 	std::vector<float> motorSpeed{0.0, 0.0};  // vector of motor speed values
 	float yawSpeed; // motor differential speed - causes  robot yaw
 	uint32_t lastTick;
+	float alpha;
 };
 
 #endif /* SRC_DRIVE_H_ */

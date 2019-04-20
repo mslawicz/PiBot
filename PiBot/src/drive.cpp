@@ -8,6 +8,7 @@
 #include "LSM9DS1.h"
 #include "drive.h"
 #include "program.h"
+#include <math.h>
 
 Drive::Drive()
 {
@@ -15,7 +16,6 @@ Drive::Drive()
     pAccelerometer = new Accelerometer(SerialBusId::I2C1, SerialPriority::ACCELEROMETER_PR, I2cDeviceAddress::ACCELEROMETER_ADDR);
     sensorAngularRateX = sensorAngularRateY = sensorAngularRateZ = 0.0;
     sensorAccelerationX = sensorAccelerationY = sensorAccelerationZ = 0.0;
-    targetPitchAngularRate = 0.0;
     pPitchPID = new PID(0.5, 0.05, 0.05);
     // left motor
     pMotors.push_back(new Motor(SerialBusId::I2C1, SerialPriority::MOTOR_PR, I2cDeviceAddress::MOTOR_ADDR, 0));
@@ -24,6 +24,8 @@ Drive::Drive()
     pitchControlSpeed = 0.0;
     yawSpeed = 0.0;
     lastTick = 0;
+    pitch = roll = yaw = 0.0;
+    alpha = 0.02;
 }
 
 Drive::~Drive()
@@ -120,7 +122,10 @@ void Drive::pitchControl(int level, uint32_t tick)
             //calculate time elapsed from the last calculations
             float dt = (tick - lastTick) * TickPeriod;
 
-            // calculate pitch
+            // calculate tilt of the robot
+            pitch = (1.0 - alpha) * (pitch + sensorAngularRateX * dt) + alpha * static_cast<float>(atan2(sensorAccelerationX, sensorAccelerationZ));
+            roll = (1.0 - alpha) * (roll + sensorAngularRateY * dt) + alpha * static_cast<float>(atan2(sensorAccelerationY, sensorAccelerationZ));
+            yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
 
             //pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitchAngularRate, sensorAngularRateX, dt);
@@ -145,7 +150,9 @@ void Drive::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["PidProportional"] =  pPitchPID->getProportional();
                 Program::getInstance().getRobot()->telemetryParameters["PidIntegral"] =  pPitchPID->getIntegral();
                 Program::getInstance().getRobot()->telemetryParameters["PidDerivative"] =  pPitchPID->getDerivative();
-                Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
+                Program::getInstance().getRobot()->telemetryParameters["pitch"] = pitch;
+                Program::getInstance().getRobot()->telemetryParameters["roll"] = roll;
+                Program::getInstance().getRobot()->telemetryParameters["yaw"] = yaw;
             }
 
             lastTick = tick;
@@ -193,5 +200,5 @@ void Drive::setTargetPitchAngularRate(float rate)
     {
         rate = -1.0f;
     }
-    targetPitchAngularRate = rate;
+    //targetPitchAngularRate = rate;
 }

@@ -20,9 +20,9 @@ Gyroscope::Gyroscope(SerialBusId busId, SerialPriority priority, I2cDeviceAddres
     writeDataRequest(ImuRegisters::INT1_CTRL, std::vector<uint8_t>{0x02});
     // gyroscope output data rate 238 Hz, 245 dps, LPF=63 Hz
     // LPF2 output for interrupts and DataReg
-    // low-power disabled, HPF enabled, HPF 0.2 Hz
+    // low-power disabled, HPF disabled
     // swap X/Y axis
-    writeDataRequest(ImuRegisters::CTRL_REG1_G, std::vector<uint8_t>{0x82, 0x0F, 0x46, 0x02});
+    writeDataRequest(ImuRegisters::CTRL_REG1_G, std::vector<uint8_t>{0x82, 0x0F, 0x00, 0x02});
 }
 
 Accelerometer::Accelerometer(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address)

@@ -86,20 +86,23 @@ void Robot::telemetryHandler(void)
         textStream << telemetryParameters["sensorAccelerationY"] << ",";
         // sensor acceleration - Z axis [g]
         textStream << telemetryParameters["sensorAccelerationZ"] << ",";
-        // PID Kp
-        textStream << telemetryParameters["PidKp"] << ",";
-        // PID Ki
-        textStream << telemetryParameters["PidKi"] << ",";
-        // PID Kd
-        textStream << telemetryParameters["PidKd"] << ",";
-        // PID P value
-        textStream << telemetryParameters["PidProportional"] << ",";
-        // PID I value
-        textStream << telemetryParameters["PidIntegral"] << ",";
-        // PID D value
-        textStream << telemetryParameters["PidDerivative"] << ",";
-        // both motors pitch control speed [1.0 == full forward speed]
-        textStream << telemetryParameters["pitchControlSpeed"] << ",";
+//        // PID Kp
+//        textStream << telemetryParameters["PidKp"] << ",";
+//        // PID Ki
+//        textStream << telemetryParameters["PidKi"] << ",";
+//        // PID Kd
+//        textStream << telemetryParameters["PidKd"] << ",";
+//        // PID P value
+//        textStream << telemetryParameters["PidProportional"] << ",";
+//        // PID I value
+//        textStream << telemetryParameters["PidIntegral"] << ",";
+//        // PID D value
+//        textStream << telemetryParameters["PidDerivative"] << ",";
+//        // both motors pitch control speed [1.0 == full forward speed]
+//        textStream << telemetryParameters["pitchControlSpeed"] << ",";
+        textStream << telemetryParameters["pitch"] << ",";
+        textStream << telemetryParameters["roll"] << ",";
+        textStream << telemetryParameters["yaw"] << ",";
 
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
