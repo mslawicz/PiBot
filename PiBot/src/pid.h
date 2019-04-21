@@ -13,7 +13,7 @@
 class PID
 {
 public:
-    PID(float coefficientP, float coefficientI, float coefficientD);
+    PID(float coefficientP, float coefficientI, float coefficientD, float integralLlimit = 1.0);
     float calculate(float setPointValue, float measuredProcessValue, float dt);
     void setKp(float value) {kP = value;}
     void setKi(float value) {kI = value;}
@@ -27,10 +27,10 @@ public:
 private:
     float kP, kI, kD;
     float previousError;
-    float integralError;
     float proportional;
     float integral;
     float derivative;
+    float limit;
 };
 
 #endif /* SRC_PID_H_ */
