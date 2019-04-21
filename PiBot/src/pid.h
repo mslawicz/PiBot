@@ -24,6 +24,7 @@ public:
     float getProportional(void) const {return proportional;}
     float getIntegral(void) const {return integral;}
     float getDerivative(void) const {return derivative;}
+    void reset(void) { proportional = integral = derivative = 0.0; }
 private:
     float kP, kI, kD;
     float previousError;

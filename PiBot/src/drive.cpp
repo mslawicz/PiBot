@@ -48,6 +48,7 @@ void Drive::start(void)
 {
 	// enable gyroscope interrupts
     // interrupt function is called either on interrupt signal or after stated timeout in ms
+    pPitchPID->reset();
 	gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 10, Drive::gyroInterruptCallback, this);
 }
 
