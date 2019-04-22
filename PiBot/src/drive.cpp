@@ -130,7 +130,7 @@ void Drive::pitchControl(int level, uint32_t tick)
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
 
-            pitchControlSpeed = -1.0 * pPitchPID->calculate(targetPitch, pitch, dt);
+            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             motorSpeed[0] = pitchControlSpeed - yawSpeed;
@@ -194,17 +194,17 @@ void Drive::setYawSpeed(float speed)
 /*
  * set target pitch angular rate
  */
-void Drive::setTargetPitchAngularRate(float rate)
+void Drive::setTargetPitch(float pitch)
 {
-    if(rate > 1.0f)
+    if(pitch > 1.0f)
     {
-        rate = 1.0f;
+        pitch = 1.0f;
     }
-    else if (rate < -1.0f)
+    else if (pitch < -1.0f)
     {
-        rate = -1.0f;
+        pitch = -1.0f;
     }
-    //targetPitchAngularRate = rate;
+    targetPitch = pitch;
 }
 
 /*
