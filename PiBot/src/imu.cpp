@@ -22,7 +22,7 @@ Gyroscope::Gyroscope(SerialBusId busId, SerialPriority priority, I2cDeviceAddres
     // LPF2 output for interrupts and DataReg
     // low-power disabled, HPF 0.02 Hz
     // swap X/Y axis
-    writeDataRequest(ImuRegisters::CTRL_REG1_G, std::vector<uint8_t>{0x83, 0x0F, 0x49, 0x02});
+    writeDataRequest(ImuRegisters::CTRL_REG1_G, std::vector<uint8_t>{0x83, 0x00, 0x00, 0x02});
 }
 
 Accelerometer::Accelerometer(SerialBusId busId, SerialPriority priority, I2cDeviceAddress address)

@@ -19,9 +19,9 @@ PID::PID(float coefficientP, float coefficientI, float coefficientD, float integ
     derivative = 0.0f;
 }
 
-float PID::calculate(float setPointValue, float measuredProcessValue, float dt)
+float PID::calculate(float measuredProcessValue, float setPointValue, float dt)
 {
-    float error = setPointValue - measuredProcessValue;
+    float error = measuredProcessValue - setPointValue;
     proportional = kP * error;
     integral += kI * error * dt;
     if(integral > limit)

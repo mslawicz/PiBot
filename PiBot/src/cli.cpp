@@ -188,7 +188,7 @@ void CLI::setPID(void)
     }
     else     if(term == "i" || term == "I")
     {
-        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKi(getArgument<float>(0.0f, 10.0f, 0.1f));
+        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKi(getArgument<float>(-10.0f, 10.0f, 0.1f));
     }
     else     if(term == "d" || term == "D")
     {
