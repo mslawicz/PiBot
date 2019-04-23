@@ -106,6 +106,7 @@ void Robot::telemetryHandler(void)
         textStream << telemetryParameters["pitchControlSpeed"] << ",";
         // complementary filter coefficient alpha
         textStream << telemetryParameters["alpha"] << ",";
+        textStream << telemetryParameters["dt"] << ",";
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
         lock.unlock();
