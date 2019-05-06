@@ -148,6 +148,9 @@ void Program::initialize(void)
 
 	// robot configuration object
 	pConfig = new Config;
+
+	// start the functions of the robot
+	pRobot->start();
 }
 
 /*
@@ -190,6 +193,7 @@ void Program::terminate(ExitCode exitCode)
 		Logger::getInstance().logEvent(ERROR, "PiBot is exiting with code ", exitCode, " (", ExitMessages.find(exitCode)->second, ")");
 	}
 
+	pRobot->stop();
 	delete pConfig;
 	pUdpServer->stop();
 	delete pUdpServer;

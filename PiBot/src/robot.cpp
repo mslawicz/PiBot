@@ -25,8 +25,6 @@ Robot::Robot()
     exitHandler = true;
     pTelemetryHandlerThread = nullptr;
     telemetryTriggered = false;
-    pKickstand = new ServoGPIO(GpioPin::KICKSTAND_SERVO);
-    pKickstand->setValue(KickstandDown);
     yawSpeed = 0.0;
     lastTick = 0;
     pitch = roll = yaw = 0.0;
@@ -38,7 +36,6 @@ Robot::Robot()
 Robot::~Robot()
 {
     delete pDrive;
-    delete pKickstand;
     delete pAccelerometer;
     delete pGyroscope;
     delete pPitchPID;
@@ -56,10 +53,7 @@ void Robot::start(void)
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 10, Robot::gyroInterruptCallback, this);
     pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
 
-    //TODO these commands must be moved to drive start
-    pKickstand->setValue(KickstandUp);
-    pDrive->start();
-    pPitchPID->reset();
+    //TODO place it in proper place: pPitchPID->reset();
 }
 
 /*
@@ -68,11 +62,6 @@ void Robot::start(void)
 void Robot::stop(void)
 {
     Logger::getInstance().logEvent(INFO, "robot stop request");
-
-    //TODO these commands must be moved to drive stop
-    pKickstand->setValue(KickstandDown);
-    pDrive->stop();
-
     // disable gyroscope interrupts
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 0, nullptr, this);
     if(pTelemetryHandlerThread != nullptr)

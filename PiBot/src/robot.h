@@ -11,9 +11,7 @@
 #define SRC_ROBOT_H_
 
 #include "drive.h"
-#include "servo.h"
 #include "imu.h"
-#include "gpio.h"
 #include "pid.h"
 #include <thread>
 #include <condition_variable>
@@ -69,9 +67,6 @@ private:
     bool exitHandler;
     std::condition_variable telemetryEvent;
     bool telemetryTriggered;
-    ServoGPIO* pKickstand;
-    const float KickstandUp = 0.0f;
-    const float KickstandDown = 0.4f;
     float yawSpeed; // motor differential speed - causes  robot yaw
     uint32_t lastTick;
     float alpha;

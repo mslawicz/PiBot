@@ -9,6 +9,8 @@
 #define SRC_DRIVE_H_
 
 #include "motor.h"
+#include "gpio.h"
+#include "servo.h"
 #include <vector>
 
 enum MotorName
@@ -30,6 +32,9 @@ public:
 private:
 	std::vector<Motor*> pMotors;    // vector of pointers to motor objects
 	std::vector<float> motorSpeed{0.0, 0.0};  // vector of motor speed values
+    ServoGPIO* pKickstand;
+    const float KickstandUp = 0.0f;
+    const float KickstandDown = 0.4f;
 };
 
 #endif /* SRC_DRIVE_H_ */
