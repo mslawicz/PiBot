@@ -24,15 +24,15 @@ CLI::CLI(HostProcess hostProcess)
     else
     {
         // not-console commands
-        commands.emplace_back(CommandStrings {"yaw"}, "set yaw speed", [this]() { Program::getInstance().getRobot()->getDrive()->setYawSpeed(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
-        commands.emplace_back(CommandStrings {"pitch"}, "set target pitch value", [this]() { Program::getInstance().getRobot()->getDrive()->setTargetPitch(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
+        commands.emplace_back(CommandStrings {"yaw"}, "set yaw speed", [this]() { Program::getInstance().getRobot()->setYawSpeed(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
+        commands.emplace_back(CommandStrings {"pitch"}, "set target pitch value", [this]() { Program::getInstance().getRobot()->setTargetPitch(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
     commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->stop(); });
     commands.emplace_back(CommandStrings {"telemetry"}, "connect to telemetry server: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
     commands.emplace_back(CommandStrings {"pid"}, "set motor PID value: p | i | d <value>", std::bind(&CLI::setPID, this));
-    commands.emplace_back(CommandStrings {"alpha"}, "set complementary filter alpha coefficient: <value>", [this]() { Program::getInstance().getRobot()->getDrive()->setAlpha(getArgument<float>(0.0f, 0.2f, 0.02f)); });
+    commands.emplace_back(CommandStrings {"alpha"}, "set complementary filter alpha coefficient: <value>", [this]() { Program::getInstance().getRobot()->setAlpha(getArgument<float>(0.0f, 0.2f, 0.02f)); });
 }
 
 void CLI::process(std::string input)
@@ -184,15 +184,15 @@ void CLI::setPID(void)
     std::string term = getArgument("");
     if(term == "p" || term == "P")
     {
-        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKp(getArgument<float>(0.0f, 10.0f, 0.5f));
+        Program::getInstance().getRobot()->getPitchPID()->setKp(getArgument<float>(0.0f, 10.0f, 0.5f));
     }
     else     if(term == "i" || term == "I")
     {
-        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKi(getArgument<float>(0.0f, 100.0f, 1.0f));
+        Program::getInstance().getRobot()->getPitchPID()->setKi(getArgument<float>(0.0f, 100.0f, 1.0f));
     }
     else     if(term == "d" || term == "D")
     {
-        Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKd(getArgument<float>(0.0f, 1.0f, 0.05f));
+        Program::getInstance().getRobot()->getPitchPID()->setKd(getArgument<float>(0.0f, 1.0f, 0.05f));
     }
     else
     {

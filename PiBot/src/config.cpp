@@ -15,14 +15,14 @@
 Config::Config()
 {
     parameters.emplace("motor_pid_p",
-            Actions([this](){Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKp(getFloatFromFile());},
-            [this](){cfgFile << Program::getInstance().getRobot()->getDrive()->getPitchPID()->getKp();}));
+            Actions([this](){Program::getInstance().getRobot()->getPitchPID()->setKp(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getPitchPID()->getKp();}));
     parameters.emplace("motor_pid_i",
-            Actions([this](){Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKi(getFloatFromFile());},
-            [this](){cfgFile << Program::getInstance().getRobot()->getDrive()->getPitchPID()->getKi();}));
+            Actions([this](){Program::getInstance().getRobot()->getPitchPID()->setKi(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getPitchPID()->getKi();}));
     parameters.emplace("motor_pid_d",
-            Actions([this](){Program::getInstance().getRobot()->getDrive()->getPitchPID()->setKd(getFloatFromFile());},
-            [this](){cfgFile << Program::getInstance().getRobot()->getDrive()->getPitchPID()->getKd();}));
+            Actions([this](){Program::getInstance().getRobot()->getPitchPID()->setKd(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getPitchPID()->getKd();}));
 
     cfgFile.open(CfgFileName, std::ios::in);
         if(cfgFile.is_open())
