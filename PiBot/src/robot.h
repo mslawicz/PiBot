@@ -25,9 +25,9 @@ class Robot
 public:
     Robot();
     ~Robot();
-    // starts the control of robot
+    // starts the robot functions
     void start(void);
-    // stops the control of robot
+    // stops the robot functions
     void stop(void);
     // this handler is to be run in a new thread
     void telemetryHandler(void);
@@ -38,15 +38,15 @@ public:
     void setYawSpeed(float speed);
     void setAlpha(float value);
     void setTargetPitch(float pitch);
+    PID* getPitchPID(void) const {return pPitchPID;}
     std::unordered_map<std::string, float> telemetryParameters;
     std::mutex telemetryHandlerMutex;
-    PID* getPitchPID(void) const {return pPitchPID;}
 private:
-    Drive* pDrive;
     // callback function for gyroscope generated interrupts
     static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pRobotObject);
     // pitch control method
     void pitchControl(int level, uint32_t tick);
+    Drive* pDrive;
     // pointer to gyroscope device
     Gyroscope* pGyroscope;
     // pointer to accelerometer device

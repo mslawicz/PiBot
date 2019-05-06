@@ -55,6 +55,8 @@ void Robot::start(void)
     // interrupt function is called either on interrupt signal or after stated timeout in ms
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 10, Robot::gyroInterruptCallback, this);
     pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
+
+    //TODO these commands must be moved to drive start
     pKickstand->setValue(KickstandUp);
     pDrive->start();
     pPitchPID->reset();
@@ -66,10 +68,13 @@ void Robot::start(void)
 void Robot::stop(void)
 {
     Logger::getInstance().logEvent(INFO, "robot stop request");
+
+    //TODO these commands must be moved to drive stop
     pKickstand->setValue(KickstandDown);
+    pDrive->stop();
+
     // disable gyroscope interrupts
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 0, nullptr, this);
-    pDrive->stop();
     if(pTelemetryHandlerThread != nullptr)
     {
         exitHandler = true;
