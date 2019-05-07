@@ -198,7 +198,7 @@ void Robot::pitchControl(int level, uint32_t tick)
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
 
-            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, dt);
+            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())

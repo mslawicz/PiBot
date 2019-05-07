@@ -14,7 +14,7 @@ class PID
 {
 public:
     PID(float coefficientP, float coefficientI, float coefficientD, float integralLlimit = 1.0);
-    float calculate(float setPointValue, float measuredProcessValue, float dt);
+    float calculate(float setPointValue, float measuredProcessValue, float derivativeInput, float dt);
     void setKp(float value) {kP = value;}
     void setKi(float value) {kI = value;}
     void setKd(float value) {kD = value;}
@@ -27,7 +27,6 @@ public:
     void reset(void) { proportional = integral = derivative = 0.0; }
 private:
     float kP, kI, kD;
-    float previousError;
     float proportional;
     float integral;
     float derivative;
