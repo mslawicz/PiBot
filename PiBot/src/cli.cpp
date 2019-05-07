@@ -24,8 +24,7 @@ CLI::CLI(HostProcess hostProcess)
     else
     {
         // not-console commands
-        //commands.emplace_back(CommandStrings {"yaw"}, "set yaw speed", [this]() { Program::getInstance().getRobot()->setYawSpeed(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
-        commands.emplace_back(CommandStrings {"yaw"}, "set yaw speed", [this]() { Program::getInstance().getRobot()->getDrive()->setMotorSpeed(MotorName::RightMotor, getArgument<float>(-1.0f, 1.0f, 0.0f)); });
+        commands.emplace_back(CommandStrings {"yaw"}, "set yaw speed", [this]() { Program::getInstance().getRobot()->setYawSpeed(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
         commands.emplace_back(CommandStrings {"pitch"}, "set target pitch value", [this]() { Program::getInstance().getRobot()->setTargetPitch(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });

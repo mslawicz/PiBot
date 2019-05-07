@@ -28,7 +28,7 @@ Robot::Robot()
     yawSpeed = 0.0;
     lastTick = 0;
     pitch = roll = yaw = 0.0;
-    alpha = 0.02;
+    alpha = 0.005;
     targetPitch = 0.0;
     pitchControlSpeed = 0.0;
 }
@@ -50,7 +50,7 @@ void Robot::start(void)
     exitHandler = false;
     // enable gyroscope interrupts
     // interrupt function is called either on interrupt signal or after stated timeout in ms
-    gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 10, Robot::gyroInterruptCallback, this);
+    gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
     pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
 
     //TODO place it in proper place: pPitchPID->reset();
