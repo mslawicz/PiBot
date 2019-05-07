@@ -43,6 +43,16 @@ Motor::~Motor()
 void Motor::setSpeed(float speed, bool motorOff)
 {
     std::map<uint8_t, std::vector<uint8_t>> registers;
+
+    if(speed > 0)
+    {
+        speed += DeadZone;
+    }
+    else if(speed < 0)
+    {
+        speed -= DeadZone;
+    }
+
     if(motorOff)
     {
         // motor off - high impedance

@@ -29,6 +29,7 @@ private:
     std::vector<uint8_t> setChannelData(uint8_t bit);
     std::vector<uint8_t> setChannelData(float value);
     const uint8_t MaxMotors = 4;
+    const float DeadZone = 0.035;   // minimum value for motor spinning
     const std::vector<uint8_t> TB6612In1 {10, 11, 4, 5};
     const std::vector<uint8_t> TB6612In2 {9, 12, 3, 6};
     const std::vector<uint8_t> TB6612PWM {8, 13, 2, 7};
