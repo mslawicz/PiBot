@@ -64,6 +64,7 @@ void Robot::stop(void)
     Logger::getInstance().logEvent(INFO, "robot stop request");
     // disable gyroscope interrupts
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 0, nullptr, this);
+    pDrive->stop();
     if(pTelemetryHandlerThread != nullptr)
     {
         exitHandler = true;
@@ -200,8 +201,11 @@ void Robot::pitchControl(int level, uint32_t tick)
             pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
-            pDrive->setMotorSpeed(MotorName::LeftMotor, pitchControlSpeed + yawSpeed);
-            pDrive->setMotorSpeed(MotorName::RightMotor, pitchControlSpeed - yawSpeed);
+            if(pDrive->isActive())
+            {
+                pDrive->setMotorSpeed(MotorName::LeftMotor, pitchControlSpeed + yawSpeed);
+                pDrive->setMotorSpeed(MotorName::RightMotor, pitchControlSpeed - yawSpeed);
+            }
             {
                 std::lock_guard<std::mutex> lock(Program::getInstance().getRobot()->telemetryHandlerMutex);
                 Program::getInstance().getRobot()->telemetryParameters["sensorAngularRateX"] = sensorAngularRateX;

@@ -28,7 +28,7 @@ CLI::CLI(HostProcess hostProcess)
         commands.emplace_back(CommandStrings {"pitch"}, "set target pitch value", [this]() { Program::getInstance().getRobot()->setTargetPitch(getArgument<float>(-1.0f, 1.0f, 0.0f)); });
     }
     commands.emplace_back(CommandStrings {"exit", "quit", "x"}, "exit from program", []() { Program::getInstance().requestExit(); });
-    commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->getDrive()->start(); });
+    commands.emplace_back(CommandStrings {"start"}, "start the robot control", []() { Program::getInstance().getRobot()->getPitchPID()->reset(); Program::getInstance().getRobot()->getDrive()->start(); });
     commands.emplace_back(CommandStrings {"stop"}, "stop the robot control", []() { Program::getInstance().getRobot()->getDrive()->stop(); });
     commands.emplace_back(CommandStrings {"telemetry"}, "connect to telemetry server: <IP> <port> | off", std::bind(&CLI::setTelemetry, this));
     commands.emplace_back(CommandStrings {"pid"}, "set motor PID value: p | i | d <value>", std::bind(&CLI::setPID, this));

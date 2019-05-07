@@ -29,12 +29,14 @@ public:
 	// stops the control of motors
 	void stop(void);
 	void setMotorSpeed(MotorName motorName, float speed);
+	bool isActive(void) const { return active; }
 private:
 	std::vector<Motor*> pMotors;    // vector of pointers to motor objects
 	std::vector<float> motorSpeed{0.0, 0.0};  // vector of motor speed values
     ServoGPIO* pKickstand;
     const float KickstandUp = 0.0f;
     const float KickstandDown = 0.4f;
+    bool active;
 };
 
 #endif /* SRC_DRIVE_H_ */
