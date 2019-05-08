@@ -34,7 +34,7 @@ public:
     bool isTelemetryEnabled(void) const { return telemetryEnabled; }
     Drive* getDrive(void) const {return pDrive;}
     void setYawSpeed(float speed);
-    void setAlpha(float value);
+    void setBeta(float value);
     void setTargetPitch(float pitch);
     PID* getPitchPID(void) const {return pPitchPID;}
     std::unordered_map<std::string, float> telemetryParameters;
@@ -70,7 +70,6 @@ private:
     bool telemetryTriggered;
     float yawSpeed; // motor differential speed - causes  robot yaw
     uint32_t lastTick;
-    float alpha;
     float pitchControlSpeed;    // calculated motor speed for pitch control (for both motors)
     // pointer to pitch control loop PID
     PID* pPitchPID;

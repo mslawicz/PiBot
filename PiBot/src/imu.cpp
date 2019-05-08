@@ -35,7 +35,7 @@ Accelerometer::Accelerometer(SerialBusId busId, SerialPriority priority, I2cDevi
 
 AHRS::AHRS()
 {
-    beta = 0.1f;
+    beta = 5.0f;
     q[0] = 1.0f;
     q[1] = q[2] = q[3] = 0.0f;
 }

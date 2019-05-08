@@ -28,7 +28,6 @@ Robot::Robot()
     yawSpeed = 0.0;
     lastTick = 0;
     pitch = roll = yaw = 0.0;
-    alpha = 0.005;
     targetPitch = 0.0;
     pitchControlSpeed = 0.0;
     pAHRS = new AHRS;
@@ -122,11 +121,13 @@ void Robot::telemetryHandler(void)
         // both motors pitch control speed [1.0 == full forward speed]
         textStream << telemetryParameters["pitchControlSpeed"] << ",";
         textStream << telemetryParameters["dt"] << ",";
-        // quaternion values
+        // quaternion data
         textStream << telemetryParameters["q0"] << ",";
         textStream << telemetryParameters["q1"] << ",";
         textStream << telemetryParameters["q2"] << ",";
         textStream << telemetryParameters["q3"] << ",";
+        // AHRS algorithm gain
+        textStream << telemetryParameters["beta"] << ",";
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
         lock.unlock();
@@ -195,13 +196,14 @@ void Robot::pitchControl(int level, uint32_t tick)
             //calculate time elapsed from the last calculations
             float dt = (tick - lastTick) * TickPeriod;
 
+            pAHRS->setBeta(2.0f * pPitchPID->getKp());
             pAHRS->process(gyroscopeX, gyroscopeY, gyroscopeZ, accelerometerX, accelerometerY, accelerometerZ, 0, 0, 0, dt);
 
             // calculate pitch of the robot
-            pitch = asinf(2.0f * (pAHRS->getQ(0) * pAHRS->getQ(2) - pAHRS->getQ(1) * pAHRS->getQ(3)));
+            pitch = asinf(2.0f * (pAHRS->getQ(1) * pAHRS->getQ(3) - pAHRS->getQ(0) * pAHRS->getQ(2)));
 
 
-            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, gyroscopeX, dt);
+            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())
@@ -232,6 +234,7 @@ void Robot::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["q1"] = pAHRS->getQ(1);
                 Program::getInstance().getRobot()->telemetryParameters["q2"] = pAHRS->getQ(2);
                 Program::getInstance().getRobot()->telemetryParameters["q3"] = pAHRS->getQ(3);
+                Program::getInstance().getRobot()->telemetryParameters["beta"] = pAHRS->getBeta();
             }
 
             lastTick = tick;
@@ -282,18 +285,3 @@ void Robot::setTargetPitch(float pitch)
     targetPitch = pitch;
 }
 
-/*
- * set complementary filter coefficient alpha
- */
-void Robot::setAlpha(float value)
-{
-    if(value > 0.2f)
-    {
-        value = 0.2f;
-    }
-    else if (value < 0)
-    {
-        value = 0.0f;
-    }
-    alpha = value;
-}
