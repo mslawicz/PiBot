@@ -37,7 +37,7 @@ AHRS::~AHRS()
 {
 }
 
-void AHRS::process9DOF(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float dt)
+void AHRS::process(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float dt)
 {
     float recipNorm;
     float s0, s1, s2, s3;
@@ -48,7 +48,7 @@ void AHRS::process9DOF(float gx, float gy, float gz, float ax, float ay, float a
     // Use IMU (6-DOF) algorithm if magnetometer measurement invalid (avoids NaN in magnetometer normalisation)
     if ((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f))
     {
-        process6DOF(gx, gy, gz, ax, ay, az, dt);
+        process(gx, gy, gz, ax, ay, az, dt);
         return;
     }
 
@@ -136,7 +136,7 @@ void AHRS::process9DOF(float gx, float gy, float gz, float ax, float ay, float a
     q[3] *= recipNorm;
 }
 
-void AHRS::process6DOF(float gx, float gy, float gz, float ax, float ay, float az, float dt)
+void AHRS::process(float gx, float gy, float gz, float ax, float ay, float az, float dt)
 {
     float recipNorm;
     float s0, s1, s2, s3;
