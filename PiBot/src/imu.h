@@ -28,4 +28,18 @@ public:
     const float range = 2.0;
 };
 
+class AHRS
+{
+public:
+    AHRS();
+    ~AHRS();
+    void process9DOF(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float dt);
+    void process6DOF(float gx, float gy, float gz, float ax, float ay, float az, float dt);
+    float getQ(uint8_t index) const { return q[index]; }
+private:
+    float fastInvSqrt(float x);     // fast inverse square-root
+    float beta;                     // algorithm gain
+    float q[4];                     // quaternion of sensor frame relative to auxiliary frame
+};
+
 #endif /* SRC_IMU_H_ */
