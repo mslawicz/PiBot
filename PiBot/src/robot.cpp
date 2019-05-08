@@ -17,8 +17,8 @@ Robot::Robot()
 {
     pGyroscope = new Gyroscope(SerialBusId::I2C1, SerialPriority::GYROSCOPE_PR, I2cDeviceAddress::GYROSCOPE_ADDR);
     pAccelerometer = new Accelerometer(SerialBusId::I2C1, SerialPriority::ACCELEROMETER_PR, I2cDeviceAddress::ACCELEROMETER_ADDR);
-    sensorAngularRateX = sensorAngularRateY = sensorAngularRateZ = 0.0;
-    sensorAccelerationX = sensorAccelerationY = sensorAccelerationZ = 0.0;
+    gyroscopeX = gyroscopeY = gyroscopeZ = 0.0;
+    accelerometerX = accelerometerY = accelerometerZ = 0.0;
     pDrive = new Drive;
     pPitchPID = new PID(0.5, 0.05, 0.05);
     telemetryEnabled = false;
@@ -31,6 +31,7 @@ Robot::Robot()
     alpha = 0.005;
     targetPitch = 0.0;
     pitchControlSpeed = 0.0;
+    pAHRS = new AHRS;
 }
 
 Robot::~Robot()
@@ -39,6 +40,7 @@ Robot::~Robot()
     delete pAccelerometer;
     delete pGyroscope;
     delete pPitchPID;
+    delete pAHRS;
 }
 
 /*
@@ -52,8 +54,6 @@ void Robot::start(void)
     // interrupt function is called either on interrupt signal or after stated timeout in ms
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
     pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
-
-    //TODO place it in proper place: pPitchPID->reset();
 }
 
 /*
@@ -92,17 +92,17 @@ void Robot::telemetryHandler(void)
         textStream.str(std::string());
 
         // gyroscope angular rate - X axis [rad/s]
-        textStream << telemetryParameters["sensorAngularRateX"] << ",";
+        textStream << telemetryParameters["gyroscopeX"] << ",";
         // gyroscope angular rate - Y axis [rad/s]
-        textStream << telemetryParameters["sensorAngularRateY"] << ",";
+        textStream << telemetryParameters["gyroscopeY"] << ",";
         // gyroscope angular rate - Z axis [rad/s]
-        textStream << telemetryParameters["sensorAngularRateZ"] << ",";
+        textStream << telemetryParameters["gyroscopeZ"] << ",";
         // sensor acceleration - X axis [g]
-        textStream << telemetryParameters["sensorAccelerationX"] << ",";
+        textStream << telemetryParameters["accelerometerX"] << ",";
         // sensor acceleration - Y axis [g]
-        textStream << telemetryParameters["sensorAccelerationY"] << ",";
+        textStream << telemetryParameters["accelerometerY"] << ",";
         // sensor acceleration - Z axis [g]
-        textStream << telemetryParameters["sensorAccelerationZ"] << ",";
+        textStream << telemetryParameters["accelerometerZ"] << ",";
         // robot tilt [rad]
         textStream << telemetryParameters["pitch"] << ",";
         textStream << telemetryParameters["roll"] << ",";
@@ -121,9 +121,12 @@ void Robot::telemetryHandler(void)
         textStream << telemetryParameters["PidDerivative"] << ",";
         // both motors pitch control speed [1.0 == full forward speed]
         textStream << telemetryParameters["pitchControlSpeed"] << ",";
-        // complementary filter coefficient alpha
-        textStream << telemetryParameters["alpha"] << ",";
         textStream << telemetryParameters["dt"] << ",";
+        // quaternion values
+        textStream << telemetryParameters["q0"] << ",";
+        textStream << telemetryParameters["q1"] << ",";
+        textStream << telemetryParameters["q2"] << ",";
+        textStream << telemetryParameters["q3"] << ",";
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
         lock.unlock();
@@ -170,9 +173,9 @@ void Robot::pitchControl(int level, uint32_t tick)
         if((std::get<0>(data) == ImuRegisters::OUT_X_L_XL) && (std::get<1>(data) == dataLength))
         {
             //valid data received
-            sensorAccelerationX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pAccelerometer->range / 0x7FFF;
-            sensorAccelerationY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pAccelerometer->range / 0x7FFF;
-            sensorAccelerationZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pAccelerometer->range / 0x7FFF;
+            accelerometerX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pAccelerometer->range / 0x7FFF;
+            accelerometerY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pAccelerometer->range / 0x7FFF;
+            accelerometerZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pAccelerometer->range / 0x7FFF;
         }
     }
 
@@ -185,20 +188,20 @@ void Robot::pitchControl(int level, uint32_t tick)
                 (tick != lastTick))
         {
             //valid gyroscope data received
-            sensorAngularRateX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0x7FFF;
-            sensorAngularRateY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pGyroscope->range / 0x7FFF;
-            sensorAngularRateZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pGyroscope->range / 0x7FFF;
+            gyroscopeX = *reinterpret_cast<int16_t*>(&std::get<2>(data)[0]) * pGyroscope->range / 0x7FFF;
+            gyroscopeY = *reinterpret_cast<int16_t*>(&std::get<2>(data)[2]) * pGyroscope->range / 0x7FFF;
+            gyroscopeZ = *reinterpret_cast<int16_t*>(&std::get<2>(data)[4]) * pGyroscope->range / 0x7FFF;
 
             //calculate time elapsed from the last calculations
             float dt = (tick - lastTick) * TickPeriod;
 
-            // calculate tilt of the robot
-            pitch = (1.0 - alpha) * (pitch + sensorAngularRateX * dt) + alpha * static_cast<float>(atan2(sensorAccelerationX, sensorAccelerationZ));
-            roll = (1.0 - alpha) * (roll + sensorAngularRateY * dt) + alpha * static_cast<float>(atan2(sensorAccelerationY, sensorAccelerationZ));
-            yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
+            pAHRS->process(gyroscopeX, gyroscopeY, gyroscopeZ, accelerometerX, accelerometerY, accelerometerZ, 0, 0, 0, dt);
+
+            // calculate pitch of the robot
+            pitch = asinf(2.0f * (pAHRS->getQ(0) * pAHRS->getQ(2) - pAHRS->getQ(1) * pAHRS->getQ(3)));
 
 
-            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
+            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, gyroscopeX, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())
@@ -208,12 +211,12 @@ void Robot::pitchControl(int level, uint32_t tick)
             }
             {
                 std::lock_guard<std::mutex> lock(Program::getInstance().getRobot()->telemetryHandlerMutex);
-                Program::getInstance().getRobot()->telemetryParameters["sensorAngularRateX"] = sensorAngularRateX;
-                Program::getInstance().getRobot()->telemetryParameters["sensorAngularRateY"] = sensorAngularRateY;
-                Program::getInstance().getRobot()->telemetryParameters["sensorAngularRateZ"] = sensorAngularRateZ;
-                Program::getInstance().getRobot()->telemetryParameters["sensorAccelerationX"] = sensorAccelerationX;
-                Program::getInstance().getRobot()->telemetryParameters["sensorAccelerationY"] = sensorAccelerationY;
-                Program::getInstance().getRobot()->telemetryParameters["sensorAccelerationZ"] = sensorAccelerationZ;
+                Program::getInstance().getRobot()->telemetryParameters["gyroscopeX"] = gyroscopeX;
+                Program::getInstance().getRobot()->telemetryParameters["gyroscopeY"] = gyroscopeY;
+                Program::getInstance().getRobot()->telemetryParameters["gyroscopeZ"] = gyroscopeZ;
+                Program::getInstance().getRobot()->telemetryParameters["accelerometerX"] = accelerometerX;
+                Program::getInstance().getRobot()->telemetryParameters["accelerometerY"] = accelerometerY;
+                Program::getInstance().getRobot()->telemetryParameters["accelerometerZ"] = accelerometerZ;
                 Program::getInstance().getRobot()->telemetryParameters["PidKp"] =  pPitchPID->getKp();
                 Program::getInstance().getRobot()->telemetryParameters["PidKi"] =  pPitchPID->getKi();
                 Program::getInstance().getRobot()->telemetryParameters["PidKd"] =  pPitchPID->getKd();
@@ -224,8 +227,11 @@ void Robot::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["roll"] = roll;
                 Program::getInstance().getRobot()->telemetryParameters["yaw"] = yaw;
                 Program::getInstance().getRobot()->telemetryParameters["pitchControlSpeed"] = pitchControlSpeed;
-                Program::getInstance().getRobot()->telemetryParameters["alpha"] = alpha;
                 Program::getInstance().getRobot()->telemetryParameters["dt"] = dt * 1e3;
+                Program::getInstance().getRobot()->telemetryParameters["q0"] = pAHRS->getQ(0);
+                Program::getInstance().getRobot()->telemetryParameters["q1"] = pAHRS->getQ(1);
+                Program::getInstance().getRobot()->telemetryParameters["q2"] = pAHRS->getQ(2);
+                Program::getInstance().getRobot()->telemetryParameters["q3"] = pAHRS->getQ(3);
             }
 
             lastTick = tick;

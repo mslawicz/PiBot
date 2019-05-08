@@ -39,6 +39,7 @@ public:
     PID* getPitchPID(void) const {return pPitchPID;}
     std::unordered_map<std::string, float> telemetryParameters;
     std::mutex telemetryHandlerMutex;
+    AHRS* pAHRS;
 private:
     // callback function for gyroscope generated interrupts
     static void gyroInterruptCallback(int gpio, int level, uint32_t tick, void* pRobotObject);
@@ -50,13 +51,13 @@ private:
     // pointer to accelerometer device
     Accelerometer* pAccelerometer;
     // sensor angular rate values [rad/s]
-    float sensorAngularRateX;
-    float sensorAngularRateY;
-    float sensorAngularRateZ;
+    float gyroscopeX;
+    float gyroscopeY;
+    float gyroscopeZ;
     // sensor acceleration values [g]
-    float sensorAccelerationX;
-    float sensorAccelerationY;
-    float sensorAccelerationZ;
+    float accelerometerX;
+    float accelerometerY;
+    float accelerometerZ;
     // robot tilts [rad]
     float pitch;
     float roll;

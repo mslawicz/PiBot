@@ -33,8 +33,11 @@ Accelerometer::Accelerometer(SerialBusId busId, SerialPriority priority, I2cDevi
     writeDataRequest(ImuRegisters::CTRL_REG6_XL, std::vector<uint8_t>{0x82});
 }
 
-AHRS::~AHRS()
+AHRS::AHRS()
 {
+    beta = 0.1f;
+    q[0] = 1.0f;
+    q[1] = q[2] = q[3] = 0.0f;
 }
 
 void AHRS::process(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float dt)

@@ -32,7 +32,6 @@ class AHRS
 {
 public:
     AHRS();
-    ~AHRS();
     void process(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float dt);
     void process(float gx, float gy, float gz, float ax, float ay, float az, float dt);
     float getQ(uint8_t index) const { return q[index]; }
