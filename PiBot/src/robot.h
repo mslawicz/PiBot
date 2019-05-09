@@ -71,8 +71,10 @@ private:
     uint32_t lastTick;
     float alpha;
     float pitchControlSpeed;    // calculated motor speed for pitch control (for both motors)
+    float targetSpeed;          // target speed of the robot
     // pointer to pitch control loop PID
     PID* pPitchPID;
+    // pointer to speed control loop PID
     PID* pSpeedPID;
 };
 
