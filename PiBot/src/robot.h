@@ -73,6 +73,7 @@ private:
     float pitchControlSpeed;    // calculated motor speed for pitch control (for both motors)
     // pointer to pitch control loop PID
     PID* pPitchPID;
+    PID* pSpeedPID;
 };
 
 #endif /* SRC_ROBOT_H_ */

@@ -21,6 +21,7 @@ Robot::Robot()
     sensorAccelerationX = sensorAccelerationY = sensorAccelerationZ = 0.0;
     pDrive = new Drive;
     pPitchPID = new PID(0.5, 0.05, 0.05);
+    pSpeedPID = new PID(0.1, 0.1, 0);
     telemetryEnabled = false;
     exitHandler = true;
     pTelemetryHandlerThread = nullptr;
@@ -39,6 +40,7 @@ Robot::~Robot()
     delete pAccelerometer;
     delete pGyroscope;
     delete pPitchPID;
+    delete pSpeedPID;
 }
 
 /*
