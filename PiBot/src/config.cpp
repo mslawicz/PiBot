@@ -23,6 +23,18 @@ Config::Config()
     parameters.emplace("motor_pid_d",
             Actions([this](){Program::getInstance().getRobot()->getPitchPID()->setKd(getFloatFromFile());},
             [this](){cfgFile << Program::getInstance().getRobot()->getPitchPID()->getKd();}));
+    parameters.emplace("speed_pid_p",
+            Actions([this](){Program::getInstance().getRobot()->getSpeedPID()->setKp(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getSpeedPID()->getKp();}));
+    parameters.emplace("speed_pid_i",
+            Actions([this](){Program::getInstance().getRobot()->getSpeedPID()->setKi(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getSpeedPID()->getKi();}));
+    parameters.emplace("speed_pid_d",
+            Actions([this](){Program::getInstance().getRobot()->getSpeedPID()->setKd(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getSpeedPID()->getKd();}));
+    parameters.emplace("alpha",
+            Actions([this](){Program::getInstance().getRobot()->setAlpha(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getAlpha();}));
 
     cfgFile.open(CfgFileName, std::ios::in);
         if(cfgFile.is_open())

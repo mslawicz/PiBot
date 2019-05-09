@@ -35,8 +35,10 @@ public:
     Drive* getDrive(void) const {return pDrive;}
     void setYawSpeed(float speed);
     void setAlpha(float value);
+    float getAlpha(void) const { return alpha; }
     void setTargetPitch(float pitch);
     PID* getPitchPID(void) const {return pPitchPID;}
+    PID* getSpeedPID(void) const {return pSpeedPID;}
     std::unordered_map<std::string, float> telemetryParameters;
     std::mutex telemetryHandlerMutex;
 private:
