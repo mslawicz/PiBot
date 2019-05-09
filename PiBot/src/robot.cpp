@@ -15,6 +15,7 @@
 
 Robot::Robot()
 {
+    Logger::getInstance().logEvent(INFO, "start robot control");
     pGyroscope = new Gyroscope(SerialBusId::I2C1, SerialPriority::GYROSCOPE_PR, I2cDeviceAddress::GYROSCOPE_ADDR);
     pAccelerometer = new Accelerometer(SerialBusId::I2C1, SerialPriority::ACCELEROMETER_PR, I2cDeviceAddress::ACCELEROMETER_ADDR);
     sensorAngularRateX = sensorAngularRateY = sensorAngularRateZ = 0.0;
@@ -23,8 +24,6 @@ Robot::Robot()
     pPitchPID = new PID(0.5, 0.05, 0.05);
     pSpeedPID = new PID(0.1, 0.1, 0);
     telemetryEnabled = false;
-    exitHandler = true;
-    pTelemetryHandlerThread = nullptr;
     telemetryTriggered = false;
     yawSpeed = 0.0;
     lastTick = 0;
@@ -32,10 +31,27 @@ Robot::Robot()
     alpha = 0.005;
     targetPitch = 0.0;
     pitchControlSpeed = 0.0;
+    exitHandler = false;
+    // enable gyroscope interrupts
+    // interrupt function is called either on interrupt signal or after stated timeout in ms
+    gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
+    pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
 }
 
 Robot::~Robot()
 {
+    Logger::getInstance().logEvent(INFO, "stop robot control");
+    // disable gyroscope interrupts
+    gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 0, nullptr, this);
+    pDrive->stop();
+    if(pTelemetryHandlerThread != nullptr)
+    {
+        exitHandler = true;
+        telemetryNotify();
+        pTelemetryHandlerThread->join();
+        delete pTelemetryHandlerThread;
+        pTelemetryHandlerThread = nullptr;
+    }
     delete pDrive;
     delete pAccelerometer;
     delete pGyroscope;
@@ -48,14 +64,8 @@ Robot::~Robot()
  */
 void Robot::start(void)
 {
-    Logger::getInstance().logEvent(INFO, "robot start request");
-    exitHandler = false;
-    // enable gyroscope interrupts
-    // interrupt function is called either on interrupt signal or after stated timeout in ms
-    gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
-    pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
-
-    //TODO place it in proper place: pPitchPID->reset();
+    pPitchPID->reset();
+    pDrive->start();
 }
 
 /*
@@ -63,18 +73,7 @@ void Robot::start(void)
  */
 void Robot::stop(void)
 {
-    Logger::getInstance().logEvent(INFO, "robot stop request");
-    // disable gyroscope interrupts
-    gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 0, nullptr, this);
     pDrive->stop();
-    if(pTelemetryHandlerThread != nullptr)
-    {
-        exitHandler = true;
-        telemetryNotify();
-        pTelemetryHandlerThread->join();
-        delete pTelemetryHandlerThread;
-        pTelemetryHandlerThread = nullptr;
-    }
 }
 
 /*
