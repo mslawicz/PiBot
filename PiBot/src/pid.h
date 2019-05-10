@@ -25,7 +25,7 @@ public:
     float getProportional(void) const {return proportional;}
     float getIntegral(void) const {return integral;}
     float getDerivative(void) const {return derivative;}
-    void reset(void) { proportional = integral = derivative = 0.0; }
+    void reset(void) { proportional = integral = derivative = cumulativeError = previousError = 0.0; }
 private:
     float kP, kI, kD;
     float proportional;
@@ -33,6 +33,7 @@ private:
     float derivative;
     float limit;
     float previousError;
+    float cumulativeError;
 };
 
 #endif /* SRC_PID_H_ */

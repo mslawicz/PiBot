@@ -17,20 +17,22 @@ PID::PID(float coefficientP, float coefficientI, float coefficientD, float integ
     integral = 0.0f;
     derivative = 0.0f;
     previousError = 0.0f;
+    cumulativeError = 0.0f;
 }
 
 float PID::calculate(float setPointValue, float measuredProcessValue, float derivativeInput, float dt)
 {
-    float error = measuredProcessValue - setPointValue;
+    float error = setPointValue - measuredProcessValue;
     proportional = kP * error;
-    integral += kI * error * dt;
+    cumulativeError += error * dt;
+    integral = kI * cumulativeError;
     if(integral > limit)
     {
-        integral = limit;
+        cumulativeError = kI * limit;
     }
     else if (integral < -limit)
     {
-        integral = -limit;
+        cumulativeError = -kI * limit;
     }
     derivative = kD * derivativeInput;
     float output = proportional + integral + derivative;
@@ -39,16 +41,17 @@ float PID::calculate(float setPointValue, float measuredProcessValue, float deri
 
 float PID::calculate(float setPointValue, float measuredProcessValue, float dt)
 {
-    float error = measuredProcessValue - setPointValue;
+    float error = setPointValue - measuredProcessValue;
     proportional = kP * error;
-    integral += kI * error * dt;
-    if (integral > limit)
+    cumulativeError += error * dt;
+    integral = kI * cumulativeError;
+    if(integral > limit)
     {
-        integral = limit;
+        cumulativeError = kI * limit;
     }
     else if (integral < -limit)
     {
-        integral = -limit;
+        cumulativeError = -kI * limit;
     }
     derivative = kD * (error - previousError) / dt;
     previousError = error;
