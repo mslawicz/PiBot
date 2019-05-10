@@ -28,11 +28,11 @@ float PID::calculate(float setPointValue, float measuredProcessValue, float deri
     integral = kI * cumulativeError;
     if(integral > limit)
     {
-        cumulativeError = kI * limit;
+        cumulativeError = limit / kI;
     }
     else if (integral < -limit)
     {
-        cumulativeError = -kI * limit;
+        cumulativeError = -limit / kI;
     }
     derivative = kD * derivativeInput;
     float output = proportional + integral + derivative;
@@ -47,11 +47,11 @@ float PID::calculate(float setPointValue, float measuredProcessValue, float dt)
     integral = kI * cumulativeError;
     if(integral > limit)
     {
-        cumulativeError = kI * limit;
+        cumulativeError = limit / kI;
     }
     else if (integral < -limit)
     {
-        cumulativeError = -kI * limit;
+        cumulativeError = -limit / kI;
     }
     derivative = kD * (error - previousError) / dt;
     previousError = error;

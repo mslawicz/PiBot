@@ -64,6 +64,8 @@ Robot::~Robot()
  */
 void Robot::start(void)
 {
+    targetSpeed = 0.0f;
+    targetPitch = 0.0f;
     pPitchPID->reset();
     pSpeedPID->reset();
     pDrive->start();
@@ -205,7 +207,7 @@ void Robot::pitchControl(int level, uint32_t tick)
 
             targetPitch = pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
 
-            pitchControlSpeed = pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
+            pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())
