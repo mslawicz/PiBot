@@ -20,6 +20,7 @@ CLI::CLI(HostProcess hostProcess)
         commands.emplace_back(CommandStrings {"help", "h"}, "display the list of commands", std::bind(&CLI::displayHelp, this));
         commands.emplace_back(CommandStrings {"ip"}, "display lan interface addresses", std::bind(&CLI::displayLanAddresses, this));
         commands.emplace_back(CommandStrings {"udp"}, "start/stop udp remote control: <port> | 0", std::bind(&CLI::serverUDP, this));
+        commands.emplace_back(CommandStrings {"beta"}, "set EMA filter strength: <value>", [this]() { Program::getInstance().getRobot()->setBeta(getArgument<float>(0.0f, 1.0f, 0.01f)); });
     }
     else
     {

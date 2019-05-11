@@ -209,7 +209,7 @@ void Robot::pitchControl(int level, uint32_t tick)
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
             float filteredSpeed = pMotorSpeedFilter->process(pitchControlSpeed);
-            targetPitch = pSpeedPID->calculate(targetSpeed, filteredSpeed, dt);
+            targetPitch = pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
 
             pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
             // set the speed of both motors

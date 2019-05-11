@@ -13,6 +13,7 @@ class EMA
 public:
     EMA(float filterStrength);
     float process(float input);
+    void setStrength(float value) { strength = value; }
 private:
     float strength;
     float filteredValue;

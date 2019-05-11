@@ -40,6 +40,7 @@ public:
     void setTargetPitch(float pitch);
     PID* getPitchPID(void) const {return pPitchPID;}
     PID* getSpeedPID(void) const {return pSpeedPID;}
+    void setBeta(float value) { pMotorSpeedFilter->setStrength(value); }
     std::unordered_map<std::string, float> telemetryParameters;
     std::mutex telemetryHandlerMutex;
 private:
