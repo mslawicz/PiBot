@@ -12,7 +12,7 @@ class EMA
 {
 public:
     EMA(float filterStrength);
-    float filter(float input);
+    float process(float input);
 private:
     float strength;
     float filteredValue;

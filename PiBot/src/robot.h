@@ -13,6 +13,7 @@
 #include "drive.h"
 #include "imu.h"
 #include "pid.h"
+#include "filter.h"
 #include <thread>
 #include <condition_variable>
 #include <mutex>
@@ -78,6 +79,7 @@ private:
     PID* pPitchPID;
     // pointer to speed control loop PID
     PID* pSpeedPID;
+    EMA* pMotorSpeedFilter;
 };
 
 #endif /* SRC_ROBOT_H_ */

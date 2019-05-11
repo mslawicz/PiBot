@@ -32,6 +32,7 @@ Robot::Robot()
     targetPitch = 0.0;
     pitchControlSpeed = targetSpeed = 0.0;
     exitHandler = false;
+    pMotorSpeedFilter = new EMA(0.01);
     // enable gyroscope interrupts
     // interrupt function is called either on interrupt signal or after stated timeout in ms
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
@@ -57,6 +58,7 @@ Robot::~Robot()
     delete pGyroscope;
     delete pPitchPID;
     delete pSpeedPID;
+    delete pMotorSpeedFilter;
 }
 
 /*
@@ -132,6 +134,7 @@ void Robot::telemetryHandler(void)
         textStream << telemetryParameters["SpeedD"] << ",";
         // calculated target pitch
         textStream << telemetryParameters["targetPitch"] << ",";
+        textStream << telemetryParameters["filteredSpeed"] << ",";
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
         lock.unlock();
@@ -205,7 +208,8 @@ void Robot::pitchControl(int level, uint32_t tick)
             roll = (1.0 - alpha) * (roll + sensorAngularRateY * dt) + alpha * static_cast<float>(atan2(sensorAccelerationY, sensorAccelerationZ));
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
-            targetPitch = pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
+            float filteredSpeed = pMotorSpeedFilter->process(pitchControlSpeed);
+            targetPitch = pSpeedPID->calculate(targetSpeed, filteredSpeed, dt);
 
             pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
             // set the speed of both motors
@@ -236,6 +240,7 @@ void Robot::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["SpeedI"] =  pSpeedPID->getIntegral();
                 Program::getInstance().getRobot()->telemetryParameters["SpeedD"] =  pSpeedPID->getDerivative();
                 Program::getInstance().getRobot()->telemetryParameters["targetPitch"] = targetPitch;
+                Program::getInstance().getRobot()->telemetryParameters["filteredSpeed"] = filteredSpeed;
             }
 
             lastTick = tick;

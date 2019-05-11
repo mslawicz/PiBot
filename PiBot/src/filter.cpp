@@ -13,7 +13,7 @@ EMA::EMA(float filterStrength)
     filteredValue = 0.0f;
 }
 
-float EMA::filter(float input)
+float EMA::process(float input)
 {
     filteredValue += strength * (input - filteredValue);
     return filteredValue;
