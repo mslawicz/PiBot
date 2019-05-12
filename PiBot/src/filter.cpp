@@ -22,9 +22,9 @@ float EMA::process(float input)
 
 Kalman::Kalman() {
     /* We will set the variables like so, these can also be tuned by the user */
-    Q_angle = 0.00002f;
+    Q_angle = 0.001f;
     Q_bias = 0.003f;
-    R_measure = 0.0006f;
+    R_measure = 0.03f;
 
     angle = 0.0f; // Reset the angle
     bias = 0.0f; // Reset bias

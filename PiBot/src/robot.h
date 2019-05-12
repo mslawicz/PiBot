@@ -81,6 +81,7 @@ private:
     // pointer to speed control loop PID
     PID* pSpeedPID;
     EMA* pMotorSpeedFilter;
+    Kalman* pKalmanFilter;
 };
 
 #endif /* SRC_ROBOT_H_ */

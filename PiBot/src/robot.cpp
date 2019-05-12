@@ -33,6 +33,7 @@ Robot::Robot()
     pitchControlSpeed = targetSpeed = 0.0;
     exitHandler = false;
     pMotorSpeedFilter = new EMA(0.01);
+    pKalmanFilter = new Kalman;
     // enable gyroscope interrupts
     // interrupt function is called either on interrupt signal or after stated timeout in ms
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
@@ -59,6 +60,7 @@ Robot::~Robot()
     delete pPitchPID;
     delete pSpeedPID;
     delete pMotorSpeedFilter;
+    delete pKalmanFilter;
 }
 
 /*
@@ -209,9 +211,14 @@ void Robot::pitchControl(int level, uint32_t tick)
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
             float filteredSpeed = 0;//pMotorSpeedFilter->process(pitchControlSpeed);
-            targetPitch = -pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
 
-            pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
+            // Kalman filter test:
+
+
+            //targetPitch = -pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
+            targetPitch = pKalmanFilter->getAngle(static_cast<float>(atan2(sensorAccelerationX, sensorAccelerationZ)), sensorAngularRateX, dt);
+            //pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
+
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())
