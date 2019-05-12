@@ -208,8 +208,8 @@ void Robot::pitchControl(int level, uint32_t tick)
             roll = (1.0 - alpha) * (roll + sensorAngularRateY * dt) + alpha * static_cast<float>(atan2(sensorAccelerationY, sensorAccelerationZ));
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
-            float filteredSpeed = pMotorSpeedFilter->process(pitchControlSpeed);
-            targetPitch = pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
+            float filteredSpeed = 0;//pMotorSpeedFilter->process(pitchControlSpeed);
+            targetPitch = -pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
 
             pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
             // set the speed of both motors
@@ -278,17 +278,17 @@ void Robot::setYawSpeed(float speed)
 /*
  * set target pitch angular rate
  */
-void Robot::setTargetPitch(float pitch)
+void Robot::setSpeed(float speed)
 {
-    if(pitch > 1.0f)
+    if(speed > 1.0f)
     {
-        pitch = 1.0f;
+        speed = 1.0f;
     }
-    else if (pitch < -1.0f)
+    else if (speed < -1.0f)
     {
-        pitch = -1.0f;
+        speed = -1.0f;
     }
-    targetPitch = pitch;
+    targetSpeed = speed;
 }
 
 /*

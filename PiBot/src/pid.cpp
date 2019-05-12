@@ -43,7 +43,7 @@ float PID::calculate(float setPointValue, float measuredProcessValue, float dt)
 {
     float error = setPointValue - measuredProcessValue;
     proportional = kP * error;
-    cumulativeError += error * dt;
+    cumulativeError = error * dt;
     integral = kI * cumulativeError;
     if(integral > limit)
     {

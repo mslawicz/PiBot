@@ -37,7 +37,7 @@ public:
     void setYawSpeed(float speed);
     void setAlpha(float value);
     float getAlpha(void) const { return alpha; }
-    void setTargetPitch(float pitch);
+    void setSpeed(float speed);
     PID* getPitchPID(void) const {return pPitchPID;}
     PID* getSpeedPID(void) const {return pSpeedPID;}
     void setBeta(float value) { pMotorSpeedFilter->setStrength(value); }
