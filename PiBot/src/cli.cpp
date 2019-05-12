@@ -35,6 +35,9 @@ CLI::CLI(HostProcess hostProcess)
     commands.emplace_back(CommandStrings {"ppid"}, "set pitch PID value: p | i | d <value>", std::bind(&CLI::setPPID, this));
     commands.emplace_back(CommandStrings {"spid"}, "set speed PID value: p | i | d <value>", std::bind(&CLI::setSPID, this));
     commands.emplace_back(CommandStrings {"alpha"}, "set complementary filter alpha coefficient: <value>", [this]() { Program::getInstance().getRobot()->setAlpha(getArgument<float>(0.0f, 0.2f, 0.02f)); });
+    commands.emplace_back(CommandStrings {"qa"}, "set q_angle: <value>", [this]() { Program::getInstance().getRobot()->getKalmanFilter()->setQangle(getArgument<float>(-1.0f, 1.0f, 0.001f)); });
+    commands.emplace_back(CommandStrings {"qb"}, "set q_bias: <value>", [this]() { Program::getInstance().getRobot()->getKalmanFilter()->setQbias(getArgument<float>(-1.0f, 1.0f, 0.003f)); });
+    commands.emplace_back(CommandStrings {"rm"}, "set Rmeasure: <value>", [this]() { Program::getInstance().getRobot()->getKalmanFilter()->setRmeasure(getArgument<float>(-1.0f, 1.0f, 0.03f)); });
 }
 
 void CLI::process(std::string input)

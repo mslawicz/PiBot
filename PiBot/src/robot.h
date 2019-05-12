@@ -40,6 +40,7 @@ public:
     void setSpeed(float speed);
     PID* getPitchPID(void) const {return pPitchPID;}
     PID* getSpeedPID(void) const {return pSpeedPID;}
+    Kalman* getKalmanFilter(void) const { return pKalmanFilter; }
     void setBeta(float value) { pMotorSpeedFilter->setStrength(value); }
     std::unordered_map<std::string, float> telemetryParameters;
     std::mutex telemetryHandlerMutex;

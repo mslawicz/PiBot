@@ -206,7 +206,8 @@ void Robot::pitchControl(int level, uint32_t tick)
             float dt = (tick - lastTick) * TickPeriod;
 
             // calculate tilt of the robot
-            pitch = (1.0 - alpha) * (pitch + sensorAngularRateX * dt) + alpha * static_cast<float>(atan2(sensorAccelerationX, sensorAccelerationZ));
+            //pitch = (1.0 - alpha) * (pitch + sensorAngularRateX * dt) + alpha * static_cast<float>(atan2(sensorAccelerationX, sensorAccelerationZ));
+            pitch = pKalmanFilter->getAngle(static_cast<float>(atan2(sensorAccelerationX, sensorAccelerationZ)), sensorAngularRateX, dt);
             roll = (1.0 - alpha) * (roll + sensorAngularRateY * dt) + alpha * static_cast<float>(atan2(sensorAccelerationY, sensorAccelerationZ));
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
@@ -215,9 +216,8 @@ void Robot::pitchControl(int level, uint32_t tick)
             // Kalman filter test:
 
 
-            //targetPitch = -pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
-            targetPitch = pKalmanFilter->getAngle(static_cast<float>(atan2(sensorAccelerationX, sensorAccelerationZ)), sensorAngularRateX, dt);
-            //pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
+            targetPitch = -pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
+            pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, -sensorAngularRateX, dt);
 
             // set the speed of both motors
             // TODO: limit the speed to allowed range
