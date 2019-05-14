@@ -32,11 +32,12 @@ Robot::Robot()
     targetPitch = 0.0;
     pitchControlSpeed = targetSpeed = 0.0;
     exitHandler = false;
-    pMotorSpeedFilter = new EMA(0.01);
+    pMotorSpeedFilter = new EMA(0.001);
     // enable gyroscope interrupts
     // interrupt function is called either on interrupt signal or after stated timeout in ms
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
     pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
+    accSpeed = speed = 0.0f;
 }
 
 Robot::~Robot()
@@ -68,6 +69,7 @@ void Robot::start(void)
 {
     targetSpeed = 0.0f;
     targetPitch = 0.0f;
+    accSpeed = speed = 0.0f;
     pPitchPID->reset();
     pSpeedPID->reset();
     pDrive->start();
@@ -134,7 +136,7 @@ void Robot::telemetryHandler(void)
         textStream << telemetryParameters["SpeedD"] << ",";
         // calculated target pitch
         textStream << telemetryParameters["targetPitch"] << ",";
-        textStream << telemetryParameters["filteredSpeed"] << ",";
+        textStream << telemetryParameters["speed"] << ",";
         textStream << "\n";
         Program::getInstance().getUdpClient()->sendData(textStream.str());
         lock.unlock();
@@ -208,10 +210,14 @@ void Robot::pitchControl(int level, uint32_t tick)
             roll = (1.0 - alpha) * (roll + sensorAngularRateY * dt) + alpha * static_cast<float>(atan2(sensorAccelerationY, sensorAccelerationZ));
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
-            float filteredSpeed = 0;//pMotorSpeedFilter->process(pitchControlSpeed);
-            targetPitch = -pSpeedPID->calculate(targetSpeed, pitchControlSpeed, dt);
+            const float beta = 0.01;
+            // calculate speed from accelerometer [m/s]
+            accSpeed += 0.102 * sensorAccelerationX * dt;
+            // complementary filter for robot speed
+            speed = (1.0 - beta) * (speed + accSpeed) + beta * 0.89535f * pitchControlSpeed;
+            targetPitch = -pSpeedPID->calculate(targetSpeed, speed, dt);
 
-            pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, sensorAngularRateX, dt);
+            pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, -sensorAngularRateX, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())
@@ -240,7 +246,7 @@ void Robot::pitchControl(int level, uint32_t tick)
                 Program::getInstance().getRobot()->telemetryParameters["SpeedI"] =  pSpeedPID->getIntegral();
                 Program::getInstance().getRobot()->telemetryParameters["SpeedD"] =  pSpeedPID->getDerivative();
                 Program::getInstance().getRobot()->telemetryParameters["targetPitch"] = targetPitch;
-                Program::getInstance().getRobot()->telemetryParameters["filteredSpeed"] = filteredSpeed;
+                Program::getInstance().getRobot()->telemetryParameters["speed"] = speed;
             }
 
             lastTick = tick;

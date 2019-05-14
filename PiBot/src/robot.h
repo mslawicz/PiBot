@@ -81,6 +81,10 @@ private:
     // pointer to speed control loop PID
     PID* pSpeedPID;
     EMA* pMotorSpeedFilter;
+    // estimated speed of the robot
+    float speed;
+    // speed calculated from accelerometer
+    float accSpeed;
 };
 
 #endif /* SRC_ROBOT_H_ */
