@@ -41,6 +41,8 @@ public:
     PID* getPitchPID(void) const {return pPitchPID;}
     PID* getSpeedPID(void) const {return pSpeedPID;}
     void setBeta(float value) { pMotorSpeedFilter->setStrength(value); }
+    void setTargetPitch(float pitch) { targetPitch = pitch; }
+    float getTargetPitch(void) const {return targetPitch; }
     std::unordered_map<std::string, float> telemetryParameters;
     std::mutex telemetryHandlerMutex;
 private:
@@ -83,8 +85,6 @@ private:
     EMA* pMotorSpeedFilter;
     // estimated speed of the robot
     float speed;
-    // speed calculated from accelerometer
-    float accSpeed;
 };
 
 #endif /* SRC_ROBOT_H_ */

@@ -35,6 +35,9 @@ Config::Config()
     parameters.emplace("alpha",
             Actions([this](){Program::getInstance().getRobot()->setAlpha(getFloatFromFile());},
             [this](){cfgFile << Program::getInstance().getRobot()->getAlpha();}));
+    parameters.emplace("target_pitch",
+            Actions([this](){Program::getInstance().getRobot()->setTargetPitch(getFloatFromFile());},
+            [this](){cfgFile << Program::getInstance().getRobot()->getTargetPitch();}));
 
     cfgFile.open(CfgFileName, std::ios::in);
         if(cfgFile.is_open())

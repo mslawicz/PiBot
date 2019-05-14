@@ -37,7 +37,7 @@ Robot::Robot()
     // interrupt function is called either on interrupt signal or after stated timeout in ms
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
     pTelemetryHandlerThread = new std::thread(&Robot::telemetryHandler, this);
-    accSpeed = speed = 0.0f;
+    speed = 0.0f;
 }
 
 Robot::~Robot()
@@ -68,8 +68,8 @@ Robot::~Robot()
 void Robot::start(void)
 {
     targetSpeed = 0.0f;
-    targetPitch = 0.0f;
-    accSpeed = speed = 0.0f;
+    //targetPitch = 0.0f;
+    speed = 0.0f;
     pPitchPID->reset();
     pSpeedPID->reset();
     pDrive->start();
@@ -211,13 +211,11 @@ void Robot::pitchControl(int level, uint32_t tick)
             yaw = 0.999 * (yaw + sensorAngularRateZ * dt);
 
             const float beta = 0.01;
-            // calculate speed from accelerometer [m/s]
-            accSpeed += 0.102 * sensorAccelerationX * dt;
             // complementary filter for robot speed
-            speed = (1.0 - beta) * (speed + accSpeed) + beta * 0.89535f * pitchControlSpeed;
-            targetPitch = -pSpeedPID->calculate(targetSpeed, speed, dt);
+            speed = (1.0 - beta) * (speed + 0.102 * sensorAccelerationX * dt) + beta * 0.89535f * pitchControlSpeed;
+            //targetPitch = -pSpeedPID->calculate(targetSpeed, speed, dt);
 
-            pitchControlSpeed = -pPitchPID->calculate(targetPitch, pitch, -sensorAngularRateX, dt);
+            pitchControlSpeed = -pPitchPID->calculate(targetPitch + targetSpeed, pitch, -sensorAngularRateX, dt);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())
@@ -282,17 +280,17 @@ void Robot::setYawSpeed(float speed)
 }
 
 /*
- * set target pitch angular rate
+ * set robot speed indirectly by modifying target pitch
  */
 void Robot::setSpeed(float speed)
 {
-    if(speed > 1.0f)
+    if(speed > 0.1f)
     {
-        speed = 1.0f;
+        speed = 0.1f;
     }
-    else if (speed < -1.0f)
+    else if (speed < -0.1f)
     {
-        speed = -1.0f;
+        speed = -0.1f;
     }
     targetSpeed = speed;
 }
