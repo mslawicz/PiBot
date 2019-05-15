@@ -32,7 +32,7 @@ Robot::Robot()
     targetPitch = 0.0;
     pitchControlSpeed = targetSpeed = 0.0;
     exitHandler = false;
-    pMotorSpeedFilter = new EMA(0.001);
+    pMotorSpeedFilter = new EMA(0.1);
     // enable gyroscope interrupts
     // interrupt function is called either on interrupt signal or after stated timeout in ms
     gpioSetISRFuncEx(GpioPin::GYRO_INT, RISING_EDGE, 12, Robot::gyroInterruptCallback, this);
@@ -215,7 +215,8 @@ void Robot::pitchControl(int level, uint32_t tick)
             speed = (1.0 - beta) * (speed + 0.102 * sensorAccelerationX * dt) + beta * 0.89535f * pitchControlSpeed;
             //targetPitch = -pSpeedPID->calculate(targetSpeed, speed, dt);
 
-            pitchControlSpeed = -pPitchPID->calculate(targetPitch + targetSpeed, pitch, -sensorAngularRateX, dt);
+            float unfilteredSpeed = -pPitchPID->calculate(targetPitch + targetSpeed, pitch, -sensorAngularRateX, dt);
+            pitchControlSpeed = pMotorSpeedFilter->process(unfilteredSpeed);
             // set the speed of both motors
             // TODO: limit the speed to allowed range
             if(pDrive->isActive())
